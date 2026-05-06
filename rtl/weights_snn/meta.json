@@ -1,0 +1,14 @@
+{
+  "n_in": 256,
+  "H": 64,
+  "n_classes": 3,
+  "T": 32,
+  "leak_shift": 4,
+  "threshold_fp": 1.0,
+  "w1_scale": 0.002885545801928663,
+  "w2_scale": 0.0015146428440499494,
+  "theta1_int": 44012,
+  "theta2_int": 660,
+  "W1_bytes": 16384,
+  "W2_bytes": 192
+}

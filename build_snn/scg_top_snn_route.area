@@ -1,0 +1,60 @@
+standard
+***Report Model: scg_top_snn Device: EG4S20BG256***
+
+IO Statistics
+#IO                         8   out of    188    4.26%
+  #input                    3
+  #output                   5
+  #inout                    0
+
+Utilization Statistics
+#lut                     3120   out of  19600   15.92%
+#reg                     3589   out of  19600   18.31%
+#le                      4035
+  #lut only               446   out of   4035   11.05%
+  #reg only               915   out of   4035   22.68%
+  #lut&reg               2674   out of   4035   66.27%
+#bram                      18   out of     64   28.12%
+  #bram9k                  18
+  #fifo9k                   0
+#bram32k                    0   out of     16    0.00%
+#dsp                        1   out of     29    3.45%
+#pad                        8   out of    188    4.26%
+#pll                        0   out of      4    0.00%
+#gclk                       1   out of     16    6.25%
+#csb                        0   out of      2    0.00%
+
+Report Clock Domain Luts:
+
+------------------------------------------------------------------------------------------------------------------
+  Index   |  Name         |  Frequency   |  LUT As Logic   |  LUT As Shifter   |  LUT As Dram   |  BRAM   |  DSP
+------------------------------------------------------------------------------------------------------------------
+  #1      |  DeriveClock  |  50MHz       |  1525           |  0                |  0             |  18     |  1
+------------------------------------------------------------------------------------------------------------------
+
+Clock Resource Statistics
+Index     ClockNet       Type               DriverType         Driver            Clk/Fanout
+#1        clk_i_dup_1    Global             io                 clk_i_syn_2.di    2767/2767
+
+Report Hierarchy Area:
++---------------------------------------------------------------------------------+
+|Instance   |Module         |le      |lut     |ripple  |seq     |bram    |dsp     |
++---------------------------------------------------------------------------------+
+|top        |scg_top_snn    |4035    |2956    |164     |3589    |18      |1       |
+|  u_engine |scg_snn_engine |3818    |2800    |134     |3461    |0       |1       |
++---------------------------------------------------------------------------------+
+
+
+DataNet Average Fanout:
+
+   Index     Fanout     Nets  
+    #1          1       5675  
+    #2          2       284   
+    #3          3       104   
+    #4          4        37   
+    #5        5-10       93   
+    #6        11-50     289   
+    #7       51-100      61   
+    #8       101-500     2    
+    #9        >500       1    
+  Average     3.15            

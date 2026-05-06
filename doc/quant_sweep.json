@@ -1,0 +1,41 @@
+{
+  "fp32": 84.0,
+  "sweep": [
+    {
+      "tag": "INT4-per_tensor",
+      "n_bits": 4,
+      "per_channel": false,
+      "accuracy_percent": 67.0
+    },
+    {
+      "tag": "INT4-per_channel",
+      "n_bits": 4,
+      "per_channel": true,
+      "accuracy_percent": 66.5
+    },
+    {
+      "tag": "INT6-per_tensor",
+      "n_bits": 6,
+      "per_channel": false,
+      "accuracy_percent": 79.5
+    },
+    {
+      "tag": "INT6-per_channel",
+      "n_bits": 6,
+      "per_channel": true,
+      "accuracy_percent": 85.0
+    },
+    {
+      "tag": "INT8-per_tensor",
+      "n_bits": 8,
+      "per_channel": false,
+      "accuracy_percent": 84.0
+    },
+    {
+      "tag": "INT8-per_channel",
+      "n_bits": 8,
+      "per_channel": true,
+      "accuracy_percent": 83.0
+    }
+  ]
+}

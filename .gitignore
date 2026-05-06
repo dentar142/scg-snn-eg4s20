@@ -1,0 +1,85 @@
+# =============================================================================
+# Reproducibility-friendly .gitignore
+# Excludes downloadable datasets, synthesis intermediates, runtime logs.
+# Keeps: source code, RTL, weights (.hex/.mem), bitstreams, doc, benchmark JSON.
+# =============================================================================
+
+# --- datasets (downloadable via tools/dl_curl_parallel.py) ---
+data/
+data_excl100/
+data_mixed/
+
+# --- ML training artifacts ---
+model/ckpt/*.pt
+model/__pycache__/
+**/__pycache__/
+*.pyc
+*.pyo
+
+# --- FPGA synthesis intermediates (bitstream itself IS tracked) ---
+build/
+build_v7/*
+!build_v7/scg_top_v7.bit
+!build_v7/scg_top_v7_route_timing.rpt
+!build_v7/scg_top_v7_route.area
+build_snn/*
+!build_snn/scg_top_snn.bit
+!build_snn/scg_top_snn_route_timing.rpt
+!build_snn/scg_top_snn_route.area
+
+# --- runtime logs / scratch ---
+*.log
+*.err
+log/
+*.dmp
+*.bid
+*.db
+
+# --- TD/Anlogic toolchain artifacts ---
+*.html
+*.qor
+!build_*/scg_top_*_route.qor
+*.area.html
+backup/
+*.logw
+td_*.log
+td_*.logw
+
+# --- editor / IDE ---
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# --- Claude Code state (local only) ---
+.omc/
+.claude/
+
+# --- temp ---
+3
+*.tmp
+flash_*.log
+flash_*.err
+train_*.log
+train_*.err
+cv_*.log
+cv_*.err
+ssl_*.log
+ssl_*.err
+final_*.log
+final_*.err
+build_v7_stdout*.log
+build_v7_stderr*.log
+build_snn_stdout*.log
+build_snn_stderr*.log
+build_snn3.log
+build_snn3.err
+dl_*.log
+dl_*.err
+
+# --- accidentally-committed unsuccessful experiments ---
+windows_artifacts/
+training/
+
+# --- GitHub auto stuff ---
+.github/copilot-instructions.md

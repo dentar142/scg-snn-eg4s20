@@ -1,0 +1,1938 @@
+Created by          : Tang Dynasty v6.2.190657
+                    : Copyright (c) 2012-2026 Anlogic Inc.
+Generated           : Wed May  6 18:58:58 2026
+
+Top Model           : scg_top_v7
+Device              : EG4S20BG256
+Speed               : NA
+STA coverage        : 95.65%
+Constraint File     : 
+Confidence          : Routed
+Check Corner        : Both (Slow and Fast)
+CRPR Enabled        : Yes
+Report Scheme       : 10 end point(s) per path group, 1 path(s) per end point
+
+
+Check Status
+-------------
+
+Corner   | Max      Min     
+------------------------------------
+Slow     | yes      yes     
+Fast     | yes      yes     
+
+
+Timing Status
+--------------------
+	SWNS: -2.715ns, STNS: -291.891ns
+	HWNS: 0.013ns, HTNS: 0.000ns
+	Period Check WNS: 0.000ns
+
+
+Clock Summary
+--------------------
+
+       Clock-Id:       C-Freq       Fanout   Clock-Name
+--------------------------------------------------------------------------------
+           clk0:       50.000         2362   DeriveClock
+--------------------------------------------------------------------------------
+
+       Name            Type         Rise(ns)   Fall(ns)          C-Period(ns)     C-Freq(MHz)          R-Period(ns)     R-Freq(MHz)         SWNS(ns)   STNS(ns)         HWNS(ns)   HTNS(ns)         Skew(ns)           Fanout        Max-Level        CC-From    CC-To
+       clk0           local            0.000     10.000                20.000          50.000                22.715          44.024           -2.715   -291.891            0.013      0.000            0.000             2362               17             no       no
+
+Notes
+----------
+C-Period  :  constraint period
+C-Freq    :  constraint freq
+R-Period  :  report min period
+R-Freq    :  report fmax
+CC-From   :  has path(s) from cross-domain clock
+CC-To     :  has path(s) to cross-domain clock
+
+
+*   Clock R-Period data only takes intra-clock timing. SWNS/STNS/HWNS/HTNS take both intra-clock and inter-clock timing.
+*   If there is mismatch between R-Period and SWNS, check inter-clock timing of this clock as capture clock.
+*   SWNS/STNS/HWNS/HTNS of timing exception (SMCP/SMD) only counted in global Timing Status, not counted in Clock Summary.
+
+Intra clock domain timing
+--------------------------------------------------
+
+----------------------------------------------------------------------------------------------------
+Path Group     :     DeriveClock -> DeriveClock
+Type           :     Self
+From Clock     :     DeriveClock
+To Clock       :     DeriveClock
+Min Period     :     22.715ns
+Fmax           :     44.024MHz
+
+Statistics:
+Max            : SWNS     -2.715ns, STNS   -291.891ns,       147 Viol Endpoints,      7647 Total Endpoints,1000000000 Paths Analyzed
+Min            : HWNS      0.013ns, HTNS      0.000ns,         0 Viol Endpoints,      7647 Total Endpoints,1000000000 Paths Analyzed
+----------------------------------------------------------------------------------------------------
+
+Max Paths
+----------------------------------------------------------------------------------------------------
+Slack               : -2.715ns
+Begin Point         : u_engine/right_shift2_syn_1032.clk (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+End Point           : u_engine/right_shift2_syn_877.mi[0] (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+Check Type          : setup
+Process             : slow
+Budget              : 20.000ns { DeriveClock rising@20.000ns - DeriveClock rising@0.000ns }
+Data Path Delay     : 22.499ns (cell 12.883ns (57%), net 9.616ns (43%))
+Clock Skew          : 0.000ns
+Logic Level         : 16 ( ADDER=6  LUT5=3  LUT3=3  LUT4=2  MULT18=1  LUT2=1 )
+Max Fanout          : 65
+Clock Uncertainty   : 0.100ns (sdc uncertainty: 0.000ns, default uncertainty: 0.100ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+clk2q               x012y038z3          0.146    r     0.146          pin: u_engine/right_shift2_syn_1032.q[0]
+net (fo=65)                             1.035          1.181          net: u_engine/co_base[4]_dup_10,  ../rtl/scg_mac_array_v7.v(820)
+                                                                      pin: u_engine/mux20_syn_218.e[0]
+LUT5                x013y044z3          0.527    r     1.708       1  pin: u_engine/mux20_syn_218.fx[0]
+net (fo=1)                              0.591          2.299          net: u_engine/mux20_syn_36,  ../rtl/scg_mac_array_v7.v(348)
+                                                                      pin: u_engine/a_raddr_o_reg[2]_syn_415.b[0]
+LUT3                x015y044z3          0.431    f     2.730       2  pin: u_engine/a_raddr_o_reg[2]_syn_415.f[0]
+net (fo=2)                              0.920          3.650          net: u_engine/gap_acc[0]_b19[1],  NOFILE(0)
+                                                                      pin: u_engine/mult3_syn_116.a[1]
+MULT18              x016y036            3.563    f     7.213       3  pin: u_engine/mult3_syn_116.p[18]
+net (fo=1)                              0.603          7.816          net: u_engine/mult3_syn_20,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/mult3_syn_354.b[0]
+ADDER               x014y043z2          0.836    f     8.652       4  pin: u_engine/mult3_syn_354.fco
+net (fo=1)                              0.000          8.652          net: u_engine/mult3_syn_326,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/mult3_syn_355.fci
+ADDER               x014y043z3          0.132    f     8.784          pin: u_engine/mult3_syn_355.fco
+net (fo=1)                              0.000          8.784          net: u_engine/mult3_syn_330,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/mult3_syn_356.fci
+ADDER               x014y044z2          0.132    f     8.916          pin: u_engine/mult3_syn_356.fco
+net (fo=1)                              0.000          8.916          net: u_engine/mult3_syn_334,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/mult3_syn_357.fci
+ADDER               x014y044z3          0.132    f     9.048          pin: u_engine/mult3_syn_357.fco
+net (fo=1)                              0.000          9.048          net: u_engine/mult3_syn_338,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/mult3_syn_358.fci
+ADDER               x014y045z2          0.132    f     9.180          pin: u_engine/mult3_syn_358.fco
+net (fo=1)                              0.000          9.180          net: u_engine/mult3_syn_342,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/mult3_syn_359.fci
+ADDER               x014y045z3          0.198    r     9.378       5  pin: u_engine/mult3_syn_359.f[0]
+net (fo=3)                              0.594          9.972          net: u_engine/mult3_syn_119[19],  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/gap_acc[0]_b13[6]_syn_85.c[1]
+LUT5                x014y047z3          0.348    f    10.320       6  pin: u_engine/gap_acc[0]_b13[6]_syn_85.f[1]
+net (fo=2)                              0.591         10.911          net: u_engine/gap_acc[0]_b13[6]_syn_41,  NOFILE(0)
+                                                                      pin: u_engine/gap_acc[0]_b13[6]_syn_85.a[0]
+LUT5                x014y047z3          0.424    f    11.335       7  pin: u_engine/gap_acc[0]_b13[6]_syn_85.f[0]
+net (fo=3)                              0.819         12.154          net: u_engine/right_shift2_syn_220,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/right_shift2_syn_961.d[1]
+LUT4                x009y044z2          0.262    r    12.416       8  pin: u_engine/right_shift2_syn_961.f[1]
+net (fo=5)                              0.379         12.795          net: u_engine/right_shift2_syn_625,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/right_shift2_syn_958.b[0]
+LUT4                x007y044z2          0.431    f    13.226       9  pin: u_engine/right_shift2_syn_958.f[0]
+net (fo=1)                              0.858         14.084          net: u_engine/right_shift2_syn_633,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/right_shift2_syn_932.c[1]
+LUT3                x010y039z2          0.348    f    14.432      10  pin: u_engine/right_shift2_syn_932.f[1]
+net (fo=2)                              0.689         15.121          net: u_engine/right_shift2_syn_256,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/lt6_syn_167.a[0]
+ADDER               x006y041z1          0.706    f    15.827      11  pin: u_engine/lt6_syn_167.fco
+net (fo=1)                              0.000         15.827          net: u_engine/lt6_syn_25,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_170.fci
+ADDER               x006y042z0          0.073    f    15.900          pin: u_engine/lt6_syn_170.fco
+net (fo=1)                              0.000         15.900          net: u_engine/lt6_syn_29,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_173.fci
+ADDER               x006y042z1          0.073    f    15.973          pin: u_engine/lt6_syn_173.fco
+net (fo=1)                              0.000         15.973          net: u_engine/lt6_syn_33,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_176.fci
+ADDER               x006y043z0          0.073    f    16.046          pin: u_engine/lt6_syn_176.fco
+net (fo=1)                              0.000         16.046          net: u_engine/lt6_syn_37,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_179.fci
+ADDER               x006y043z1          0.073    f    16.119          pin: u_engine/lt6_syn_179.fco
+net (fo=1)                              0.000         16.119          net: u_engine/lt6_syn_41,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_182.fci
+ADDER               x006y044z0          0.073    f    16.192          pin: u_engine/lt6_syn_182.fco
+net (fo=1)                              0.000         16.192          net: u_engine/lt6_syn_45,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_185.fci
+ADDER               x006y044z1          0.073    f    16.265          pin: u_engine/lt6_syn_185.fco
+net (fo=1)                              0.000         16.265          net: u_engine/lt6_syn_49,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_188.fci
+ADDER               x006y045z0          0.073    f    16.338          pin: u_engine/lt6_syn_188.fco
+net (fo=1)                              0.000         16.338          net: u_engine/lt6_syn_53,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_191.fci
+ADDER               x006y045z1          0.073    f    16.411          pin: u_engine/lt6_syn_191.fco
+net (fo=1)                              0.000         16.411          net: u_engine/lt6_syn_57,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_194.fci
+ADDER               x006y046z0          0.073    f    16.484          pin: u_engine/lt6_syn_194.fco
+net (fo=1)                              0.000         16.484          net: u_engine/lt6_syn_61,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_197.fci
+ADDER               x006y046z1          0.073    f    16.557          pin: u_engine/lt6_syn_197.fco
+net (fo=1)                              0.000         16.557          net: u_engine/lt6_syn_65,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_200.fci
+ADDER               x006y047z0          0.073    f    16.630          pin: u_engine/lt6_syn_200.fco
+net (fo=1)                              0.000         16.630          net: u_engine/lt6_syn_69,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_203.fci
+ADDER               x006y047z1          0.073    f    16.703          pin: u_engine/lt6_syn_203.fco
+net (fo=1)                              0.000         16.703          net: u_engine/lt6_syn_73,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_206.fci
+ADDER               x006y048z0          0.073    f    16.776          pin: u_engine/lt6_syn_206.fco
+net (fo=1)                              0.000         16.776          net: u_engine/lt6_syn_77,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_209.fci
+ADDER               x006y048z1          0.073    f    16.849          pin: u_engine/lt6_syn_209.fco
+net (fo=1)                              0.000         16.849          net: u_engine/lt6_syn_81,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_212.fci
+ADDER               x006y049z0          0.073    f    16.922          pin: u_engine/lt6_syn_212.fco
+net (fo=1)                              0.000         16.922          net: u_engine/lt6_syn_85,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_215.fci
+ADDER               x006y049z1          0.073    f    16.995          pin: u_engine/lt6_syn_215.fco
+net (fo=1)                              0.000         16.995          net: u_engine/lt6_syn_89,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_218.fci
+ADDER               x006y050z0          0.073    f    17.068          pin: u_engine/lt6_syn_218.fco
+net (fo=1)                              0.000         17.068          net: u_engine/lt6_syn_93,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_221.fci
+ADDER               x006y050z1          0.073    f    17.141          pin: u_engine/lt6_syn_221.fco
+net (fo=1)                              0.000         17.141          net: u_engine/lt6_syn_97,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_224.fci
+ADDER               x006y051z0          0.355    f    17.496      12  pin: u_engine/lt6_syn_224.f[1]
+net (fo=9)                              0.507         18.003          net: u_engine/gap_acc[0]_b13_n,  NOFILE(0)
+                                                                      pin: u_engine/co_base_reg[1]_syn_31.b[1]
+LUT3                x006y050z3          0.431    f    18.434      13  pin: u_engine/co_base_reg[1]_syn_31.f[1]
+net (fo=1)                              0.657         19.091          net: u_engine/gap_acc[0]_b13[4],  NOFILE(0)
+                                                                      pin: u_engine/add8_syn_189.e[0]
+ADDER               x001y049z3          0.781    f    19.872      14  pin: u_engine/add8_syn_189.fco
+net (fo=1)                              0.000         19.872          net: u_engine/add8_syn_162,  ../rtl/scg_mac_array_v7.v(930)
+                                                                      pin: u_engine/add8_syn_190.fci
+ADDER               x001y050z2          0.132    f    20.004          pin: u_engine/add8_syn_190.fco
+net (fo=1)                              0.000         20.004          net: u_engine/add8_syn_166,  ../rtl/scg_mac_array_v7.v(930)
+                                                                      pin: u_engine/add8_syn_191.fci
+ADDER               x001y050z3          0.132    f    20.136          pin: u_engine/add8_syn_191.fco
+net (fo=1)                              0.000         20.136          net: u_engine/add8_syn_170,  ../rtl/scg_mac_array_v7.v(930)
+                                                                      pin: u_engine/add8_syn_192.fci
+ADDER               x001y051z2          0.132    f    20.268          pin: u_engine/add8_syn_192.fco
+net (fo=1)                              0.000         20.268          net: u_engine/add8_syn_174,  ../rtl/scg_mac_array_v7.v(930)
+                                                                      pin: u_engine/add8_syn_193.fci
+ADDER               x001y051z3          0.453    f    20.721      15  pin: u_engine/add8_syn_193.fx[1]
+net (fo=1)                              0.506         21.227          net: u_engine/gap_acc[0]_b9[22],  NOFILE(0)
+                                                                      pin: u_engine/gap_acc_reg[84]_syn_4.d[0]
+LUT2                x006y051z3          0.262    r    21.489      16  pin: u_engine/gap_acc_reg[84]_syn_4.f[0]
+net (fo=2)                              0.867         22.356          net: u_engine/mux50_syn_1956,  ../rtl/scg_mac_array_v7.v(886)
+                                                                      pin: u_engine/right_shift2_syn_877.mi[0]
+reg                 x009y046z2          0.143    r    22.499          net: u_engine/gap_acc[1][22],  ../rtl/scg_mac_array_v7.v(825)
+--------------------------------------------------------------------  ---------------
+Arrival                                               22.499               
+
+capture edge                           20.000    r    20.000               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.116         19.884               
+clock uncertainty                      -0.100         19.784               
+clock pessimism                         0.000         19.784               
+--------------------------------------------------------------------  ---------------
+Required                                              19.784               
+--------------------------------------------------------------------  ---------------
+Slack                                                 -2.715               
+
+Slack               : -2.702ns
+Begin Point         : u_engine/right_shift2_syn_1032.clk (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+End Point           : u_engine/gap_acc_reg[20]_syn_3.mi[0] (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+Check Type          : setup
+Process             : slow
+Budget              : 20.000ns { DeriveClock rising@20.000ns - DeriveClock rising@0.000ns }
+Data Path Delay     : 22.486ns (cell 12.817ns (56%), net 9.669ns (44%))
+Clock Skew          : 0.000ns
+Logic Level         : 16 ( ADDER=6  LUT5=3  LUT3=3  LUT4=2  MULT18=1  LUT2=1 )
+Max Fanout          : 65
+Clock Uncertainty   : 0.100ns (sdc uncertainty: 0.000ns, default uncertainty: 0.100ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+clk2q               x012y038z3          0.146    r     0.146          pin: u_engine/right_shift2_syn_1032.q[0]
+net (fo=65)                             1.035          1.181          net: u_engine/co_base[4]_dup_10,  ../rtl/scg_mac_array_v7.v(820)
+                                                                      pin: u_engine/mux20_syn_218.e[0]
+LUT5                x013y044z3          0.527    r     1.708       1  pin: u_engine/mux20_syn_218.fx[0]
+net (fo=1)                              0.591          2.299          net: u_engine/mux20_syn_36,  ../rtl/scg_mac_array_v7.v(348)
+                                                                      pin: u_engine/a_raddr_o_reg[2]_syn_415.b[0]
+LUT3                x015y044z3          0.431    f     2.730       2  pin: u_engine/a_raddr_o_reg[2]_syn_415.f[0]
+net (fo=2)                              0.920          3.650          net: u_engine/gap_acc[0]_b19[1],  NOFILE(0)
+                                                                      pin: u_engine/mult3_syn_116.a[1]
+MULT18              x016y036            3.563    f     7.213       3  pin: u_engine/mult3_syn_116.p[18]
+net (fo=1)                              0.603          7.816          net: u_engine/mult3_syn_20,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/mult3_syn_354.b[0]
+ADDER               x014y043z2          0.836    f     8.652       4  pin: u_engine/mult3_syn_354.fco
+net (fo=1)                              0.000          8.652          net: u_engine/mult3_syn_326,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/mult3_syn_355.fci
+ADDER               x014y043z3          0.132    f     8.784          pin: u_engine/mult3_syn_355.fco
+net (fo=1)                              0.000          8.784          net: u_engine/mult3_syn_330,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/mult3_syn_356.fci
+ADDER               x014y044z2          0.132    f     8.916          pin: u_engine/mult3_syn_356.fco
+net (fo=1)                              0.000          8.916          net: u_engine/mult3_syn_334,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/mult3_syn_357.fci
+ADDER               x014y044z3          0.132    f     9.048          pin: u_engine/mult3_syn_357.fco
+net (fo=1)                              0.000          9.048          net: u_engine/mult3_syn_338,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/mult3_syn_358.fci
+ADDER               x014y045z2          0.132    f     9.180          pin: u_engine/mult3_syn_358.fco
+net (fo=1)                              0.000          9.180          net: u_engine/mult3_syn_342,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/mult3_syn_359.fci
+ADDER               x014y045z3          0.198    r     9.378       5  pin: u_engine/mult3_syn_359.f[0]
+net (fo=3)                              0.594          9.972          net: u_engine/mult3_syn_119[19],  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/gap_acc[0]_b13[6]_syn_85.c[1]
+LUT5                x014y047z3          0.348    f    10.320       6  pin: u_engine/gap_acc[0]_b13[6]_syn_85.f[1]
+net (fo=2)                              0.591         10.911          net: u_engine/gap_acc[0]_b13[6]_syn_41,  NOFILE(0)
+                                                                      pin: u_engine/gap_acc[0]_b13[6]_syn_85.a[0]
+LUT5                x014y047z3          0.424    f    11.335       7  pin: u_engine/gap_acc[0]_b13[6]_syn_85.f[0]
+net (fo=3)                              0.819         12.154          net: u_engine/right_shift2_syn_220,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/right_shift2_syn_961.d[1]
+LUT4                x009y044z2          0.262    r    12.416       8  pin: u_engine/right_shift2_syn_961.f[1]
+net (fo=5)                              0.379         12.795          net: u_engine/right_shift2_syn_625,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/right_shift2_syn_958.b[0]
+LUT4                x007y044z2          0.431    f    13.226       9  pin: u_engine/right_shift2_syn_958.f[0]
+net (fo=1)                              0.858         14.084          net: u_engine/right_shift2_syn_633,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/right_shift2_syn_932.c[1]
+LUT3                x010y039z2          0.348    f    14.432      10  pin: u_engine/right_shift2_syn_932.f[1]
+net (fo=2)                              0.689         15.121          net: u_engine/right_shift2_syn_256,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/lt6_syn_167.a[0]
+ADDER               x006y041z1          0.706    f    15.827      11  pin: u_engine/lt6_syn_167.fco
+net (fo=1)                              0.000         15.827          net: u_engine/lt6_syn_25,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_170.fci
+ADDER               x006y042z0          0.073    f    15.900          pin: u_engine/lt6_syn_170.fco
+net (fo=1)                              0.000         15.900          net: u_engine/lt6_syn_29,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_173.fci
+ADDER               x006y042z1          0.073    f    15.973          pin: u_engine/lt6_syn_173.fco
+net (fo=1)                              0.000         15.973          net: u_engine/lt6_syn_33,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_176.fci
+ADDER               x006y043z0          0.073    f    16.046          pin: u_engine/lt6_syn_176.fco
+net (fo=1)                              0.000         16.046          net: u_engine/lt6_syn_37,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_179.fci
+ADDER               x006y043z1          0.073    f    16.119          pin: u_engine/lt6_syn_179.fco
+net (fo=1)                              0.000         16.119          net: u_engine/lt6_syn_41,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_182.fci
+ADDER               x006y044z0          0.073    f    16.192          pin: u_engine/lt6_syn_182.fco
+net (fo=1)                              0.000         16.192          net: u_engine/lt6_syn_45,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_185.fci
+ADDER               x006y044z1          0.073    f    16.265          pin: u_engine/lt6_syn_185.fco
+net (fo=1)                              0.000         16.265          net: u_engine/lt6_syn_49,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_188.fci
+ADDER               x006y045z0          0.073    f    16.338          pin: u_engine/lt6_syn_188.fco
+net (fo=1)                              0.000         16.338          net: u_engine/lt6_syn_53,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_191.fci
+ADDER               x006y045z1          0.073    f    16.411          pin: u_engine/lt6_syn_191.fco
+net (fo=1)                              0.000         16.411          net: u_engine/lt6_syn_57,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_194.fci
+ADDER               x006y046z0          0.073    f    16.484          pin: u_engine/lt6_syn_194.fco
+net (fo=1)                              0.000         16.484          net: u_engine/lt6_syn_61,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_197.fci
+ADDER               x006y046z1          0.073    f    16.557          pin: u_engine/lt6_syn_197.fco
+net (fo=1)                              0.000         16.557          net: u_engine/lt6_syn_65,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_200.fci
+ADDER               x006y047z0          0.073    f    16.630          pin: u_engine/lt6_syn_200.fco
+net (fo=1)                              0.000         16.630          net: u_engine/lt6_syn_69,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_203.fci
+ADDER               x006y047z1          0.073    f    16.703          pin: u_engine/lt6_syn_203.fco
+net (fo=1)                              0.000         16.703          net: u_engine/lt6_syn_73,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_206.fci
+ADDER               x006y048z0          0.073    f    16.776          pin: u_engine/lt6_syn_206.fco
+net (fo=1)                              0.000         16.776          net: u_engine/lt6_syn_77,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_209.fci
+ADDER               x006y048z1          0.073    f    16.849          pin: u_engine/lt6_syn_209.fco
+net (fo=1)                              0.000         16.849          net: u_engine/lt6_syn_81,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_212.fci
+ADDER               x006y049z0          0.073    f    16.922          pin: u_engine/lt6_syn_212.fco
+net (fo=1)                              0.000         16.922          net: u_engine/lt6_syn_85,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_215.fci
+ADDER               x006y049z1          0.073    f    16.995          pin: u_engine/lt6_syn_215.fco
+net (fo=1)                              0.000         16.995          net: u_engine/lt6_syn_89,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_218.fci
+ADDER               x006y050z0          0.073    f    17.068          pin: u_engine/lt6_syn_218.fco
+net (fo=1)                              0.000         17.068          net: u_engine/lt6_syn_93,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_221.fci
+ADDER               x006y050z1          0.073    f    17.141          pin: u_engine/lt6_syn_221.fco
+net (fo=1)                              0.000         17.141          net: u_engine/lt6_syn_97,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_224.fci
+ADDER               x006y051z0          0.355    f    17.496      12  pin: u_engine/lt6_syn_224.f[1]
+net (fo=9)                              0.507         18.003          net: u_engine/gap_acc[0]_b13_n,  NOFILE(0)
+                                                                      pin: u_engine/co_base_reg[1]_syn_31.b[1]
+LUT3                x006y050z3          0.431    f    18.434      13  pin: u_engine/co_base_reg[1]_syn_31.f[1]
+net (fo=1)                              0.657         19.091          net: u_engine/gap_acc[0]_b13[4],  NOFILE(0)
+                                                                      pin: u_engine/add8_syn_189.e[0]
+ADDER               x001y049z3          0.781    f    19.872      14  pin: u_engine/add8_syn_189.fco
+net (fo=1)                              0.000         19.872          net: u_engine/add8_syn_162,  ../rtl/scg_mac_array_v7.v(930)
+                                                                      pin: u_engine/add8_syn_190.fci
+ADDER               x001y050z2          0.132    f    20.004          pin: u_engine/add8_syn_190.fco
+net (fo=1)                              0.000         20.004          net: u_engine/add8_syn_166,  ../rtl/scg_mac_array_v7.v(930)
+                                                                      pin: u_engine/add8_syn_191.fci
+ADDER               x001y050z3          0.132    f    20.136          pin: u_engine/add8_syn_191.fco
+net (fo=1)                              0.000         20.136          net: u_engine/add8_syn_170,  ../rtl/scg_mac_array_v7.v(930)
+                                                                      pin: u_engine/add8_syn_192.fci
+ADDER               x001y051z2          0.132    f    20.268          pin: u_engine/add8_syn_192.fco
+net (fo=1)                              0.000         20.268          net: u_engine/add8_syn_174,  ../rtl/scg_mac_array_v7.v(930)
+                                                                      pin: u_engine/add8_syn_193.fci
+ADDER               x001y051z3          0.387    f    20.655      15  pin: u_engine/add8_syn_193.fx[0]
+net (fo=1)                              0.506         21.161          net: u_engine/gap_acc[0]_b9[20],  NOFILE(0)
+                                                                      pin: u_engine/gap_acc_reg[84]_syn_4.d[1]
+LUT2                x006y051z3          0.262    r    21.423      16  pin: u_engine/gap_acc_reg[84]_syn_4.f[1]
+net (fo=2)                              0.920         22.343          net: u_engine/mux50_syn_1808,  ../rtl/scg_mac_array_v7.v(886)
+                                                                      pin: u_engine/gap_acc_reg[20]_syn_3.mi[0]
+reg                 x007y054z3          0.143    r    22.486          net: u_engine/gap_acc[2][20],  ../rtl/scg_mac_array_v7.v(825)
+--------------------------------------------------------------------  ---------------
+Arrival                                               22.486               
+
+capture edge                           20.000    r    20.000               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.116         19.884               
+clock uncertainty                      -0.100         19.784               
+clock pessimism                         0.000         19.784               
+--------------------------------------------------------------------  ---------------
+Required                                              19.784               
+--------------------------------------------------------------------  ---------------
+Slack                                                 -2.702               
+
+Slack               : -2.689ns
+Begin Point         : u_engine/right_shift2_syn_1032.clk (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+End Point           : u_engine/gap_acc_reg[59]_syn_3.mi[0] (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+Check Type          : setup
+Process             : slow
+Budget              : 20.000ns { DeriveClock rising@20.000ns - DeriveClock rising@0.000ns }
+Data Path Delay     : 22.473ns (cell 13.024ns (57%), net 9.449ns (43%))
+Clock Skew          : 0.000ns
+Logic Level         : 16 ( ADDER=6  LUT5=3  LUT3=3  LUT4=2  MULT18=1  LUT2=1 )
+Max Fanout          : 65
+Clock Uncertainty   : 0.100ns (sdc uncertainty: 0.000ns, default uncertainty: 0.100ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+clk2q               x012y038z3          0.146    r     0.146          pin: u_engine/right_shift2_syn_1032.q[0]
+net (fo=65)                             1.035          1.181          net: u_engine/co_base[4]_dup_10,  ../rtl/scg_mac_array_v7.v(820)
+                                                                      pin: u_engine/mux20_syn_218.e[0]
+LUT5                x013y044z3          0.527    r     1.708       1  pin: u_engine/mux20_syn_218.fx[0]
+net (fo=1)                              0.591          2.299          net: u_engine/mux20_syn_36,  ../rtl/scg_mac_array_v7.v(348)
+                                                                      pin: u_engine/a_raddr_o_reg[2]_syn_415.b[0]
+LUT3                x015y044z3          0.431    f     2.730       2  pin: u_engine/a_raddr_o_reg[2]_syn_415.f[0]
+net (fo=2)                              0.920          3.650          net: u_engine/gap_acc[0]_b19[1],  NOFILE(0)
+                                                                      pin: u_engine/mult3_syn_116.a[1]
+MULT18              x016y036            3.563    f     7.213       3  pin: u_engine/mult3_syn_116.p[18]
+net (fo=1)                              0.603          7.816          net: u_engine/mult3_syn_20,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/mult3_syn_354.b[0]
+ADDER               x014y043z2          0.836    f     8.652       4  pin: u_engine/mult3_syn_354.fco
+net (fo=1)                              0.000          8.652          net: u_engine/mult3_syn_326,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/mult3_syn_355.fci
+ADDER               x014y043z3          0.132    f     8.784          pin: u_engine/mult3_syn_355.fco
+net (fo=1)                              0.000          8.784          net: u_engine/mult3_syn_330,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/mult3_syn_356.fci
+ADDER               x014y044z2          0.132    f     8.916          pin: u_engine/mult3_syn_356.fco
+net (fo=1)                              0.000          8.916          net: u_engine/mult3_syn_334,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/mult3_syn_357.fci
+ADDER               x014y044z3          0.132    f     9.048          pin: u_engine/mult3_syn_357.fco
+net (fo=1)                              0.000          9.048          net: u_engine/mult3_syn_338,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/mult3_syn_358.fci
+ADDER               x014y045z2          0.132    f     9.180          pin: u_engine/mult3_syn_358.fco
+net (fo=1)                              0.000          9.180          net: u_engine/mult3_syn_342,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/mult3_syn_359.fci
+ADDER               x014y045z3          0.198    r     9.378       5  pin: u_engine/mult3_syn_359.f[0]
+net (fo=3)                              0.594          9.972          net: u_engine/mult3_syn_119[19],  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/gap_acc[0]_b13[6]_syn_85.c[1]
+LUT5                x014y047z3          0.348    f    10.320       6  pin: u_engine/gap_acc[0]_b13[6]_syn_85.f[1]
+net (fo=2)                              0.591         10.911          net: u_engine/gap_acc[0]_b13[6]_syn_41,  NOFILE(0)
+                                                                      pin: u_engine/gap_acc[0]_b13[6]_syn_85.a[0]
+LUT5                x014y047z3          0.424    f    11.335       7  pin: u_engine/gap_acc[0]_b13[6]_syn_85.f[0]
+net (fo=3)                              0.819         12.154          net: u_engine/right_shift2_syn_220,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/right_shift2_syn_961.d[1]
+LUT4                x009y044z2          0.262    r    12.416       8  pin: u_engine/right_shift2_syn_961.f[1]
+net (fo=5)                              0.379         12.795          net: u_engine/right_shift2_syn_625,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/right_shift2_syn_958.b[0]
+LUT4                x007y044z2          0.431    f    13.226       9  pin: u_engine/right_shift2_syn_958.f[0]
+net (fo=1)                              0.858         14.084          net: u_engine/right_shift2_syn_633,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/right_shift2_syn_932.c[1]
+LUT3                x010y039z2          0.348    f    14.432      10  pin: u_engine/right_shift2_syn_932.f[1]
+net (fo=2)                              0.689         15.121          net: u_engine/right_shift2_syn_256,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/lt6_syn_167.a[0]
+ADDER               x006y041z1          0.706    f    15.827      11  pin: u_engine/lt6_syn_167.fco
+net (fo=1)                              0.000         15.827          net: u_engine/lt6_syn_25,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_170.fci
+ADDER               x006y042z0          0.073    f    15.900          pin: u_engine/lt6_syn_170.fco
+net (fo=1)                              0.000         15.900          net: u_engine/lt6_syn_29,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_173.fci
+ADDER               x006y042z1          0.073    f    15.973          pin: u_engine/lt6_syn_173.fco
+net (fo=1)                              0.000         15.973          net: u_engine/lt6_syn_33,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_176.fci
+ADDER               x006y043z0          0.073    f    16.046          pin: u_engine/lt6_syn_176.fco
+net (fo=1)                              0.000         16.046          net: u_engine/lt6_syn_37,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_179.fci
+ADDER               x006y043z1          0.073    f    16.119          pin: u_engine/lt6_syn_179.fco
+net (fo=1)                              0.000         16.119          net: u_engine/lt6_syn_41,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_182.fci
+ADDER               x006y044z0          0.073    f    16.192          pin: u_engine/lt6_syn_182.fco
+net (fo=1)                              0.000         16.192          net: u_engine/lt6_syn_45,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_185.fci
+ADDER               x006y044z1          0.073    f    16.265          pin: u_engine/lt6_syn_185.fco
+net (fo=1)                              0.000         16.265          net: u_engine/lt6_syn_49,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_188.fci
+ADDER               x006y045z0          0.073    f    16.338          pin: u_engine/lt6_syn_188.fco
+net (fo=1)                              0.000         16.338          net: u_engine/lt6_syn_53,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_191.fci
+ADDER               x006y045z1          0.073    f    16.411          pin: u_engine/lt6_syn_191.fco
+net (fo=1)                              0.000         16.411          net: u_engine/lt6_syn_57,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_194.fci
+ADDER               x006y046z0          0.073    f    16.484          pin: u_engine/lt6_syn_194.fco
+net (fo=1)                              0.000         16.484          net: u_engine/lt6_syn_61,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_197.fci
+ADDER               x006y046z1          0.073    f    16.557          pin: u_engine/lt6_syn_197.fco
+net (fo=1)                              0.000         16.557          net: u_engine/lt6_syn_65,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_200.fci
+ADDER               x006y047z0          0.073    f    16.630          pin: u_engine/lt6_syn_200.fco
+net (fo=1)                              0.000         16.630          net: u_engine/lt6_syn_69,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_203.fci
+ADDER               x006y047z1          0.073    f    16.703          pin: u_engine/lt6_syn_203.fco
+net (fo=1)                              0.000         16.703          net: u_engine/lt6_syn_73,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_206.fci
+ADDER               x006y048z0          0.073    f    16.776          pin: u_engine/lt6_syn_206.fco
+net (fo=1)                              0.000         16.776          net: u_engine/lt6_syn_77,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_209.fci
+ADDER               x006y048z1          0.073    f    16.849          pin: u_engine/lt6_syn_209.fco
+net (fo=1)                              0.000         16.849          net: u_engine/lt6_syn_81,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_212.fci
+ADDER               x006y049z0          0.073    f    16.922          pin: u_engine/lt6_syn_212.fco
+net (fo=1)                              0.000         16.922          net: u_engine/lt6_syn_85,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_215.fci
+ADDER               x006y049z1          0.073    f    16.995          pin: u_engine/lt6_syn_215.fco
+net (fo=1)                              0.000         16.995          net: u_engine/lt6_syn_89,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_218.fci
+ADDER               x006y050z0          0.073    f    17.068          pin: u_engine/lt6_syn_218.fco
+net (fo=1)                              0.000         17.068          net: u_engine/lt6_syn_93,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_221.fci
+ADDER               x006y050z1          0.073    f    17.141          pin: u_engine/lt6_syn_221.fco
+net (fo=1)                              0.000         17.141          net: u_engine/lt6_syn_97,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_224.fci
+ADDER               x006y051z0          0.355    f    17.496      12  pin: u_engine/lt6_syn_224.f[1]
+net (fo=9)                              0.507         18.003          net: u_engine/gap_acc[0]_b13_n,  NOFILE(0)
+                                                                      pin: u_engine/co_base_reg[1]_syn_31.b[1]
+LUT3                x006y050z3          0.431    f    18.434      13  pin: u_engine/co_base_reg[1]_syn_31.f[1]
+net (fo=1)                              0.657         19.091          net: u_engine/gap_acc[0]_b13[4],  NOFILE(0)
+                                                                      pin: u_engine/add8_syn_189.e[0]
+ADDER               x001y049z3          0.781    f    19.872      14  pin: u_engine/add8_syn_189.fco
+net (fo=1)                              0.000         19.872          net: u_engine/add8_syn_162,  ../rtl/scg_mac_array_v7.v(930)
+                                                                      pin: u_engine/add8_syn_190.fci
+ADDER               x001y050z2          0.132    f    20.004          pin: u_engine/add8_syn_190.fco
+net (fo=1)                              0.000         20.004          net: u_engine/add8_syn_166,  ../rtl/scg_mac_array_v7.v(930)
+                                                                      pin: u_engine/add8_syn_191.fci
+ADDER               x001y050z3          0.132    f    20.136          pin: u_engine/add8_syn_191.fco
+net (fo=1)                              0.000         20.136          net: u_engine/add8_syn_170,  ../rtl/scg_mac_array_v7.v(930)
+                                                                      pin: u_engine/add8_syn_192.fci
+ADDER               x001y051z2          0.132    f    20.268          pin: u_engine/add8_syn_192.fco
+net (fo=1)                              0.000         20.268          net: u_engine/add8_syn_174,  ../rtl/scg_mac_array_v7.v(930)
+                                                                      pin: u_engine/add8_syn_193.fci
+ADDER               x001y051z3          0.132    f    20.400          pin: u_engine/add8_syn_193.fco
+net (fo=1)                              0.000         20.400          net: u_engine/add8_syn_178,  ../rtl/scg_mac_array_v7.v(930)
+                                                                      pin: u_engine/add8_syn_194.fci
+ADDER               x001y052z2          0.132    f    20.532          pin: u_engine/add8_syn_194.fco
+net (fo=1)                              0.000         20.532          net: u_engine/add8_syn_182,  ../rtl/scg_mac_array_v7.v(930)
+                                                                      pin: u_engine/add8_syn_195.fci
+ADDER               x001y052z3          0.132    f    20.664          pin: u_engine/add8_syn_195.fco
+net (fo=1)                              0.000         20.664          net: u_engine/add8_syn_186,  ../rtl/scg_mac_array_v7.v(930)
+                                                                      pin: u_engine/add8_syn_196.fci
+ADDER               x001y053z2          0.198    r    20.862      15  pin: u_engine/add8_syn_196.f[0]
+net (fo=1)                              0.612         21.474          net: u_engine/gap_acc[0]_b9[31],  NOFILE(0)
+                                                                      pin: u_engine/gap_acc_reg[91]_syn_4.d[0]
+LUT2                x001y058z3          0.262    r    21.736      16  pin: u_engine/gap_acc_reg[91]_syn_4.f[0]
+net (fo=2)                              0.594         22.330          net: u_engine/mux50_syn_2622,  ../rtl/scg_mac_array_v7.v(886)
+                                                                      pin: u_engine/gap_acc_reg[59]_syn_3.mi[0]
+reg                 x001y059z3          0.143    r    22.473          net: u_engine/gap_acc[1][31],  ../rtl/scg_mac_array_v7.v(825)
+--------------------------------------------------------------------  ---------------
+Arrival                                               22.473               
+
+capture edge                           20.000    r    20.000               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.116         19.884               
+clock uncertainty                      -0.100         19.784               
+clock pessimism                         0.000         19.784               
+--------------------------------------------------------------------  ---------------
+Required                                              19.784               
+--------------------------------------------------------------------  ---------------
+Slack                                                 -2.689               
+
+Slack               : -2.683ns
+Begin Point         : u_engine/right_shift2_syn_1032.clk (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+End Point           : u_engine/gap_acc_reg[4]_syn_4.mi[0] (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+Check Type          : setup
+Process             : slow
+Budget              : 20.000ns { DeriveClock rising@20.000ns - DeriveClock rising@0.000ns }
+Data Path Delay     : 22.467ns (cell 12.166ns (54%), net 10.301ns (46%))
+Clock Skew          : 0.000ns
+Logic Level         : 15 ( ADDER=5  LUT5=3  LUT3=3  LUT4=2  MULT18=1  LUT2=1 )
+Max Fanout          : 65
+Clock Uncertainty   : 0.100ns (sdc uncertainty: 0.000ns, default uncertainty: 0.100ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+clk2q               x012y038z3          0.146    r     0.146          pin: u_engine/right_shift2_syn_1032.q[0]
+net (fo=65)                             1.035          1.181          net: u_engine/co_base[4]_dup_10,  ../rtl/scg_mac_array_v7.v(820)
+                                                                      pin: u_engine/mux20_syn_218.e[0]
+LUT5                x013y044z3          0.527    r     1.708       1  pin: u_engine/mux20_syn_218.fx[0]
+net (fo=1)                              0.591          2.299          net: u_engine/mux20_syn_36,  ../rtl/scg_mac_array_v7.v(348)
+                                                                      pin: u_engine/a_raddr_o_reg[2]_syn_415.b[0]
+LUT3                x015y044z3          0.431    f     2.730       2  pin: u_engine/a_raddr_o_reg[2]_syn_415.f[0]
+net (fo=2)                              0.920          3.650          net: u_engine/gap_acc[0]_b19[1],  NOFILE(0)
+                                                                      pin: u_engine/mult3_syn_116.a[1]
+MULT18              x016y036            3.563    f     7.213       3  pin: u_engine/mult3_syn_116.p[18]
+net (fo=1)                              0.603          7.816          net: u_engine/mult3_syn_20,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/mult3_syn_354.b[0]
+ADDER               x014y043z2          0.836    f     8.652       4  pin: u_engine/mult3_syn_354.fco
+net (fo=1)                              0.000          8.652          net: u_engine/mult3_syn_326,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/mult3_syn_355.fci
+ADDER               x014y043z3          0.132    f     8.784          pin: u_engine/mult3_syn_355.fco
+net (fo=1)                              0.000          8.784          net: u_engine/mult3_syn_330,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/mult3_syn_356.fci
+ADDER               x014y044z2          0.132    f     8.916          pin: u_engine/mult3_syn_356.fco
+net (fo=1)                              0.000          8.916          net: u_engine/mult3_syn_334,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/mult3_syn_357.fci
+ADDER               x014y044z3          0.132    f     9.048          pin: u_engine/mult3_syn_357.fco
+net (fo=1)                              0.000          9.048          net: u_engine/mult3_syn_338,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/mult3_syn_358.fci
+ADDER               x014y045z2          0.132    f     9.180          pin: u_engine/mult3_syn_358.fco
+net (fo=1)                              0.000          9.180          net: u_engine/mult3_syn_342,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/mult3_syn_359.fci
+ADDER               x014y045z3          0.198    r     9.378       5  pin: u_engine/mult3_syn_359.f[0]
+net (fo=3)                              0.594          9.972          net: u_engine/mult3_syn_119[19],  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/gap_acc[0]_b13[6]_syn_85.c[1]
+LUT5                x014y047z3          0.348    f    10.320       6  pin: u_engine/gap_acc[0]_b13[6]_syn_85.f[1]
+net (fo=2)                              0.591         10.911          net: u_engine/gap_acc[0]_b13[6]_syn_41,  NOFILE(0)
+                                                                      pin: u_engine/gap_acc[0]_b13[6]_syn_85.a[0]
+LUT5                x014y047z3          0.424    f    11.335       7  pin: u_engine/gap_acc[0]_b13[6]_syn_85.f[0]
+net (fo=3)                              0.819         12.154          net: u_engine/right_shift2_syn_220,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/right_shift2_syn_961.d[1]
+LUT4                x009y044z2          0.262    r    12.416       8  pin: u_engine/right_shift2_syn_961.f[1]
+net (fo=5)                              0.379         12.795          net: u_engine/right_shift2_syn_625,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/right_shift2_syn_958.b[0]
+LUT4                x007y044z2          0.431    f    13.226       9  pin: u_engine/right_shift2_syn_958.f[0]
+net (fo=1)                              0.858         14.084          net: u_engine/right_shift2_syn_633,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/right_shift2_syn_932.c[1]
+LUT3                x010y039z2          0.348    f    14.432      10  pin: u_engine/right_shift2_syn_932.f[1]
+net (fo=2)                              0.689         15.121          net: u_engine/right_shift2_syn_256,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/lt6_syn_167.a[0]
+ADDER               x006y041z1          0.706    f    15.827      11  pin: u_engine/lt6_syn_167.fco
+net (fo=1)                              0.000         15.827          net: u_engine/lt6_syn_25,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_170.fci
+ADDER               x006y042z0          0.073    f    15.900          pin: u_engine/lt6_syn_170.fco
+net (fo=1)                              0.000         15.900          net: u_engine/lt6_syn_29,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_173.fci
+ADDER               x006y042z1          0.073    f    15.973          pin: u_engine/lt6_syn_173.fco
+net (fo=1)                              0.000         15.973          net: u_engine/lt6_syn_33,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_176.fci
+ADDER               x006y043z0          0.073    f    16.046          pin: u_engine/lt6_syn_176.fco
+net (fo=1)                              0.000         16.046          net: u_engine/lt6_syn_37,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_179.fci
+ADDER               x006y043z1          0.073    f    16.119          pin: u_engine/lt6_syn_179.fco
+net (fo=1)                              0.000         16.119          net: u_engine/lt6_syn_41,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_182.fci
+ADDER               x006y044z0          0.073    f    16.192          pin: u_engine/lt6_syn_182.fco
+net (fo=1)                              0.000         16.192          net: u_engine/lt6_syn_45,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_185.fci
+ADDER               x006y044z1          0.073    f    16.265          pin: u_engine/lt6_syn_185.fco
+net (fo=1)                              0.000         16.265          net: u_engine/lt6_syn_49,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_188.fci
+ADDER               x006y045z0          0.073    f    16.338          pin: u_engine/lt6_syn_188.fco
+net (fo=1)                              0.000         16.338          net: u_engine/lt6_syn_53,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_191.fci
+ADDER               x006y045z1          0.073    f    16.411          pin: u_engine/lt6_syn_191.fco
+net (fo=1)                              0.000         16.411          net: u_engine/lt6_syn_57,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_194.fci
+ADDER               x006y046z0          0.073    f    16.484          pin: u_engine/lt6_syn_194.fco
+net (fo=1)                              0.000         16.484          net: u_engine/lt6_syn_61,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_197.fci
+ADDER               x006y046z1          0.073    f    16.557          pin: u_engine/lt6_syn_197.fco
+net (fo=1)                              0.000         16.557          net: u_engine/lt6_syn_65,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_200.fci
+ADDER               x006y047z0          0.073    f    16.630          pin: u_engine/lt6_syn_200.fco
+net (fo=1)                              0.000         16.630          net: u_engine/lt6_syn_69,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_203.fci
+ADDER               x006y047z1          0.073    f    16.703          pin: u_engine/lt6_syn_203.fco
+net (fo=1)                              0.000         16.703          net: u_engine/lt6_syn_73,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_206.fci
+ADDER               x006y048z0          0.073    f    16.776          pin: u_engine/lt6_syn_206.fco
+net (fo=1)                              0.000         16.776          net: u_engine/lt6_syn_77,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_209.fci
+ADDER               x006y048z1          0.073    f    16.849          pin: u_engine/lt6_syn_209.fco
+net (fo=1)                              0.000         16.849          net: u_engine/lt6_syn_81,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_212.fci
+ADDER               x006y049z0          0.073    f    16.922          pin: u_engine/lt6_syn_212.fco
+net (fo=1)                              0.000         16.922          net: u_engine/lt6_syn_85,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_215.fci
+ADDER               x006y049z1          0.073    f    16.995          pin: u_engine/lt6_syn_215.fco
+net (fo=1)                              0.000         16.995          net: u_engine/lt6_syn_89,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_218.fci
+ADDER               x006y050z0          0.073    f    17.068          pin: u_engine/lt6_syn_218.fco
+net (fo=1)                              0.000         17.068          net: u_engine/lt6_syn_93,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_221.fci
+ADDER               x006y050z1          0.073    f    17.141          pin: u_engine/lt6_syn_221.fco
+net (fo=1)                              0.000         17.141          net: u_engine/lt6_syn_97,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_224.fci
+ADDER               x006y051z0          0.355    f    17.496      12  pin: u_engine/lt6_syn_224.f[1]
+net (fo=9)                              0.507         18.003          net: u_engine/gap_acc[0]_b13_n,  NOFILE(0)
+                                                                      pin: u_engine/co_base_reg[1]_syn_31.b[0]
+LUT3                x006y050z3          0.431    f    18.434      13  pin: u_engine/co_base_reg[1]_syn_31.f[0]
+net (fo=1)                              0.649         19.083          net: u_engine/gap_acc[0]_b13[3],  NOFILE(0)
+                                                                      pin: u_engine/add8_syn_189.d[0]
+ADDER               x001y049z3          0.913    r    19.996      14  pin: u_engine/add8_syn_189.f[1]
+net (fo=1)                              0.895         20.891          net: u_engine/gap_acc[0]_b9[5],  NOFILE(0)
+                                                                      pin: u_engine/gap_acc_reg[69]_syn_4.d[1]
+LUT2                x007y038z3          0.262    r    21.153      15  pin: u_engine/gap_acc_reg[69]_syn_4.f[1]
+net (fo=2)                              1.171         22.324          net: u_engine/mux50_syn_698,  ../rtl/scg_mac_array_v7.v(886)
+                                                                      pin: u_engine/gap_acc_reg[4]_syn_4.mi[0]
+reg                 x005y050z2          0.143    r    22.467          net: u_engine/gap_acc[2][5],  ../rtl/scg_mac_array_v7.v(825)
+--------------------------------------------------------------------  ---------------
+Arrival                                               22.467               
+
+capture edge                           20.000    r    20.000               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.116         19.884               
+clock uncertainty                      -0.100         19.784               
+clock pessimism                         0.000         19.784               
+--------------------------------------------------------------------  ---------------
+Required                                              19.784               
+--------------------------------------------------------------------  ---------------
+Slack                                                 -2.683               
+
+Slack               : -2.680ns
+Begin Point         : a_dout_b[5]_syn_889.clk (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+End Point           : u_engine/a_wdata_o_reg[0]_syn_40.mi[0] (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+Check Type          : setup
+Process             : slow
+Budget              : 20.000ns { DeriveClock rising@20.000ns - DeriveClock rising@0.000ns }
+Data Path Delay     : 22.464ns (cell 11.677ns (51%), net 10.787ns (49%))
+Clock Skew          : 0.000ns
+Logic Level         : 15 ( LUT5=4  ADDER=4  LUT4=3  LUT3=3  MULT18=1 )
+Max Fanout          : 55
+Clock Uncertainty   : 0.100ns (sdc uncertainty: 0.000ns, default uncertainty: 0.100ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+clk2q               x010y033z3          0.146    r     0.146          pin: a_dout_b[5]_syn_889.q[0]
+net (fo=55)                             0.723          0.869          net: u_engine/li_o[0],  ../rtl/scg_mac_array_v7.v(26)
+                                                                      pin: u_engine/right_shift2_syn_932.b[0]
+LUT3                x010y039z2          0.431    f     1.300       1  pin: u_engine/right_shift2_syn_932.f[0]
+net (fo=55)                             0.819          2.119          net: u_engine/add3_syn_dup_25,  ../rtl/scg_mac_array_v7.v(917)
+                                                                      pin: u_engine/mux13_syn_257.mi[0]
+LUT5                x005y037z3          0.281    f     2.400       2  pin: u_engine/mux13_syn_257.fx[0]
+net (fo=2)                              0.607          3.007          net: u_engine/mux13_syn_29,  ../rtl/scg_mac_array_v7.v(348)
+                                                                      pin: u_engine/mux13_syn_376.b[1]
+LUT5                x004y037z3          0.664    r     3.671       3  pin: u_engine/mux13_syn_376.fx[0]
+net (fo=2)                              1.078          4.749          net: u_engine/a_wdata_o_b10[2],  NOFILE(0)
+                                                                      pin: u_engine/mult1_syn_117.a[2]
+MULT18              x016y027            3.563    f     8.312       4  pin: u_engine/mult1_syn_117.p[2]
+net (fo=1)                              0.603          8.915          net: u_engine/mult1_syn_39,  ../rtl/scg_mac_array_v7.v(926)
+                                                                      pin: u_engine/mult1_syn_330.e[1]
+ADDER               x014y029z2          0.715    f     9.630       5  pin: u_engine/mult1_syn_330.fco
+net (fo=1)                              0.000          9.630          net: u_engine/mult1_syn_302,  ../rtl/scg_mac_array_v7.v(926)
+                                                                      pin: u_engine/mult1_syn_331.fci
+ADDER               x014y029z3          0.132    f     9.762          pin: u_engine/mult1_syn_331.fco
+net (fo=1)                              0.000          9.762          net: u_engine/mult1_syn_306,  ../rtl/scg_mac_array_v7.v(926)
+                                                                      pin: u_engine/mult1_syn_332.fci
+ADDER               x014y030z2          0.132    f     9.894          pin: u_engine/mult1_syn_332.fco
+net (fo=1)                              0.000          9.894          net: u_engine/mult1_syn_310,  ../rtl/scg_mac_array_v7.v(926)
+                                                                      pin: u_engine/mult1_syn_333.fci
+ADDER               x014y030z3          0.132    f    10.026          pin: u_engine/mult1_syn_333.fco
+net (fo=1)                              0.000         10.026          net: u_engine/mult1_syn_314,  ../rtl/scg_mac_array_v7.v(926)
+                                                                      pin: u_engine/mult1_syn_334.fci
+ADDER               x014y031z2          0.132    f    10.158          pin: u_engine/mult1_syn_334.fco
+net (fo=1)                              0.000         10.158          net: u_engine/mult1_syn_318,  ../rtl/scg_mac_array_v7.v(926)
+                                                                      pin: u_engine/mult1_syn_335.fci
+ADDER               x014y031z3          0.132    f    10.290          pin: u_engine/mult1_syn_335.fco
+net (fo=1)                              0.000         10.290          net: u_engine/mult1_syn_322,  ../rtl/scg_mac_array_v7.v(926)
+                                                                      pin: u_engine/mult1_syn_336.fci
+ADDER               x014y032z2          0.264    r    10.554       6  pin: u_engine/mult1_syn_336.f[1]
+net (fo=4)                              0.606         11.160          net: u_engine/mult1_syn_119[25],  ../rtl/scg_mac_array_v7.v(926)
+                                                                      pin: u_engine/right_shift1_syn_1032.b[1]
+LUT4                x012y030z1          0.333    f    11.493       7  pin: u_engine/right_shift1_syn_1032.f[1]
+net (fo=1)                              0.901         12.394          net: u_engine/right_shift1_syn_664,  ../rtl/scg_mac_array_v7.v(926)
+                                                                      pin: u_engine/right_shift1_syn_1133.c[1]
+LUT4                x011y028z3          0.348    f    12.742       8  pin: u_engine/right_shift1_syn_1133.f[1]
+net (fo=12)                             0.760         13.502          net: u_engine/right_shift1_syn_666,  ../rtl/scg_mac_array_v7.v(926)
+                                                                      pin: u_engine/a_raddr_o_reg[3]_syn_348.b[1]
+LUT4                x005y026z2          0.431    f    13.933       9  pin: u_engine/a_raddr_o_reg[3]_syn_348.f[1]
+net (fo=1)                              0.309         14.242          net: u_engine/right_shift1_syn_668,  ../rtl/scg_mac_array_v7.v(926)
+                                                                      pin: u_engine/right_shift1_syn_980.c[1]
+LUT5                x005y027z2          0.348    f    14.590      10  pin: u_engine/right_shift1_syn_980.f[1]
+net (fo=2)                              0.603         15.193          net: u_engine/right_shift1_syn_284,  ../rtl/scg_mac_array_v7.v(926)
+                                                                      pin: u_engine/right_shift1_syn_943.b[0]
+LUT3                x003y029z3          0.431    f    15.624      11  pin: u_engine/right_shift1_syn_943.f[0]
+net (fo=3)                              0.625         16.249          net: u_engine/right_shift1_syn_286,  ../rtl/scg_mac_array_v7.v(926)
+                                                                      pin: u_engine/lt5_syn_170.a[1]
+ADDER               x003y033z0          0.627    f    16.876      12  pin: u_engine/lt5_syn_170.fco
+net (fo=1)                              0.000         16.876          net: u_engine/lt5_syn_29,  ../rtl/scg_mac_array_v7.v(865)
+                                                                      pin: u_engine/lt5_syn_173.fci
+ADDER               x003y033z1          0.073    f    16.949          pin: u_engine/lt5_syn_173.fco
+net (fo=1)                              0.000         16.949          net: u_engine/lt5_syn_33,  ../rtl/scg_mac_array_v7.v(865)
+                                                                      pin: u_engine/lt5_syn_176.fci
+ADDER               x003y034z0          0.073    f    17.022          pin: u_engine/lt5_syn_176.fco
+net (fo=1)                              0.000         17.022          net: u_engine/lt5_syn_37,  ../rtl/scg_mac_array_v7.v(865)
+                                                                      pin: u_engine/lt5_syn_179.fci
+ADDER               x003y034z1          0.073    f    17.095          pin: u_engine/lt5_syn_179.fco
+net (fo=1)                              0.000         17.095          net: u_engine/lt5_syn_41,  ../rtl/scg_mac_array_v7.v(865)
+                                                                      pin: u_engine/lt5_syn_182.fci
+ADDER               x003y035z0          0.073    f    17.168          pin: u_engine/lt5_syn_182.fco
+net (fo=1)                              0.000         17.168          net: u_engine/lt5_syn_45,  ../rtl/scg_mac_array_v7.v(865)
+                                                                      pin: u_engine/lt5_syn_185.fci
+ADDER               x003y035z1          0.073    f    17.241          pin: u_engine/lt5_syn_185.fco
+net (fo=1)                              0.000         17.241          net: u_engine/lt5_syn_49,  ../rtl/scg_mac_array_v7.v(865)
+                                                                      pin: u_engine/lt5_syn_188.fci
+ADDER               x003y036z0          0.073    f    17.314          pin: u_engine/lt5_syn_188.fco
+net (fo=1)                              0.000         17.314          net: u_engine/lt5_syn_53,  ../rtl/scg_mac_array_v7.v(865)
+                                                                      pin: u_engine/lt5_syn_191.fci
+ADDER               x003y036z1          0.073    f    17.387          pin: u_engine/lt5_syn_191.fco
+net (fo=1)                              0.000         17.387          net: u_engine/lt5_syn_57,  ../rtl/scg_mac_array_v7.v(865)
+                                                                      pin: u_engine/lt5_syn_194.fci
+ADDER               x003y037z0          0.073    f    17.460          pin: u_engine/lt5_syn_194.fco
+net (fo=1)                              0.000         17.460          net: u_engine/lt5_syn_61,  ../rtl/scg_mac_array_v7.v(865)
+                                                                      pin: u_engine/lt5_syn_197.fci
+ADDER               x003y037z1          0.073    f    17.533          pin: u_engine/lt5_syn_197.fco
+net (fo=1)                              0.000         17.533          net: u_engine/lt5_syn_65,  ../rtl/scg_mac_array_v7.v(865)
+                                                                      pin: u_engine/lt5_syn_200.fci
+ADDER               x003y038z0          0.073    f    17.606          pin: u_engine/lt5_syn_200.fco
+net (fo=1)                              0.000         17.606          net: u_engine/lt5_syn_69,  ../rtl/scg_mac_array_v7.v(865)
+                                                                      pin: u_engine/lt5_syn_203.fci
+ADDER               x003y038z1          0.073    f    17.679          pin: u_engine/lt5_syn_203.fco
+net (fo=1)                              0.000         17.679          net: u_engine/lt5_syn_73,  ../rtl/scg_mac_array_v7.v(865)
+                                                                      pin: u_engine/lt5_syn_206.fci
+ADDER               x003y039z0          0.073    f    17.752          pin: u_engine/lt5_syn_206.fco
+net (fo=1)                              0.000         17.752          net: u_engine/lt5_syn_77,  ../rtl/scg_mac_array_v7.v(865)
+                                                                      pin: u_engine/lt5_syn_209.fci
+ADDER               x003y039z1          0.073    f    17.825          pin: u_engine/lt5_syn_209.fco
+net (fo=1)                              0.000         17.825          net: u_engine/lt5_syn_81,  ../rtl/scg_mac_array_v7.v(865)
+                                                                      pin: u_engine/lt5_syn_212.fci
+ADDER               x003y040z0          0.073    f    17.898          pin: u_engine/lt5_syn_212.fco
+net (fo=1)                              0.000         17.898          net: u_engine/lt5_syn_85,  ../rtl/scg_mac_array_v7.v(865)
+                                                                      pin: u_engine/lt5_syn_215.fci
+ADDER               x003y040z1          0.073    f    17.971          pin: u_engine/lt5_syn_215.fco
+net (fo=1)                              0.000         17.971          net: u_engine/lt5_syn_89,  ../rtl/scg_mac_array_v7.v(865)
+                                                                      pin: u_engine/lt5_syn_218.fci
+ADDER               x003y041z0          0.073    f    18.044          pin: u_engine/lt5_syn_218.fco
+net (fo=1)                              0.000         18.044          net: u_engine/lt5_syn_93,  ../rtl/scg_mac_array_v7.v(865)
+                                                                      pin: u_engine/lt5_syn_221.fci
+ADDER               x003y041z1          0.073    f    18.117          pin: u_engine/lt5_syn_221.fco
+net (fo=1)                              0.000         18.117          net: u_engine/lt5_syn_97,  ../rtl/scg_mac_array_v7.v(865)
+                                                                      pin: u_engine/lt5_syn_224.fci
+ADDER               x003y042z0          0.355    f    18.472      13  pin: u_engine/lt5_syn_224.f[1]
+net (fo=1)                              0.811         19.283          net: u_engine/a_wdata_o_b3_n,  NOFILE(0)
+                                                                      pin: u_engine/a_wdata_o_b1[6]_syn_187.c[1]
+LUT3                x002y032z2          0.348    f    19.631      14  pin: u_engine/a_wdata_o_b1[6]_syn_187.f[1]
+net (fo=7)                              0.499         20.130          net: u_engine/a_wdata_o_b1[6]_syn_83,  NOFILE(0)
+                                                                      pin: u_engine/a_wdata_o_reg[4]_syn_21.c[1]
+LUT5                x002y032z3          0.348    f    20.478      15  pin: u_engine/a_wdata_o_reg[4]_syn_21.f[1]
+net (fo=11)                             1.843         22.321          net: u_engine/a_wdata_o_b1[4],  NOFILE(0)
+                                                                      pin: u_engine/a_wdata_o_reg[0]_syn_40.mi[0]
+reg                 x031y027z2          0.143    r    22.464          net: u_engine/a_wdata_o[4]_dup_19,  ../rtl/scg_mac_array_v7.v(24)
+--------------------------------------------------------------------  ---------------
+Arrival                                               22.464               
+
+capture edge                           20.000    r    20.000               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.116         19.884               
+clock uncertainty                      -0.100         19.784               
+clock pessimism                         0.000         19.784               
+--------------------------------------------------------------------  ---------------
+Required                                              19.784               
+--------------------------------------------------------------------  ---------------
+Slack                                                 -2.680               
+
+Slack               : -2.636ns
+Begin Point         : u_engine/right_shift2_syn_1032.clk (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+End Point           : u_engine/gap_acc_reg[48]_syn_4.mi[0] (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+Check Type          : setup
+Process             : slow
+Budget              : 20.000ns { DeriveClock rising@20.000ns - DeriveClock rising@0.000ns }
+Data Path Delay     : 22.420ns (cell 12.562ns (56%), net 9.858ns (44%))
+Clock Skew          : 0.000ns
+Logic Level         : 16 ( ADDER=6  LUT5=3  LUT3=3  LUT4=2  MULT18=1  LUT2=1 )
+Max Fanout          : 65
+Clock Uncertainty   : 0.100ns (sdc uncertainty: 0.000ns, default uncertainty: 0.100ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+clk2q               x012y038z3          0.146    r     0.146          pin: u_engine/right_shift2_syn_1032.q[0]
+net (fo=65)                             1.035          1.181          net: u_engine/co_base[4]_dup_10,  ../rtl/scg_mac_array_v7.v(820)
+                                                                      pin: u_engine/mux20_syn_218.e[0]
+LUT5                x013y044z3          0.527    r     1.708       1  pin: u_engine/mux20_syn_218.fx[0]
+net (fo=1)                              0.591          2.299          net: u_engine/mux20_syn_36,  ../rtl/scg_mac_array_v7.v(348)
+                                                                      pin: u_engine/a_raddr_o_reg[2]_syn_415.b[0]
+LUT3                x015y044z3          0.431    f     2.730       2  pin: u_engine/a_raddr_o_reg[2]_syn_415.f[0]
+net (fo=2)                              0.920          3.650          net: u_engine/gap_acc[0]_b19[1],  NOFILE(0)
+                                                                      pin: u_engine/mult3_syn_116.a[1]
+MULT18              x016y036            3.563    f     7.213       3  pin: u_engine/mult3_syn_116.p[18]
+net (fo=1)                              0.603          7.816          net: u_engine/mult3_syn_20,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/mult3_syn_354.b[0]
+ADDER               x014y043z2          0.836    f     8.652       4  pin: u_engine/mult3_syn_354.fco
+net (fo=1)                              0.000          8.652          net: u_engine/mult3_syn_326,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/mult3_syn_355.fci
+ADDER               x014y043z3          0.132    f     8.784          pin: u_engine/mult3_syn_355.fco
+net (fo=1)                              0.000          8.784          net: u_engine/mult3_syn_330,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/mult3_syn_356.fci
+ADDER               x014y044z2          0.132    f     8.916          pin: u_engine/mult3_syn_356.fco
+net (fo=1)                              0.000          8.916          net: u_engine/mult3_syn_334,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/mult3_syn_357.fci
+ADDER               x014y044z3          0.132    f     9.048          pin: u_engine/mult3_syn_357.fco
+net (fo=1)                              0.000          9.048          net: u_engine/mult3_syn_338,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/mult3_syn_358.fci
+ADDER               x014y045z2          0.132    f     9.180          pin: u_engine/mult3_syn_358.fco
+net (fo=1)                              0.000          9.180          net: u_engine/mult3_syn_342,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/mult3_syn_359.fci
+ADDER               x014y045z3          0.198    r     9.378       5  pin: u_engine/mult3_syn_359.f[0]
+net (fo=3)                              0.594          9.972          net: u_engine/mult3_syn_119[19],  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/gap_acc[0]_b13[6]_syn_85.c[1]
+LUT5                x014y047z3          0.348    f    10.320       6  pin: u_engine/gap_acc[0]_b13[6]_syn_85.f[1]
+net (fo=2)                              0.591         10.911          net: u_engine/gap_acc[0]_b13[6]_syn_41,  NOFILE(0)
+                                                                      pin: u_engine/gap_acc[0]_b13[6]_syn_85.a[0]
+LUT5                x014y047z3          0.424    f    11.335       7  pin: u_engine/gap_acc[0]_b13[6]_syn_85.f[0]
+net (fo=3)                              0.819         12.154          net: u_engine/right_shift2_syn_220,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/right_shift2_syn_961.d[1]
+LUT4                x009y044z2          0.262    r    12.416       8  pin: u_engine/right_shift2_syn_961.f[1]
+net (fo=5)                              0.379         12.795          net: u_engine/right_shift2_syn_625,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/right_shift2_syn_958.b[0]
+LUT4                x007y044z2          0.431    f    13.226       9  pin: u_engine/right_shift2_syn_958.f[0]
+net (fo=1)                              0.858         14.084          net: u_engine/right_shift2_syn_633,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/right_shift2_syn_932.c[1]
+LUT3                x010y039z2          0.348    f    14.432      10  pin: u_engine/right_shift2_syn_932.f[1]
+net (fo=2)                              0.689         15.121          net: u_engine/right_shift2_syn_256,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/lt6_syn_167.a[0]
+ADDER               x006y041z1          0.706    f    15.827      11  pin: u_engine/lt6_syn_167.fco
+net (fo=1)                              0.000         15.827          net: u_engine/lt6_syn_25,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_170.fci
+ADDER               x006y042z0          0.073    f    15.900          pin: u_engine/lt6_syn_170.fco
+net (fo=1)                              0.000         15.900          net: u_engine/lt6_syn_29,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_173.fci
+ADDER               x006y042z1          0.073    f    15.973          pin: u_engine/lt6_syn_173.fco
+net (fo=1)                              0.000         15.973          net: u_engine/lt6_syn_33,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_176.fci
+ADDER               x006y043z0          0.073    f    16.046          pin: u_engine/lt6_syn_176.fco
+net (fo=1)                              0.000         16.046          net: u_engine/lt6_syn_37,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_179.fci
+ADDER               x006y043z1          0.073    f    16.119          pin: u_engine/lt6_syn_179.fco
+net (fo=1)                              0.000         16.119          net: u_engine/lt6_syn_41,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_182.fci
+ADDER               x006y044z0          0.073    f    16.192          pin: u_engine/lt6_syn_182.fco
+net (fo=1)                              0.000         16.192          net: u_engine/lt6_syn_45,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_185.fci
+ADDER               x006y044z1          0.073    f    16.265          pin: u_engine/lt6_syn_185.fco
+net (fo=1)                              0.000         16.265          net: u_engine/lt6_syn_49,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_188.fci
+ADDER               x006y045z0          0.073    f    16.338          pin: u_engine/lt6_syn_188.fco
+net (fo=1)                              0.000         16.338          net: u_engine/lt6_syn_53,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_191.fci
+ADDER               x006y045z1          0.073    f    16.411          pin: u_engine/lt6_syn_191.fco
+net (fo=1)                              0.000         16.411          net: u_engine/lt6_syn_57,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_194.fci
+ADDER               x006y046z0          0.073    f    16.484          pin: u_engine/lt6_syn_194.fco
+net (fo=1)                              0.000         16.484          net: u_engine/lt6_syn_61,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_197.fci
+ADDER               x006y046z1          0.073    f    16.557          pin: u_engine/lt6_syn_197.fco
+net (fo=1)                              0.000         16.557          net: u_engine/lt6_syn_65,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_200.fci
+ADDER               x006y047z0          0.073    f    16.630          pin: u_engine/lt6_syn_200.fco
+net (fo=1)                              0.000         16.630          net: u_engine/lt6_syn_69,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_203.fci
+ADDER               x006y047z1          0.073    f    16.703          pin: u_engine/lt6_syn_203.fco
+net (fo=1)                              0.000         16.703          net: u_engine/lt6_syn_73,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_206.fci
+ADDER               x006y048z0          0.073    f    16.776          pin: u_engine/lt6_syn_206.fco
+net (fo=1)                              0.000         16.776          net: u_engine/lt6_syn_77,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_209.fci
+ADDER               x006y048z1          0.073    f    16.849          pin: u_engine/lt6_syn_209.fco
+net (fo=1)                              0.000         16.849          net: u_engine/lt6_syn_81,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_212.fci
+ADDER               x006y049z0          0.073    f    16.922          pin: u_engine/lt6_syn_212.fco
+net (fo=1)                              0.000         16.922          net: u_engine/lt6_syn_85,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_215.fci
+ADDER               x006y049z1          0.073    f    16.995          pin: u_engine/lt6_syn_215.fco
+net (fo=1)                              0.000         16.995          net: u_engine/lt6_syn_89,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_218.fci
+ADDER               x006y050z0          0.073    f    17.068          pin: u_engine/lt6_syn_218.fco
+net (fo=1)                              0.000         17.068          net: u_engine/lt6_syn_93,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_221.fci
+ADDER               x006y050z1          0.073    f    17.141          pin: u_engine/lt6_syn_221.fco
+net (fo=1)                              0.000         17.141          net: u_engine/lt6_syn_97,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_224.fci
+ADDER               x006y051z0          0.355    f    17.496      12  pin: u_engine/lt6_syn_224.f[1]
+net (fo=9)                              0.507         18.003          net: u_engine/gap_acc[0]_b13_n,  NOFILE(0)
+                                                                      pin: u_engine/co_base_reg[1]_syn_31.b[1]
+LUT3                x006y050z3          0.431    f    18.434      13  pin: u_engine/co_base_reg[1]_syn_31.f[1]
+net (fo=1)                              0.657         19.091          net: u_engine/gap_acc[0]_b13[4],  NOFILE(0)
+                                                                      pin: u_engine/add8_syn_189.e[0]
+ADDER               x001y049z3          0.781    f    19.872      14  pin: u_engine/add8_syn_189.fco
+net (fo=1)                              0.000         19.872          net: u_engine/add8_syn_162,  ../rtl/scg_mac_array_v7.v(930)
+                                                                      pin: u_engine/add8_syn_190.fci
+ADDER               x001y050z2          0.132    f    20.004          pin: u_engine/add8_syn_190.fco
+net (fo=1)                              0.000         20.004          net: u_engine/add8_syn_166,  ../rtl/scg_mac_array_v7.v(930)
+                                                                      pin: u_engine/add8_syn_191.fci
+ADDER               x001y050z3          0.132    f    20.136          pin: u_engine/add8_syn_191.fco
+net (fo=1)                              0.000         20.136          net: u_engine/add8_syn_170,  ../rtl/scg_mac_array_v7.v(930)
+                                                                      pin: u_engine/add8_syn_192.fci
+ADDER               x001y051z2          0.264    r    20.400      15  pin: u_engine/add8_syn_192.f[1]
+net (fo=1)                              0.456         20.856          net: u_engine/gap_acc[0]_b9[17],  NOFILE(0)
+                                                                      pin: u_engine/gap_acc_reg[80]_syn_4.d[0]
+LUT2                x003y052z2          0.262    r    21.118      16  pin: u_engine/gap_acc_reg[80]_syn_4.f[0]
+net (fo=2)                              1.159         22.277          net: u_engine/mux50_syn_1586,  ../rtl/scg_mac_array_v7.v(886)
+                                                                      pin: u_engine/gap_acc_reg[48]_syn_4.mi[0]
+reg                 x009y048z2          0.143    r    22.420          net: u_engine/gap_acc[1][17],  ../rtl/scg_mac_array_v7.v(825)
+--------------------------------------------------------------------  ---------------
+Arrival                                               22.420               
+
+capture edge                           20.000    r    20.000               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.116         19.884               
+clock uncertainty                      -0.100         19.784               
+clock pessimism                         0.000         19.784               
+--------------------------------------------------------------------  ---------------
+Required                                              19.784               
+--------------------------------------------------------------------  ---------------
+Slack                                                 -2.636               
+
+Slack               : -2.630ns
+Begin Point         : a_dout_b[5]_syn_889.clk (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+End Point           : u_engine/a_wdata_o_reg[2]_syn_52.mi[1] (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+Check Type          : setup
+Process             : slow
+Budget              : 20.000ns { DeriveClock rising@20.000ns - DeriveClock rising@0.000ns }
+Data Path Delay     : 22.414ns (cell 11.677ns (52%), net 10.737ns (48%))
+Clock Skew          : 0.000ns
+Logic Level         : 15 ( LUT5=4  ADDER=4  LUT4=3  LUT3=3  MULT18=1 )
+Max Fanout          : 55
+Clock Uncertainty   : 0.100ns (sdc uncertainty: 0.000ns, default uncertainty: 0.100ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+clk2q               x010y033z3          0.146    r     0.146          pin: a_dout_b[5]_syn_889.q[0]
+net (fo=55)                             0.723          0.869          net: u_engine/li_o[0],  ../rtl/scg_mac_array_v7.v(26)
+                                                                      pin: u_engine/right_shift2_syn_932.b[0]
+LUT3                x010y039z2          0.431    f     1.300       1  pin: u_engine/right_shift2_syn_932.f[0]
+net (fo=55)                             0.819          2.119          net: u_engine/add3_syn_dup_25,  ../rtl/scg_mac_array_v7.v(917)
+                                                                      pin: u_engine/mux13_syn_257.mi[0]
+LUT5                x005y037z3          0.281    f     2.400       2  pin: u_engine/mux13_syn_257.fx[0]
+net (fo=2)                              0.607          3.007          net: u_engine/mux13_syn_29,  ../rtl/scg_mac_array_v7.v(348)
+                                                                      pin: u_engine/mux13_syn_376.b[1]
+LUT5                x004y037z3          0.664    r     3.671       3  pin: u_engine/mux13_syn_376.fx[0]
+net (fo=2)                              1.078          4.749          net: u_engine/a_wdata_o_b10[2],  NOFILE(0)
+                                                                      pin: u_engine/mult1_syn_117.a[2]
+MULT18              x016y027            3.563    f     8.312       4  pin: u_engine/mult1_syn_117.p[2]
+net (fo=1)                              0.603          8.915          net: u_engine/mult1_syn_39,  ../rtl/scg_mac_array_v7.v(926)
+                                                                      pin: u_engine/mult1_syn_330.e[1]
+ADDER               x014y029z2          0.715    f     9.630       5  pin: u_engine/mult1_syn_330.fco
+net (fo=1)                              0.000          9.630          net: u_engine/mult1_syn_302,  ../rtl/scg_mac_array_v7.v(926)
+                                                                      pin: u_engine/mult1_syn_331.fci
+ADDER               x014y029z3          0.132    f     9.762          pin: u_engine/mult1_syn_331.fco
+net (fo=1)                              0.000          9.762          net: u_engine/mult1_syn_306,  ../rtl/scg_mac_array_v7.v(926)
+                                                                      pin: u_engine/mult1_syn_332.fci
+ADDER               x014y030z2          0.132    f     9.894          pin: u_engine/mult1_syn_332.fco
+net (fo=1)                              0.000          9.894          net: u_engine/mult1_syn_310,  ../rtl/scg_mac_array_v7.v(926)
+                                                                      pin: u_engine/mult1_syn_333.fci
+ADDER               x014y030z3          0.132    f    10.026          pin: u_engine/mult1_syn_333.fco
+net (fo=1)                              0.000         10.026          net: u_engine/mult1_syn_314,  ../rtl/scg_mac_array_v7.v(926)
+                                                                      pin: u_engine/mult1_syn_334.fci
+ADDER               x014y031z2          0.132    f    10.158          pin: u_engine/mult1_syn_334.fco
+net (fo=1)                              0.000         10.158          net: u_engine/mult1_syn_318,  ../rtl/scg_mac_array_v7.v(926)
+                                                                      pin: u_engine/mult1_syn_335.fci
+ADDER               x014y031z3          0.132    f    10.290          pin: u_engine/mult1_syn_335.fco
+net (fo=1)                              0.000         10.290          net: u_engine/mult1_syn_322,  ../rtl/scg_mac_array_v7.v(926)
+                                                                      pin: u_engine/mult1_syn_336.fci
+ADDER               x014y032z2          0.264    r    10.554       6  pin: u_engine/mult1_syn_336.f[1]
+net (fo=4)                              0.606         11.160          net: u_engine/mult1_syn_119[25],  ../rtl/scg_mac_array_v7.v(926)
+                                                                      pin: u_engine/right_shift1_syn_1032.b[1]
+LUT4                x012y030z1          0.333    f    11.493       7  pin: u_engine/right_shift1_syn_1032.f[1]
+net (fo=1)                              0.901         12.394          net: u_engine/right_shift1_syn_664,  ../rtl/scg_mac_array_v7.v(926)
+                                                                      pin: u_engine/right_shift1_syn_1133.c[1]
+LUT4                x011y028z3          0.348    f    12.742       8  pin: u_engine/right_shift1_syn_1133.f[1]
+net (fo=12)                             0.760         13.502          net: u_engine/right_shift1_syn_666,  ../rtl/scg_mac_array_v7.v(926)
+                                                                      pin: u_engine/a_raddr_o_reg[3]_syn_348.b[1]
+LUT4                x005y026z2          0.431    f    13.933       9  pin: u_engine/a_raddr_o_reg[3]_syn_348.f[1]
+net (fo=1)                              0.309         14.242          net: u_engine/right_shift1_syn_668,  ../rtl/scg_mac_array_v7.v(926)
+                                                                      pin: u_engine/right_shift1_syn_980.c[1]
+LUT5                x005y027z2          0.348    f    14.590      10  pin: u_engine/right_shift1_syn_980.f[1]
+net (fo=2)                              0.603         15.193          net: u_engine/right_shift1_syn_284,  ../rtl/scg_mac_array_v7.v(926)
+                                                                      pin: u_engine/right_shift1_syn_943.b[0]
+LUT3                x003y029z3          0.431    f    15.624      11  pin: u_engine/right_shift1_syn_943.f[0]
+net (fo=3)                              0.625         16.249          net: u_engine/right_shift1_syn_286,  ../rtl/scg_mac_array_v7.v(926)
+                                                                      pin: u_engine/lt5_syn_170.a[1]
+ADDER               x003y033z0          0.627    f    16.876      12  pin: u_engine/lt5_syn_170.fco
+net (fo=1)                              0.000         16.876          net: u_engine/lt5_syn_29,  ../rtl/scg_mac_array_v7.v(865)
+                                                                      pin: u_engine/lt5_syn_173.fci
+ADDER               x003y033z1          0.073    f    16.949          pin: u_engine/lt5_syn_173.fco
+net (fo=1)                              0.000         16.949          net: u_engine/lt5_syn_33,  ../rtl/scg_mac_array_v7.v(865)
+                                                                      pin: u_engine/lt5_syn_176.fci
+ADDER               x003y034z0          0.073    f    17.022          pin: u_engine/lt5_syn_176.fco
+net (fo=1)                              0.000         17.022          net: u_engine/lt5_syn_37,  ../rtl/scg_mac_array_v7.v(865)
+                                                                      pin: u_engine/lt5_syn_179.fci
+ADDER               x003y034z1          0.073    f    17.095          pin: u_engine/lt5_syn_179.fco
+net (fo=1)                              0.000         17.095          net: u_engine/lt5_syn_41,  ../rtl/scg_mac_array_v7.v(865)
+                                                                      pin: u_engine/lt5_syn_182.fci
+ADDER               x003y035z0          0.073    f    17.168          pin: u_engine/lt5_syn_182.fco
+net (fo=1)                              0.000         17.168          net: u_engine/lt5_syn_45,  ../rtl/scg_mac_array_v7.v(865)
+                                                                      pin: u_engine/lt5_syn_185.fci
+ADDER               x003y035z1          0.073    f    17.241          pin: u_engine/lt5_syn_185.fco
+net (fo=1)                              0.000         17.241          net: u_engine/lt5_syn_49,  ../rtl/scg_mac_array_v7.v(865)
+                                                                      pin: u_engine/lt5_syn_188.fci
+ADDER               x003y036z0          0.073    f    17.314          pin: u_engine/lt5_syn_188.fco
+net (fo=1)                              0.000         17.314          net: u_engine/lt5_syn_53,  ../rtl/scg_mac_array_v7.v(865)
+                                                                      pin: u_engine/lt5_syn_191.fci
+ADDER               x003y036z1          0.073    f    17.387          pin: u_engine/lt5_syn_191.fco
+net (fo=1)                              0.000         17.387          net: u_engine/lt5_syn_57,  ../rtl/scg_mac_array_v7.v(865)
+                                                                      pin: u_engine/lt5_syn_194.fci
+ADDER               x003y037z0          0.073    f    17.460          pin: u_engine/lt5_syn_194.fco
+net (fo=1)                              0.000         17.460          net: u_engine/lt5_syn_61,  ../rtl/scg_mac_array_v7.v(865)
+                                                                      pin: u_engine/lt5_syn_197.fci
+ADDER               x003y037z1          0.073    f    17.533          pin: u_engine/lt5_syn_197.fco
+net (fo=1)                              0.000         17.533          net: u_engine/lt5_syn_65,  ../rtl/scg_mac_array_v7.v(865)
+                                                                      pin: u_engine/lt5_syn_200.fci
+ADDER               x003y038z0          0.073    f    17.606          pin: u_engine/lt5_syn_200.fco
+net (fo=1)                              0.000         17.606          net: u_engine/lt5_syn_69,  ../rtl/scg_mac_array_v7.v(865)
+                                                                      pin: u_engine/lt5_syn_203.fci
+ADDER               x003y038z1          0.073    f    17.679          pin: u_engine/lt5_syn_203.fco
+net (fo=1)                              0.000         17.679          net: u_engine/lt5_syn_73,  ../rtl/scg_mac_array_v7.v(865)
+                                                                      pin: u_engine/lt5_syn_206.fci
+ADDER               x003y039z0          0.073    f    17.752          pin: u_engine/lt5_syn_206.fco
+net (fo=1)                              0.000         17.752          net: u_engine/lt5_syn_77,  ../rtl/scg_mac_array_v7.v(865)
+                                                                      pin: u_engine/lt5_syn_209.fci
+ADDER               x003y039z1          0.073    f    17.825          pin: u_engine/lt5_syn_209.fco
+net (fo=1)                              0.000         17.825          net: u_engine/lt5_syn_81,  ../rtl/scg_mac_array_v7.v(865)
+                                                                      pin: u_engine/lt5_syn_212.fci
+ADDER               x003y040z0          0.073    f    17.898          pin: u_engine/lt5_syn_212.fco
+net (fo=1)                              0.000         17.898          net: u_engine/lt5_syn_85,  ../rtl/scg_mac_array_v7.v(865)
+                                                                      pin: u_engine/lt5_syn_215.fci
+ADDER               x003y040z1          0.073    f    17.971          pin: u_engine/lt5_syn_215.fco
+net (fo=1)                              0.000         17.971          net: u_engine/lt5_syn_89,  ../rtl/scg_mac_array_v7.v(865)
+                                                                      pin: u_engine/lt5_syn_218.fci
+ADDER               x003y041z0          0.073    f    18.044          pin: u_engine/lt5_syn_218.fco
+net (fo=1)                              0.000         18.044          net: u_engine/lt5_syn_93,  ../rtl/scg_mac_array_v7.v(865)
+                                                                      pin: u_engine/lt5_syn_221.fci
+ADDER               x003y041z1          0.073    f    18.117          pin: u_engine/lt5_syn_221.fco
+net (fo=1)                              0.000         18.117          net: u_engine/lt5_syn_97,  ../rtl/scg_mac_array_v7.v(865)
+                                                                      pin: u_engine/lt5_syn_224.fci
+ADDER               x003y042z0          0.355    f    18.472      13  pin: u_engine/lt5_syn_224.f[1]
+net (fo=1)                              0.811         19.283          net: u_engine/a_wdata_o_b3_n,  NOFILE(0)
+                                                                      pin: u_engine/a_wdata_o_b1[6]_syn_187.c[1]
+LUT3                x002y032z2          0.348    f    19.631      14  pin: u_engine/a_wdata_o_b1[6]_syn_187.f[1]
+net (fo=7)                              0.499         20.130          net: u_engine/a_wdata_o_b1[6]_syn_83,  NOFILE(0)
+                                                                      pin: u_engine/a_wdata_o_reg[2]_syn_22.c[1]
+LUT5                x002y029z2          0.348    f    20.478      15  pin: u_engine/a_wdata_o_reg[2]_syn_22.f[1]
+net (fo=18)                             1.793         22.271          net: u_engine/a_wdata_o_b1[2],  NOFILE(0)
+                                                                      pin: u_engine/a_wdata_o_reg[2]_syn_52.mi[1]
+reg                 x020y047z3          0.143    r    22.414          net: u_engine/a_wdata_o[2]_dup_25,  ../rtl/scg_mac_array_v7.v(24)
+--------------------------------------------------------------------  ---------------
+Arrival                                               22.414               
+
+capture edge                           20.000    r    20.000               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.116         19.884               
+clock uncertainty                      -0.100         19.784               
+clock pessimism                         0.000         19.784               
+--------------------------------------------------------------------  ---------------
+Required                                              19.784               
+--------------------------------------------------------------------  ---------------
+Slack                                                 -2.630               
+
+Slack               : -2.615ns
+Begin Point         : u_engine/right_shift2_syn_1032.clk (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+End Point           : u_engine/gap_acc_reg[28]_syn_3.mi[1] (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+Check Type          : setup
+Process             : slow
+Budget              : 20.000ns { DeriveClock rising@20.000ns - DeriveClock rising@0.000ns }
+Data Path Delay     : 22.399ns (cell 13.081ns (58%), net 9.318ns (42%))
+Clock Skew          : 0.000ns
+Logic Level         : 16 ( ADDER=6  LUT5=3  LUT3=3  LUT4=2  MULT18=1  LUT2=1 )
+Max Fanout          : 65
+Clock Uncertainty   : 0.100ns (sdc uncertainty: 0.000ns, default uncertainty: 0.100ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+clk2q               x012y038z3          0.146    r     0.146          pin: u_engine/right_shift2_syn_1032.q[0]
+net (fo=65)                             1.035          1.181          net: u_engine/co_base[4]_dup_10,  ../rtl/scg_mac_array_v7.v(820)
+                                                                      pin: u_engine/mux20_syn_218.e[0]
+LUT5                x013y044z3          0.527    r     1.708       1  pin: u_engine/mux20_syn_218.fx[0]
+net (fo=1)                              0.591          2.299          net: u_engine/mux20_syn_36,  ../rtl/scg_mac_array_v7.v(348)
+                                                                      pin: u_engine/a_raddr_o_reg[2]_syn_415.b[0]
+LUT3                x015y044z3          0.431    f     2.730       2  pin: u_engine/a_raddr_o_reg[2]_syn_415.f[0]
+net (fo=2)                              0.920          3.650          net: u_engine/gap_acc[0]_b19[1],  NOFILE(0)
+                                                                      pin: u_engine/mult3_syn_116.a[1]
+MULT18              x016y036            3.563    f     7.213       3  pin: u_engine/mult3_syn_116.p[18]
+net (fo=1)                              0.603          7.816          net: u_engine/mult3_syn_20,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/mult3_syn_354.b[0]
+ADDER               x014y043z2          0.836    f     8.652       4  pin: u_engine/mult3_syn_354.fco
+net (fo=1)                              0.000          8.652          net: u_engine/mult3_syn_326,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/mult3_syn_355.fci
+ADDER               x014y043z3          0.132    f     8.784          pin: u_engine/mult3_syn_355.fco
+net (fo=1)                              0.000          8.784          net: u_engine/mult3_syn_330,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/mult3_syn_356.fci
+ADDER               x014y044z2          0.132    f     8.916          pin: u_engine/mult3_syn_356.fco
+net (fo=1)                              0.000          8.916          net: u_engine/mult3_syn_334,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/mult3_syn_357.fci
+ADDER               x014y044z3          0.132    f     9.048          pin: u_engine/mult3_syn_357.fco
+net (fo=1)                              0.000          9.048          net: u_engine/mult3_syn_338,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/mult3_syn_358.fci
+ADDER               x014y045z2          0.132    f     9.180          pin: u_engine/mult3_syn_358.fco
+net (fo=1)                              0.000          9.180          net: u_engine/mult3_syn_342,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/mult3_syn_359.fci
+ADDER               x014y045z3          0.198    r     9.378       5  pin: u_engine/mult3_syn_359.f[0]
+net (fo=3)                              0.594          9.972          net: u_engine/mult3_syn_119[19],  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/gap_acc[0]_b13[6]_syn_85.c[1]
+LUT5                x014y047z3          0.348    f    10.320       6  pin: u_engine/gap_acc[0]_b13[6]_syn_85.f[1]
+net (fo=2)                              0.591         10.911          net: u_engine/gap_acc[0]_b13[6]_syn_41,  NOFILE(0)
+                                                                      pin: u_engine/gap_acc[0]_b13[6]_syn_85.a[0]
+LUT5                x014y047z3          0.424    f    11.335       7  pin: u_engine/gap_acc[0]_b13[6]_syn_85.f[0]
+net (fo=3)                              0.819         12.154          net: u_engine/right_shift2_syn_220,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/right_shift2_syn_961.d[1]
+LUT4                x009y044z2          0.262    r    12.416       8  pin: u_engine/right_shift2_syn_961.f[1]
+net (fo=5)                              0.379         12.795          net: u_engine/right_shift2_syn_625,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/right_shift2_syn_958.b[0]
+LUT4                x007y044z2          0.431    f    13.226       9  pin: u_engine/right_shift2_syn_958.f[0]
+net (fo=1)                              0.858         14.084          net: u_engine/right_shift2_syn_633,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/right_shift2_syn_932.c[1]
+LUT3                x010y039z2          0.348    f    14.432      10  pin: u_engine/right_shift2_syn_932.f[1]
+net (fo=2)                              0.689         15.121          net: u_engine/right_shift2_syn_256,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/lt6_syn_167.a[0]
+ADDER               x006y041z1          0.706    f    15.827      11  pin: u_engine/lt6_syn_167.fco
+net (fo=1)                              0.000         15.827          net: u_engine/lt6_syn_25,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_170.fci
+ADDER               x006y042z0          0.073    f    15.900          pin: u_engine/lt6_syn_170.fco
+net (fo=1)                              0.000         15.900          net: u_engine/lt6_syn_29,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_173.fci
+ADDER               x006y042z1          0.073    f    15.973          pin: u_engine/lt6_syn_173.fco
+net (fo=1)                              0.000         15.973          net: u_engine/lt6_syn_33,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_176.fci
+ADDER               x006y043z0          0.073    f    16.046          pin: u_engine/lt6_syn_176.fco
+net (fo=1)                              0.000         16.046          net: u_engine/lt6_syn_37,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_179.fci
+ADDER               x006y043z1          0.073    f    16.119          pin: u_engine/lt6_syn_179.fco
+net (fo=1)                              0.000         16.119          net: u_engine/lt6_syn_41,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_182.fci
+ADDER               x006y044z0          0.073    f    16.192          pin: u_engine/lt6_syn_182.fco
+net (fo=1)                              0.000         16.192          net: u_engine/lt6_syn_45,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_185.fci
+ADDER               x006y044z1          0.073    f    16.265          pin: u_engine/lt6_syn_185.fco
+net (fo=1)                              0.000         16.265          net: u_engine/lt6_syn_49,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_188.fci
+ADDER               x006y045z0          0.073    f    16.338          pin: u_engine/lt6_syn_188.fco
+net (fo=1)                              0.000         16.338          net: u_engine/lt6_syn_53,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_191.fci
+ADDER               x006y045z1          0.073    f    16.411          pin: u_engine/lt6_syn_191.fco
+net (fo=1)                              0.000         16.411          net: u_engine/lt6_syn_57,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_194.fci
+ADDER               x006y046z0          0.073    f    16.484          pin: u_engine/lt6_syn_194.fco
+net (fo=1)                              0.000         16.484          net: u_engine/lt6_syn_61,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_197.fci
+ADDER               x006y046z1          0.073    f    16.557          pin: u_engine/lt6_syn_197.fco
+net (fo=1)                              0.000         16.557          net: u_engine/lt6_syn_65,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_200.fci
+ADDER               x006y047z0          0.073    f    16.630          pin: u_engine/lt6_syn_200.fco
+net (fo=1)                              0.000         16.630          net: u_engine/lt6_syn_69,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_203.fci
+ADDER               x006y047z1          0.073    f    16.703          pin: u_engine/lt6_syn_203.fco
+net (fo=1)                              0.000         16.703          net: u_engine/lt6_syn_73,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_206.fci
+ADDER               x006y048z0          0.073    f    16.776          pin: u_engine/lt6_syn_206.fco
+net (fo=1)                              0.000         16.776          net: u_engine/lt6_syn_77,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_209.fci
+ADDER               x006y048z1          0.073    f    16.849          pin: u_engine/lt6_syn_209.fco
+net (fo=1)                              0.000         16.849          net: u_engine/lt6_syn_81,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_212.fci
+ADDER               x006y049z0          0.073    f    16.922          pin: u_engine/lt6_syn_212.fco
+net (fo=1)                              0.000         16.922          net: u_engine/lt6_syn_85,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_215.fci
+ADDER               x006y049z1          0.073    f    16.995          pin: u_engine/lt6_syn_215.fco
+net (fo=1)                              0.000         16.995          net: u_engine/lt6_syn_89,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_218.fci
+ADDER               x006y050z0          0.073    f    17.068          pin: u_engine/lt6_syn_218.fco
+net (fo=1)                              0.000         17.068          net: u_engine/lt6_syn_93,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_221.fci
+ADDER               x006y050z1          0.073    f    17.141          pin: u_engine/lt6_syn_221.fco
+net (fo=1)                              0.000         17.141          net: u_engine/lt6_syn_97,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_224.fci
+ADDER               x006y051z0          0.355    f    17.496      12  pin: u_engine/lt6_syn_224.f[1]
+net (fo=9)                              0.507         18.003          net: u_engine/gap_acc[0]_b13_n,  NOFILE(0)
+                                                                      pin: u_engine/co_base_reg[1]_syn_31.b[1]
+LUT3                x006y050z3          0.431    f    18.434      13  pin: u_engine/co_base_reg[1]_syn_31.f[1]
+net (fo=1)                              0.657         19.091          net: u_engine/gap_acc[0]_b13[4],  NOFILE(0)
+                                                                      pin: u_engine/add8_syn_189.e[0]
+ADDER               x001y049z3          0.781    f    19.872      14  pin: u_engine/add8_syn_189.fco
+net (fo=1)                              0.000         19.872          net: u_engine/add8_syn_162,  ../rtl/scg_mac_array_v7.v(930)
+                                                                      pin: u_engine/add8_syn_190.fci
+ADDER               x001y050z2          0.132    f    20.004          pin: u_engine/add8_syn_190.fco
+net (fo=1)                              0.000         20.004          net: u_engine/add8_syn_166,  ../rtl/scg_mac_array_v7.v(930)
+                                                                      pin: u_engine/add8_syn_191.fci
+ADDER               x001y050z3          0.132    f    20.136          pin: u_engine/add8_syn_191.fco
+net (fo=1)                              0.000         20.136          net: u_engine/add8_syn_170,  ../rtl/scg_mac_array_v7.v(930)
+                                                                      pin: u_engine/add8_syn_192.fci
+ADDER               x001y051z2          0.132    f    20.268          pin: u_engine/add8_syn_192.fco
+net (fo=1)                              0.000         20.268          net: u_engine/add8_syn_174,  ../rtl/scg_mac_array_v7.v(930)
+                                                                      pin: u_engine/add8_syn_193.fci
+ADDER               x001y051z3          0.132    f    20.400          pin: u_engine/add8_syn_193.fco
+net (fo=1)                              0.000         20.400          net: u_engine/add8_syn_178,  ../rtl/scg_mac_array_v7.v(930)
+                                                                      pin: u_engine/add8_syn_194.fci
+ADDER               x001y052z2          0.132    f    20.532          pin: u_engine/add8_syn_194.fco
+net (fo=1)                              0.000         20.532          net: u_engine/add8_syn_182,  ../rtl/scg_mac_array_v7.v(930)
+                                                                      pin: u_engine/add8_syn_195.fci
+ADDER               x001y052z3          0.387    f    20.919      15  pin: u_engine/add8_syn_195.fx[0]
+net (fo=1)                              0.463         21.382          net: u_engine/gap_acc[0]_b9[28],  NOFILE(0)
+                                                                      pin: u_engine/gap_acc_reg[92]_syn_4.d[1]
+LUT2                x001y054z3          0.262    r    21.644      16  pin: u_engine/gap_acc_reg[92]_syn_4.f[1]
+net (fo=2)                              0.612         22.256          net: u_engine/mux50_syn_2400,  ../rtl/scg_mac_array_v7.v(886)
+                                                                      pin: u_engine/gap_acc_reg[28]_syn_3.mi[1]
+reg                 x002y056z3          0.143    r    22.399          net: u_engine/gap_acc[2][28],  ../rtl/scg_mac_array_v7.v(825)
+--------------------------------------------------------------------  ---------------
+Arrival                                               22.399               
+
+capture edge                           20.000    r    20.000               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.116         19.884               
+clock uncertainty                      -0.100         19.784               
+clock pessimism                         0.000         19.784               
+--------------------------------------------------------------------  ---------------
+Required                                              19.784               
+--------------------------------------------------------------------  ---------------
+Slack                                                 -2.615               
+
+Slack               : -2.581ns
+Begin Point         : u_engine/right_shift2_syn_1032.clk (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+End Point           : u_engine/gap_acc_reg[10]_syn_4.mi[0] (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+Check Type          : setup
+Process             : slow
+Budget              : 20.000ns { DeriveClock rising@20.000ns - DeriveClock rising@0.000ns }
+Data Path Delay     : 22.365ns (cell 12.553ns (56%), net 9.812ns (44%))
+Clock Skew          : 0.000ns
+Logic Level         : 16 ( ADDER=6  LUT5=3  LUT3=3  LUT4=2  MULT18=1  LUT2=1 )
+Max Fanout          : 65
+Clock Uncertainty   : 0.100ns (sdc uncertainty: 0.000ns, default uncertainty: 0.100ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+clk2q               x012y038z3          0.146    r     0.146          pin: u_engine/right_shift2_syn_1032.q[0]
+net (fo=65)                             1.035          1.181          net: u_engine/co_base[4]_dup_10,  ../rtl/scg_mac_array_v7.v(820)
+                                                                      pin: u_engine/mux20_syn_218.e[0]
+LUT5                x013y044z3          0.527    r     1.708       1  pin: u_engine/mux20_syn_218.fx[0]
+net (fo=1)                              0.591          2.299          net: u_engine/mux20_syn_36,  ../rtl/scg_mac_array_v7.v(348)
+                                                                      pin: u_engine/a_raddr_o_reg[2]_syn_415.b[0]
+LUT3                x015y044z3          0.431    f     2.730       2  pin: u_engine/a_raddr_o_reg[2]_syn_415.f[0]
+net (fo=2)                              0.920          3.650          net: u_engine/gap_acc[0]_b19[1],  NOFILE(0)
+                                                                      pin: u_engine/mult3_syn_116.a[1]
+MULT18              x016y036            3.563    f     7.213       3  pin: u_engine/mult3_syn_116.p[18]
+net (fo=1)                              0.603          7.816          net: u_engine/mult3_syn_20,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/mult3_syn_354.b[0]
+ADDER               x014y043z2          0.836    f     8.652       4  pin: u_engine/mult3_syn_354.fco
+net (fo=1)                              0.000          8.652          net: u_engine/mult3_syn_326,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/mult3_syn_355.fci
+ADDER               x014y043z3          0.132    f     8.784          pin: u_engine/mult3_syn_355.fco
+net (fo=1)                              0.000          8.784          net: u_engine/mult3_syn_330,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/mult3_syn_356.fci
+ADDER               x014y044z2          0.132    f     8.916          pin: u_engine/mult3_syn_356.fco
+net (fo=1)                              0.000          8.916          net: u_engine/mult3_syn_334,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/mult3_syn_357.fci
+ADDER               x014y044z3          0.132    f     9.048          pin: u_engine/mult3_syn_357.fco
+net (fo=1)                              0.000          9.048          net: u_engine/mult3_syn_338,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/mult3_syn_358.fci
+ADDER               x014y045z2          0.132    f     9.180          pin: u_engine/mult3_syn_358.fco
+net (fo=1)                              0.000          9.180          net: u_engine/mult3_syn_342,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/mult3_syn_359.fci
+ADDER               x014y045z3          0.198    r     9.378       5  pin: u_engine/mult3_syn_359.f[0]
+net (fo=3)                              0.594          9.972          net: u_engine/mult3_syn_119[19],  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/gap_acc[0]_b13[6]_syn_85.c[1]
+LUT5                x014y047z3          0.348    f    10.320       6  pin: u_engine/gap_acc[0]_b13[6]_syn_85.f[1]
+net (fo=2)                              0.591         10.911          net: u_engine/gap_acc[0]_b13[6]_syn_41,  NOFILE(0)
+                                                                      pin: u_engine/gap_acc[0]_b13[6]_syn_85.a[0]
+LUT5                x014y047z3          0.424    f    11.335       7  pin: u_engine/gap_acc[0]_b13[6]_syn_85.f[0]
+net (fo=3)                              0.819         12.154          net: u_engine/right_shift2_syn_220,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/right_shift2_syn_961.d[1]
+LUT4                x009y044z2          0.262    r    12.416       8  pin: u_engine/right_shift2_syn_961.f[1]
+net (fo=5)                              0.379         12.795          net: u_engine/right_shift2_syn_625,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/right_shift2_syn_958.b[0]
+LUT4                x007y044z2          0.431    f    13.226       9  pin: u_engine/right_shift2_syn_958.f[0]
+net (fo=1)                              0.858         14.084          net: u_engine/right_shift2_syn_633,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/right_shift2_syn_932.c[1]
+LUT3                x010y039z2          0.348    f    14.432      10  pin: u_engine/right_shift2_syn_932.f[1]
+net (fo=2)                              0.689         15.121          net: u_engine/right_shift2_syn_256,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/lt6_syn_167.a[0]
+ADDER               x006y041z1          0.706    f    15.827      11  pin: u_engine/lt6_syn_167.fco
+net (fo=1)                              0.000         15.827          net: u_engine/lt6_syn_25,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_170.fci
+ADDER               x006y042z0          0.073    f    15.900          pin: u_engine/lt6_syn_170.fco
+net (fo=1)                              0.000         15.900          net: u_engine/lt6_syn_29,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_173.fci
+ADDER               x006y042z1          0.073    f    15.973          pin: u_engine/lt6_syn_173.fco
+net (fo=1)                              0.000         15.973          net: u_engine/lt6_syn_33,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_176.fci
+ADDER               x006y043z0          0.073    f    16.046          pin: u_engine/lt6_syn_176.fco
+net (fo=1)                              0.000         16.046          net: u_engine/lt6_syn_37,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_179.fci
+ADDER               x006y043z1          0.073    f    16.119          pin: u_engine/lt6_syn_179.fco
+net (fo=1)                              0.000         16.119          net: u_engine/lt6_syn_41,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_182.fci
+ADDER               x006y044z0          0.073    f    16.192          pin: u_engine/lt6_syn_182.fco
+net (fo=1)                              0.000         16.192          net: u_engine/lt6_syn_45,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_185.fci
+ADDER               x006y044z1          0.073    f    16.265          pin: u_engine/lt6_syn_185.fco
+net (fo=1)                              0.000         16.265          net: u_engine/lt6_syn_49,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_188.fci
+ADDER               x006y045z0          0.073    f    16.338          pin: u_engine/lt6_syn_188.fco
+net (fo=1)                              0.000         16.338          net: u_engine/lt6_syn_53,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_191.fci
+ADDER               x006y045z1          0.073    f    16.411          pin: u_engine/lt6_syn_191.fco
+net (fo=1)                              0.000         16.411          net: u_engine/lt6_syn_57,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_194.fci
+ADDER               x006y046z0          0.073    f    16.484          pin: u_engine/lt6_syn_194.fco
+net (fo=1)                              0.000         16.484          net: u_engine/lt6_syn_61,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_197.fci
+ADDER               x006y046z1          0.073    f    16.557          pin: u_engine/lt6_syn_197.fco
+net (fo=1)                              0.000         16.557          net: u_engine/lt6_syn_65,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_200.fci
+ADDER               x006y047z0          0.073    f    16.630          pin: u_engine/lt6_syn_200.fco
+net (fo=1)                              0.000         16.630          net: u_engine/lt6_syn_69,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_203.fci
+ADDER               x006y047z1          0.073    f    16.703          pin: u_engine/lt6_syn_203.fco
+net (fo=1)                              0.000         16.703          net: u_engine/lt6_syn_73,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_206.fci
+ADDER               x006y048z0          0.073    f    16.776          pin: u_engine/lt6_syn_206.fco
+net (fo=1)                              0.000         16.776          net: u_engine/lt6_syn_77,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_209.fci
+ADDER               x006y048z1          0.073    f    16.849          pin: u_engine/lt6_syn_209.fco
+net (fo=1)                              0.000         16.849          net: u_engine/lt6_syn_81,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_212.fci
+ADDER               x006y049z0          0.073    f    16.922          pin: u_engine/lt6_syn_212.fco
+net (fo=1)                              0.000         16.922          net: u_engine/lt6_syn_85,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_215.fci
+ADDER               x006y049z1          0.073    f    16.995          pin: u_engine/lt6_syn_215.fco
+net (fo=1)                              0.000         16.995          net: u_engine/lt6_syn_89,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_218.fci
+ADDER               x006y050z0          0.073    f    17.068          pin: u_engine/lt6_syn_218.fco
+net (fo=1)                              0.000         17.068          net: u_engine/lt6_syn_93,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_221.fci
+ADDER               x006y050z1          0.073    f    17.141          pin: u_engine/lt6_syn_221.fco
+net (fo=1)                              0.000         17.141          net: u_engine/lt6_syn_97,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_224.fci
+ADDER               x006y051z0          0.355    f    17.496      12  pin: u_engine/lt6_syn_224.f[1]
+net (fo=9)                              0.507         18.003          net: u_engine/gap_acc[0]_b13_n,  NOFILE(0)
+                                                                      pin: u_engine/co_base_reg[1]_syn_31.b[1]
+LUT3                x006y050z3          0.431    f    18.434      13  pin: u_engine/co_base_reg[1]_syn_31.f[1]
+net (fo=1)                              0.657         19.091          net: u_engine/gap_acc[0]_b13[4],  NOFILE(0)
+                                                                      pin: u_engine/add8_syn_189.e[0]
+ADDER               x001y049z3          0.781    f    19.872      14  pin: u_engine/add8_syn_189.fco
+net (fo=1)                              0.000         19.872          net: u_engine/add8_syn_162,  ../rtl/scg_mac_array_v7.v(930)
+                                                                      pin: u_engine/add8_syn_190.fci
+ADDER               x001y050z2          0.132    f    20.004          pin: u_engine/add8_syn_190.fco
+net (fo=1)                              0.000         20.004          net: u_engine/add8_syn_166,  ../rtl/scg_mac_array_v7.v(930)
+                                                                      pin: u_engine/add8_syn_191.fci
+ADDER               x001y050z3          0.387    f    20.391      15  pin: u_engine/add8_syn_191.fx[0]
+net (fo=1)                              0.702         21.093          net: u_engine/gap_acc[0]_b9[12],  NOFILE(0)
+                                                                      pin: u_engine/gap_acc_reg[76]_syn_4.d[1]
+LUT2                x003y038z3          0.262    r    21.355      16  pin: u_engine/gap_acc_reg[76]_syn_4.f[1]
+net (fo=7)                              0.867         22.222          net: u_engine/mux50_syn_1216,  ../rtl/scg_mac_array_v7.v(886)
+                                                                      pin: u_engine/gap_acc_reg[10]_syn_4.mi[0]
+reg                 x005y051z3          0.143    r    22.365          net: u_engine/gap_acc[2][12],  ../rtl/scg_mac_array_v7.v(825)
+--------------------------------------------------------------------  ---------------
+Arrival                                               22.365               
+
+capture edge                           20.000    r    20.000               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.116         19.884               
+clock uncertainty                      -0.100         19.784               
+clock pessimism                         0.000         19.784               
+--------------------------------------------------------------------  ---------------
+Required                                              19.784               
+--------------------------------------------------------------------  ---------------
+Slack                                                 -2.581               
+
+Slack               : -2.578ns
+Begin Point         : u_engine/right_shift2_syn_1032.clk (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+End Point           : u_engine/gap_acc_reg[45]_syn_4.mi[1] (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+Check Type          : setup
+Process             : slow
+Budget              : 20.000ns { DeriveClock rising@20.000ns - DeriveClock rising@0.000ns }
+Data Path Delay     : 22.362ns (cell 12.430ns (55%), net 9.932ns (45%))
+Clock Skew          : 0.000ns
+Logic Level         : 16 ( ADDER=6  LUT5=3  LUT3=3  LUT4=2  MULT18=1  LUT2=1 )
+Max Fanout          : 65
+Clock Uncertainty   : 0.100ns (sdc uncertainty: 0.000ns, default uncertainty: 0.100ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+clk2q               x012y038z3          0.146    r     0.146          pin: u_engine/right_shift2_syn_1032.q[0]
+net (fo=65)                             1.035          1.181          net: u_engine/co_base[4]_dup_10,  ../rtl/scg_mac_array_v7.v(820)
+                                                                      pin: u_engine/mux20_syn_218.e[0]
+LUT5                x013y044z3          0.527    r     1.708       1  pin: u_engine/mux20_syn_218.fx[0]
+net (fo=1)                              0.591          2.299          net: u_engine/mux20_syn_36,  ../rtl/scg_mac_array_v7.v(348)
+                                                                      pin: u_engine/a_raddr_o_reg[2]_syn_415.b[0]
+LUT3                x015y044z3          0.431    f     2.730       2  pin: u_engine/a_raddr_o_reg[2]_syn_415.f[0]
+net (fo=2)                              0.920          3.650          net: u_engine/gap_acc[0]_b19[1],  NOFILE(0)
+                                                                      pin: u_engine/mult3_syn_116.a[1]
+MULT18              x016y036            3.563    f     7.213       3  pin: u_engine/mult3_syn_116.p[18]
+net (fo=1)                              0.603          7.816          net: u_engine/mult3_syn_20,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/mult3_syn_354.b[0]
+ADDER               x014y043z2          0.836    f     8.652       4  pin: u_engine/mult3_syn_354.fco
+net (fo=1)                              0.000          8.652          net: u_engine/mult3_syn_326,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/mult3_syn_355.fci
+ADDER               x014y043z3          0.132    f     8.784          pin: u_engine/mult3_syn_355.fco
+net (fo=1)                              0.000          8.784          net: u_engine/mult3_syn_330,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/mult3_syn_356.fci
+ADDER               x014y044z2          0.132    f     8.916          pin: u_engine/mult3_syn_356.fco
+net (fo=1)                              0.000          8.916          net: u_engine/mult3_syn_334,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/mult3_syn_357.fci
+ADDER               x014y044z3          0.132    f     9.048          pin: u_engine/mult3_syn_357.fco
+net (fo=1)                              0.000          9.048          net: u_engine/mult3_syn_338,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/mult3_syn_358.fci
+ADDER               x014y045z2          0.132    f     9.180          pin: u_engine/mult3_syn_358.fco
+net (fo=1)                              0.000          9.180          net: u_engine/mult3_syn_342,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/mult3_syn_359.fci
+ADDER               x014y045z3          0.198    r     9.378       5  pin: u_engine/mult3_syn_359.f[0]
+net (fo=3)                              0.594          9.972          net: u_engine/mult3_syn_119[19],  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/gap_acc[0]_b13[6]_syn_85.c[1]
+LUT5                x014y047z3          0.348    f    10.320       6  pin: u_engine/gap_acc[0]_b13[6]_syn_85.f[1]
+net (fo=2)                              0.591         10.911          net: u_engine/gap_acc[0]_b13[6]_syn_41,  NOFILE(0)
+                                                                      pin: u_engine/gap_acc[0]_b13[6]_syn_85.a[0]
+LUT5                x014y047z3          0.424    f    11.335       7  pin: u_engine/gap_acc[0]_b13[6]_syn_85.f[0]
+net (fo=3)                              0.819         12.154          net: u_engine/right_shift2_syn_220,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/right_shift2_syn_961.d[1]
+LUT4                x009y044z2          0.262    r    12.416       8  pin: u_engine/right_shift2_syn_961.f[1]
+net (fo=5)                              0.379         12.795          net: u_engine/right_shift2_syn_625,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/right_shift2_syn_958.b[0]
+LUT4                x007y044z2          0.431    f    13.226       9  pin: u_engine/right_shift2_syn_958.f[0]
+net (fo=1)                              0.858         14.084          net: u_engine/right_shift2_syn_633,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/right_shift2_syn_932.c[1]
+LUT3                x010y039z2          0.348    f    14.432      10  pin: u_engine/right_shift2_syn_932.f[1]
+net (fo=2)                              0.689         15.121          net: u_engine/right_shift2_syn_256,  ../rtl/scg_mac_array_v7.v(931)
+                                                                      pin: u_engine/lt6_syn_167.a[0]
+ADDER               x006y041z1          0.706    f    15.827      11  pin: u_engine/lt6_syn_167.fco
+net (fo=1)                              0.000         15.827          net: u_engine/lt6_syn_25,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_170.fci
+ADDER               x006y042z0          0.073    f    15.900          pin: u_engine/lt6_syn_170.fco
+net (fo=1)                              0.000         15.900          net: u_engine/lt6_syn_29,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_173.fci
+ADDER               x006y042z1          0.073    f    15.973          pin: u_engine/lt6_syn_173.fco
+net (fo=1)                              0.000         15.973          net: u_engine/lt6_syn_33,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_176.fci
+ADDER               x006y043z0          0.073    f    16.046          pin: u_engine/lt6_syn_176.fco
+net (fo=1)                              0.000         16.046          net: u_engine/lt6_syn_37,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_179.fci
+ADDER               x006y043z1          0.073    f    16.119          pin: u_engine/lt6_syn_179.fco
+net (fo=1)                              0.000         16.119          net: u_engine/lt6_syn_41,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_182.fci
+ADDER               x006y044z0          0.073    f    16.192          pin: u_engine/lt6_syn_182.fco
+net (fo=1)                              0.000         16.192          net: u_engine/lt6_syn_45,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_185.fci
+ADDER               x006y044z1          0.073    f    16.265          pin: u_engine/lt6_syn_185.fco
+net (fo=1)                              0.000         16.265          net: u_engine/lt6_syn_49,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_188.fci
+ADDER               x006y045z0          0.073    f    16.338          pin: u_engine/lt6_syn_188.fco
+net (fo=1)                              0.000         16.338          net: u_engine/lt6_syn_53,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_191.fci
+ADDER               x006y045z1          0.073    f    16.411          pin: u_engine/lt6_syn_191.fco
+net (fo=1)                              0.000         16.411          net: u_engine/lt6_syn_57,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_194.fci
+ADDER               x006y046z0          0.073    f    16.484          pin: u_engine/lt6_syn_194.fco
+net (fo=1)                              0.000         16.484          net: u_engine/lt6_syn_61,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_197.fci
+ADDER               x006y046z1          0.073    f    16.557          pin: u_engine/lt6_syn_197.fco
+net (fo=1)                              0.000         16.557          net: u_engine/lt6_syn_65,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_200.fci
+ADDER               x006y047z0          0.073    f    16.630          pin: u_engine/lt6_syn_200.fco
+net (fo=1)                              0.000         16.630          net: u_engine/lt6_syn_69,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_203.fci
+ADDER               x006y047z1          0.073    f    16.703          pin: u_engine/lt6_syn_203.fco
+net (fo=1)                              0.000         16.703          net: u_engine/lt6_syn_73,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_206.fci
+ADDER               x006y048z0          0.073    f    16.776          pin: u_engine/lt6_syn_206.fco
+net (fo=1)                              0.000         16.776          net: u_engine/lt6_syn_77,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_209.fci
+ADDER               x006y048z1          0.073    f    16.849          pin: u_engine/lt6_syn_209.fco
+net (fo=1)                              0.000         16.849          net: u_engine/lt6_syn_81,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_212.fci
+ADDER               x006y049z0          0.073    f    16.922          pin: u_engine/lt6_syn_212.fco
+net (fo=1)                              0.000         16.922          net: u_engine/lt6_syn_85,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_215.fci
+ADDER               x006y049z1          0.073    f    16.995          pin: u_engine/lt6_syn_215.fco
+net (fo=1)                              0.000         16.995          net: u_engine/lt6_syn_89,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_218.fci
+ADDER               x006y050z0          0.073    f    17.068          pin: u_engine/lt6_syn_218.fco
+net (fo=1)                              0.000         17.068          net: u_engine/lt6_syn_93,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_221.fci
+ADDER               x006y050z1          0.073    f    17.141          pin: u_engine/lt6_syn_221.fco
+net (fo=1)                              0.000         17.141          net: u_engine/lt6_syn_97,  ../rtl/scg_mac_array_v7.v(870)
+                                                                      pin: u_engine/lt6_syn_224.fci
+ADDER               x006y051z0          0.355    f    17.496      12  pin: u_engine/lt6_syn_224.f[1]
+net (fo=9)                              0.507         18.003          net: u_engine/gap_acc[0]_b13_n,  NOFILE(0)
+                                                                      pin: u_engine/co_base_reg[1]_syn_31.b[1]
+LUT3                x006y050z3          0.431    f    18.434      13  pin: u_engine/co_base_reg[1]_syn_31.f[1]
+net (fo=1)                              0.657         19.091          net: u_engine/gap_acc[0]_b13[4],  NOFILE(0)
+                                                                      pin: u_engine/add8_syn_189.e[0]
+ADDER               x001y049z3          0.781    f    19.872      14  pin: u_engine/add8_syn_189.fco
+net (fo=1)                              0.000         19.872          net: u_engine/add8_syn_162,  ../rtl/scg_mac_array_v7.v(930)
+                                                                      pin: u_engine/add8_syn_190.fci
+ADDER               x001y050z2          0.132    f    20.004          pin: u_engine/add8_syn_190.fco
+net (fo=1)                              0.000         20.004          net: u_engine/add8_syn_166,  ../rtl/scg_mac_array_v7.v(930)
+                                                                      pin: u_engine/add8_syn_191.fci
+ADDER               x001y050z3          0.264    r    20.268      15  pin: u_engine/add8_syn_191.f[1]
+net (fo=1)                              0.699         20.967          net: u_engine/gap_acc[0]_b9[13],  NOFILE(0)
+                                                                      pin: u_engine/gap_acc_reg[76]_syn_4.d[0]
+LUT2                x003y038z3          0.262    r    21.229      16  pin: u_engine/gap_acc_reg[76]_syn_4.f[0]
+net (fo=7)                              0.990         22.219          net: u_engine/mux50_syn_1290,  ../rtl/scg_mac_array_v7.v(886)
+                                                                      pin: u_engine/gap_acc_reg[45]_syn_4.mi[1]
+reg                 x007y044z3          0.143    r    22.362          net: u_engine/gap_acc[1][13],  ../rtl/scg_mac_array_v7.v(825)
+--------------------------------------------------------------------  ---------------
+Arrival                                               22.362               
+
+capture edge                           20.000    r    20.000               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.116         19.884               
+clock uncertainty                      -0.100         19.784               
+clock pessimism                         0.000         19.784               
+--------------------------------------------------------------------  ---------------
+Required                                              19.784               
+--------------------------------------------------------------------  ---------------
+Slack                                                 -2.578               
+
+
+
+Min Paths
+----------------------------------------------------------------------------------------------------
+Slack               : 0.013ns
+Begin Point         : u_engine/a_waddr_o_reg[0]_syn_36.clk (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+End Point           : ramread1_syn_13521.b[0] (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+Check Type          : hold
+Process             : fast
+Budget              : 0.000ns { DeriveClock rising@0.000ns - DeriveClock rising@0.000ns }
+Data Path Delay     : 0.226ns (cell 0.109ns (48%), net 0.117ns (52%))
+Clock Skew          : 0.000ns
+Logic Level         : 1 ( DRAM=1 )
+Max Fanout          : 35
+Clock Uncertainty   : 0.100ns (sdc uncertainty: 0.000ns, default uncertainty: 0.100ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+clk2q               x031y052z3          0.109    f     0.109          pin: u_engine/a_waddr_o_reg[0]_syn_36.q[0]
+net (fo=35)                             0.117          0.226          net: u_engine/a_waddr_o[1]_dup_21,  ../rtl/scg_mac_array_v7.v(23)
+                                                                      pin: ramread1_syn_13521.b[0]
+DRAM (reg)          x031y052z2          0.000    f     0.226       1       
+--------------------------------------------------------------------  ---------------
+Arrival                                                0.226               
+
+capture edge                            0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+hold                                    0.113          0.113               
+clock uncertainty                       0.100          0.213               
+clock pessimism                         0.000          0.213               
+--------------------------------------------------------------------  ---------------
+Required                                               0.213               
+--------------------------------------------------------------------  ---------------
+Slack                                                  0.013               
+
+Slack               : 0.029ns
+Begin Point         : u_engine/a_waddr_o_reg[0]_syn_38.clk (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+End Point           : ramread1_syn_14417.b[0] (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+Check Type          : hold
+Process             : fast
+Budget              : 0.000ns { DeriveClock rising@0.000ns - DeriveClock rising@0.000ns }
+Data Path Delay     : 0.242ns (cell 0.109ns (45%), net 0.133ns (55%))
+Clock Skew          : 0.000ns
+Logic Level         : 1 ( DRAM=1 )
+Max Fanout          : 65
+Clock Uncertainty   : 0.100ns (sdc uncertainty: 0.000ns, default uncertainty: 0.100ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+clk2q               x020y061z3          0.109    f     0.109          pin: u_engine/a_waddr_o_reg[0]_syn_38.q[0]
+net (fo=65)                             0.133          0.242          net: u_engine/a_waddr_o[1]_dup_20,  ../rtl/scg_mac_array_v7.v(23)
+                                                                      pin: ramread1_syn_14417.b[0]
+DRAM (reg)          x020y061z2          0.000    f     0.242       1       
+--------------------------------------------------------------------  ---------------
+Arrival                                                0.242               
+
+capture edge                            0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+hold                                    0.113          0.113               
+clock uncertainty                       0.100          0.213               
+clock pessimism                         0.000          0.213               
+--------------------------------------------------------------------  ---------------
+Required                                               0.213               
+--------------------------------------------------------------------  ---------------
+Slack                                                  0.029               
+
+Slack               : 0.034ns
+Begin Point         : w_addr_w_reg[3]_syn_4.clk (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+End Point           : ramread0_syn_17.addra[6] (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+Check Type          : hold
+Process             : fast
+Budget              : 0.000ns { DeriveClock rising@0.000ns - DeriveClock rising@0.000ns }
+Data Path Delay     : 0.334ns (cell 0.109ns (32%), net 0.225ns (68%))
+Clock Skew          : 0.000ns
+Logic Level         : 1 ( EMB=1 )
+Max Fanout          : 52
+Clock Uncertainty   : 0.100ns (sdc uncertainty: 0.000ns, default uncertainty: 0.100ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+clk2q               x006y018z3          0.109    f     0.109          pin: w_addr_w_reg[3]_syn_4.q[0]
+net (fo=52)                             0.225          0.334          net: w_addr_w[6],  ../rtl/scg_top_v7.v(168)
+                                                                      pin: ramread0_syn_17.addra[6]
+EMB (reg)           x008y018            0.000    f     0.334       1       
+--------------------------------------------------------------------  ---------------
+Arrival                                                0.334               
+
+capture edge                            0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+hold                                    0.200          0.200               
+clock uncertainty                       0.100          0.300               
+clock pessimism                         0.000          0.300               
+--------------------------------------------------------------------  ---------------
+Required                                               0.300               
+--------------------------------------------------------------------  ---------------
+Slack                                                  0.034               
+
+Slack               : 0.049ns
+Begin Point         : u_engine/right_shift1_syn_949.clk (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+End Point           : ramread0_syn_31.addra[12] (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+Check Type          : hold
+Process             : fast
+Budget              : 0.000ns { DeriveClock rising@0.000ns - DeriveClock rising@0.000ns }
+Data Path Delay     : 0.349ns (cell 0.109ns (31%), net 0.240ns (69%))
+Clock Skew          : 0.000ns
+Logic Level         : 1 ( EMB=1 )
+Max Fanout          : 50
+Clock Uncertainty   : 0.100ns (sdc uncertainty: 0.000ns, default uncertainty: 0.100ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+clk2q               x007y025z3          0.109    f     0.109          pin: u_engine/right_shift1_syn_949.q[0]
+net (fo=50)                             0.240          0.349          net: w_addr_w[12],  ../rtl/scg_top_v7.v(168)
+                                                                      pin: ramread0_syn_31.addra[12]
+EMB (reg)           x008y018            0.000    f     0.349       1       
+--------------------------------------------------------------------  ---------------
+Arrival                                                0.349               
+
+capture edge                            0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+hold                                    0.200          0.200               
+clock uncertainty                       0.100          0.300               
+clock pessimism                         0.000          0.300               
+--------------------------------------------------------------------  ---------------
+Required                                               0.300               
+--------------------------------------------------------------------  ---------------
+Slack                                                  0.049               
+
+Slack               : 0.120ns
+Begin Point         : u_engine/a_waddr_o_reg[3]_syn_53.clk (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+End Point           : ramread1_syn_12149.c[0] (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+Check Type          : hold
+Process             : fast
+Budget              : 0.000ns { DeriveClock rising@0.000ns - DeriveClock rising@0.000ns }
+Data Path Delay     : 0.333ns (cell 0.109ns (32%), net 0.224ns (68%))
+Clock Skew          : 0.000ns
+Logic Level         : 1 ( DRAM=1 )
+Max Fanout          : 38
+Clock Uncertainty   : 0.100ns (sdc uncertainty: 0.000ns, default uncertainty: 0.100ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+clk2q               x019y011z2          0.109    f     0.109          pin: u_engine/a_waddr_o_reg[3]_syn_53.q[0]
+net (fo=38)                             0.224          0.333          net: u_engine/a_waddr_o[2]_dup_8,  ../rtl/scg_mac_array_v7.v(23)
+                                                                      pin: ramread1_syn_12149.c[0]
+DRAM (reg)          x020y011z2          0.000    f     0.333       1       
+--------------------------------------------------------------------  ---------------
+Arrival                                                0.333               
+
+capture edge                            0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+hold                                    0.113          0.113               
+clock uncertainty                       0.100          0.213               
+clock pessimism                         0.000          0.213               
+--------------------------------------------------------------------  ---------------
+Required                                               0.213               
+--------------------------------------------------------------------  ---------------
+Slack                                                  0.120               
+
+Slack               : 0.121ns
+Begin Point         : u_engine/a_waddr_o_reg[1]_syn_35.clk (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+End Point           : ramread1_syn_8915.c[0] (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+Check Type          : hold
+Process             : fast
+Budget              : 0.000ns { DeriveClock rising@0.000ns - DeriveClock rising@0.000ns }
+Data Path Delay     : 0.334ns (cell 0.109ns (32%), net 0.225ns (68%))
+Clock Skew          : 0.000ns
+Logic Level         : 1 ( DRAM=1 )
+Max Fanout          : 23
+Clock Uncertainty   : 0.100ns (sdc uncertainty: 0.000ns, default uncertainty: 0.100ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+clk2q               x026y019z3          0.109    f     0.109          pin: u_engine/a_waddr_o_reg[1]_syn_35.q[0]
+net (fo=23)                             0.225          0.334          net: u_engine/a_waddr_o[2]_dup_11,  ../rtl/scg_mac_array_v7.v(23)
+                                                                      pin: ramread1_syn_8915.c[0]
+DRAM (reg)          x026y018z2          0.000    f     0.334       1       
+--------------------------------------------------------------------  ---------------
+Arrival                                                0.334               
+
+capture edge                            0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+hold                                    0.113          0.113               
+clock uncertainty                       0.100          0.213               
+clock pessimism                         0.000          0.213               
+--------------------------------------------------------------------  ---------------
+Required                                               0.213               
+--------------------------------------------------------------------  ---------------
+Slack                                                  0.121               
+
+Slack               : 0.128ns
+Begin Point         : a_dout_b[4]_syn_893.clk (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+End Point           : ramread1_syn_8873.b[0] (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+Check Type          : hold
+Process             : fast
+Budget              : 0.000ns { DeriveClock rising@0.000ns - DeriveClock rising@0.000ns }
+Data Path Delay     : 0.341ns (cell 0.109ns (31%), net 0.232ns (69%))
+Clock Skew          : 0.000ns
+Logic Level         : 1 ( DRAM=1 )
+Max Fanout          : 31
+Clock Uncertainty   : 0.100ns (sdc uncertainty: 0.000ns, default uncertainty: 0.100ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+clk2q               x031y018z2          0.109    f     0.109          pin: a_dout_b[4]_syn_893.q[0]
+net (fo=31)                             0.232          0.341          net: u_engine/a_waddr_o[1]_dup_13,  ../rtl/scg_mac_array_v7.v(23)
+                                                                      pin: ramread1_syn_8873.b[0]
+DRAM (reg)          x031y020z2          0.000    f     0.341       1       
+--------------------------------------------------------------------  ---------------
+Arrival                                                0.341               
+
+capture edge                            0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+hold                                    0.113          0.113               
+clock uncertainty                       0.100          0.213               
+clock pessimism                         0.000          0.213               
+--------------------------------------------------------------------  ---------------
+Required                                               0.213               
+--------------------------------------------------------------------  ---------------
+Slack                                                  0.128               
+
+Slack               : 0.128ns
+Begin Point         : u_engine/a_waddr_o_reg[0]_syn_43.clk (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+End Point           : ramread1_syn_9559.b[0] (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+Check Type          : hold
+Process             : fast
+Budget              : 0.000ns { DeriveClock rising@0.000ns - DeriveClock rising@0.000ns }
+Data Path Delay     : 0.341ns (cell 0.109ns (31%), net 0.232ns (69%))
+Clock Skew          : 0.000ns
+Logic Level         : 1 ( DRAM=1 )
+Max Fanout          : 43
+Clock Uncertainty   : 0.100ns (sdc uncertainty: 0.000ns, default uncertainty: 0.100ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+clk2q               x033y030z2          0.109    f     0.109          pin: u_engine/a_waddr_o_reg[0]_syn_43.q[0]
+net (fo=43)                             0.232          0.341          net: u_engine/a_waddr_o[1]_dup_14,  ../rtl/scg_mac_array_v7.v(23)
+                                                                      pin: ramread1_syn_9559.b[0]
+DRAM (reg)          x034y030z2          0.000    f     0.341       1       
+--------------------------------------------------------------------  ---------------
+Arrival                                                0.341               
+
+capture edge                            0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+hold                                    0.113          0.113               
+clock uncertainty                       0.100          0.213               
+clock pessimism                         0.000          0.213               
+--------------------------------------------------------------------  ---------------
+Required                                               0.213               
+--------------------------------------------------------------------  ---------------
+Slack                                                  0.128               
+
+Slack               : 0.128ns
+Begin Point         : u_engine/a_waddr_o_reg[0]_syn_48.clk (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+End Point           : ramread1_syn_9783.a[0] (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+Check Type          : hold
+Process             : fast
+Budget              : 0.000ns { DeriveClock rising@0.000ns - DeriveClock rising@0.000ns }
+Data Path Delay     : 0.341ns (cell 0.109ns (31%), net 0.232ns (69%))
+Clock Skew          : 0.000ns
+Logic Level         : 1 ( DRAM=1 )
+Max Fanout          : 30
+Clock Uncertainty   : 0.100ns (sdc uncertainty: 0.000ns, default uncertainty: 0.100ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+clk2q               x033y017z3          0.109    f     0.109          pin: u_engine/a_waddr_o_reg[0]_syn_48.q[0]
+net (fo=30)                             0.232          0.341          net: u_engine/a_waddr_o[0]_dup_13,  ../rtl/scg_mac_array_v7.v(23)
+                                                                      pin: ramread1_syn_9783.a[0]
+DRAM (reg)          x035y017z2          0.000    f     0.341       1       
+--------------------------------------------------------------------  ---------------
+Arrival                                                0.341               
+
+capture edge                            0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+hold                                    0.113          0.113               
+clock uncertainty                       0.100          0.213               
+clock pessimism                         0.000          0.213               
+--------------------------------------------------------------------  ---------------
+Required                                               0.213               
+--------------------------------------------------------------------  ---------------
+Slack                                                  0.128               
+
+Slack               : 0.128ns
+Begin Point         : u_engine/a_waddr_o_reg[0]_syn_48.clk (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+End Point           : ramread1_syn_9825.a[0] (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+Check Type          : hold
+Process             : fast
+Budget              : 0.000ns { DeriveClock rising@0.000ns - DeriveClock rising@0.000ns }
+Data Path Delay     : 0.341ns (cell 0.109ns (31%), net 0.232ns (69%))
+Clock Skew          : 0.000ns
+Logic Level         : 1 ( DRAM=1 )
+Max Fanout          : 30
+Clock Uncertainty   : 0.100ns (sdc uncertainty: 0.000ns, default uncertainty: 0.100ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+clk2q               x033y017z3          0.109    f     0.109          pin: u_engine/a_waddr_o_reg[0]_syn_48.q[0]
+net (fo=30)                             0.232          0.341          net: u_engine/a_waddr_o[0]_dup_13,  ../rtl/scg_mac_array_v7.v(23)
+                                                                      pin: ramread1_syn_9825.a[0]
+DRAM (reg)          x033y015z2          0.000    f     0.341       1       
+--------------------------------------------------------------------  ---------------
+Arrival                                                0.341               
+
+capture edge                            0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+hold                                    0.113          0.113               
+clock uncertainty                       0.100          0.213               
+clock pessimism                         0.000          0.213               
+--------------------------------------------------------------------  ---------------
+Required                                               0.213               
+--------------------------------------------------------------------  ---------------
+Slack                                                  0.128               
+
+
+Inter clock domain timing
+--------------------------------------------------
+
+IP timing
+--------------------------------------------------

@@ -1,0 +1,21 @@
+################################################################################
+# scg_top.adc - HX4S20C 比赛板 (康芯科技, EG4S20BG256) 引脚约束
+# 引脚来自官方 demo: HX4S20_Contest_2025_9/2_DEMO/DEMO_TD_5.6.2/{16_uart_rs232,
+#                    0_cnt1s, 1_breath_led}.
+################################################################################
+
+# 50 MHz on-board crystal
+set_pin_assignment {clk_i}     { LOCATION = R7;  IOSTANDARD = LVCMOS33; PULLTYPE = PULLUP; }
+
+# Reset push button (active-low)
+set_pin_assignment {rst_n_i}   { LOCATION = A2;  IOSTANDARD = LVCMOS33; PULLTYPE = PULLUP; }
+
+# UART (FPGA pins exposed on GPIO header — connect external USB-TTL module)
+set_pin_assignment {uart_rx_i} { LOCATION = F12; IOSTANDARD = LVCMOS33; PULLTYPE = PULLUP; }
+set_pin_assignment {uart_tx_o} { LOCATION = D12; IOSTANDARD = LVCMOS33; DRIVESTRENGTH = 8; PULLTYPE = NONE; }
+
+# 4 user LEDs
+set_pin_assignment {led_o[0]}  { LOCATION = A4;  IOSTANDARD = LVCMOS33; DRIVESTRENGTH = 8; PULLTYPE = NONE; }
+set_pin_assignment {led_o[1]}  { LOCATION = A3;  IOSTANDARD = LVCMOS33; DRIVESTRENGTH = 8; PULLTYPE = NONE; }
+set_pin_assignment {led_o[2]}  { LOCATION = C10; IOSTANDARD = LVCMOS33; DRIVESTRENGTH = 8; PULLTYPE = NONE; }
+set_pin_assignment {led_o[3]}  { LOCATION = B12; IOSTANDARD = LVCMOS33; DRIVESTRENGTH = 8; PULLTYPE = NONE; }

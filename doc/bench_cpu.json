@@ -1,0 +1,90 @@
+{
+  "system": {
+    "platform": "Windows-11-10.0.26200-SP0",
+    "processor": "AMD64 Family 25 Model 97 Stepping 2, AuthenticAMD",
+    "machine": "AMD64",
+    "physical_cores": 6,
+    "logical_cores": 12,
+    "max_freq_mhz": 3701.0,
+    "ram_gb": 34.0,
+    "python": "3.13.9",
+    "torch": "2.11.0+cpu"
+  },
+  "fp32_single_thread": {
+    "accuracy_percent": 84.0,
+    "latency_ms_mean": 0.6026100004964974,
+    "latency_ms_median": 0.582750013563782,
+    "latency_ms_p95": 0.8975199874839742,
+    "latency_ms_std": 0.17568288451090533,
+    "latency_ms_min": 0.3964999923482537,
+    "latency_ms_max": 1.531199988676235,
+    "throughput_samples_per_s_batch128": 20460.456172079303,
+    "n_samples": 200,
+    "threads": 1
+  },
+  "fp32_multi_thread": {
+    "accuracy_percent": 84.0,
+    "latency_ms_mean": 8.622007500525797,
+    "latency_ms_median": 1.470950010116212,
+    "latency_ms_p95": 26.8294099907507,
+    "latency_ms_std": 31.18703675479573,
+    "latency_ms_min": 0.6225999968592077,
+    "latency_ms_max": 345.95650000846945,
+    "throughput_samples_per_s_batch128": 10358.372162224025,
+    "n_samples": 200,
+    "threads": 12
+  },
+  "int8_golden_python": {
+    "accuracy_percent": 86.0,
+    "latency_ms_mean": 10.370837001973996,
+    "latency_ms_median": 9.405749995494261,
+    "latency_ms_p95": 17.85971000499556,
+    "latency_ms_std": 3.6963434539992104,
+    "latency_ms_min": 5.798099999083206,
+    "latency_ms_max": 31.968299997970462,
+    "throughput_samples_per_s": 96.42423266411949,
+    "n_samples": 200,
+    "implementation": "pure-python int8 (numpy)"
+  },
+  "confusion_matrix_fp32": [
+    [
+      100,
+      11,
+      18
+    ],
+    [
+      1,
+      37,
+      0
+    ],
+    [
+      1,
+      1,
+      31
+    ]
+  ],
+  "confusion_matrix_int8": [
+    [
+      104,
+      11,
+      14
+    ],
+    [
+      1,
+      37,
+      0
+    ],
+    [
+      2,
+      0,
+      31
+    ]
+  ],
+  "fp32_vs_int8_agreement_percent": 93.0,
+  "n_samples": 200,
+  "class_names": [
+    "Background",
+    "Systolic",
+    "Diastolic"
+  ]
+}
