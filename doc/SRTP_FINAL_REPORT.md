@@ -2,7 +2,7 @@
 
 **项目**：基于国产 FPGA 的心震图（SCG）三分类硬件加速实现
 **作者**：Neko
-**日期**：2026-05-06
+**日期**：2026-05-07
 **目标硬件**：Anlogic EG4S20BG256（HX4S20C 比赛板，55 nm）
 **对标论文**：Rahman et al., *At the Edge of the Heart*, DCOSS-IoT 2026 (Lattice iCE40UP5K, 40 nm)
 
@@ -633,7 +633,7 @@ truth Dia      4358       3368       2832       (recall 26.8%)
 
 ## 9. Multi-Modal FPGA Deployment
 
-> 把 FOSTER 5-channel 多模态 SNN 烧到 EG4S20 上的 **honest negative result**——多模态 SNN 在 CPU 上验证 93.11% 5-fold CV，但**因 EG4S20 BRAM 物理容量不足无法部署到这块板上**。
+> FOSTER 5-channel 多模态 SNN 在 EG4S20 上的**完整成功部署**——经过三轮综合失败 + channel-bank ROM 重组，**第四次成功**生成 bitstream 并烧录上板，板上 200 样本 acc = **98.00%**。
 
 ### 9.1 Capacity Math
 
@@ -643,39 +643,113 @@ truth Dia      4358       3368       2832       (recall 26.8%)
 | 多模态 SNN H=64 (N_IN=1280) | 80 KB | 80 BRAM9K | **超 25%** ✗ |
 | 多模态 SNN H=32 (N_IN=1280) | 40 KB | 40 BRAM9K | 64 BRAM9K — should fit |
 
-### 9.2 综合实测（H=32 fallback）
+### 9.2 综合实测（4 轮迭代）
 
-实际 Anlogic TD 6.2.x 综合三次尝试结果：
+实际 Anlogic TD 6.2.x 综合迭代过程：
 
-| 配置 | LUT4 (limit 19,600) | BRAM9K (limit 64) | 状态 |
+| 轮次 | 配置 | LUT4 (limit 19,600) | BRAM9K (64) | MSlice (4,900) | 结果 |
+|---|---|---|---|---|---|
+| #1 | H=64 single-array W1 (80 KB) | 17,769 (90.6 %) | 16/64 | **16,881 (3.44×)** | ❌ PHY-9009 |
+| #2 | H=64 + W1 split 3-bank | 19,554 (99.8 %) | 63/64 (98.4 %) | **5,774 (1.18×)** | ❌ PHY-9009 |
+| #3 | H=32 single-array W1 (40 KB) | **41,214 (210 %)** | 3/64 | **8,752 (1.79×)** | ❌ PHY-9009 |
+| **#4** | **H=32 + W1 split 5-bank (channel-bank)** | **2,151 (10.97 %)** | **39/64 (60.94 %)** | **2,507 (51 %)** | **✅ Build complete** |
+
+**关键洞察**：Anlogic TD 对 BRAM 推断有**未公开的尺寸阈值**。≥ 40 KB 的单一 ROM 数组直接退化为 LUT-RAM，无论是否声明 `(* syn_ramstyle = "block_ram" *)`。**Channel-bank 技巧**——把 W1 按多模态通道拆成 5 个 8 KB 子数组（每 bank 触发独立 BRAM 推断）——一次性把综合资源砍到原来 1/16。
+
+### 9.3 Channel-Bank RTL 改造
+
+把 `W1[H × N_IN]` 物理拆分为 5 个 `bank_c[H × WIN_LEN]` 子数组：
+
+```
+原 W1 索引：W1[i, j], j = c · WIN_LEN + k
+新 bank 索引：bank[c][i · WIN_LEN + k] = W1[i, j]
+```
+
+**改动文件**：
+- `tools/split_w1_channels.py`（新）：把 `W1.hex` 切成 `W1_ch{0..4}.hex`
+- `rtl/scg_top_snn.v`：5 个 BRAM bank + 注册的通道选择 mux
+- `rtl/scg_snn_engine.v`：FC1 状态机用 `(fc1_c, fc1_k)` 嵌套循环替代 `fc1_j`，新增 `w1_chan_o` 端口
+
+数学上完全等价（仅是存储重组），sim 不变；综合层面 BRAM9K 推断稳定触发。
+
+### 9.4 上板实测结果（H=32 channel-bank multimodal, **subject-disjoint hold-out**）
+
+**资源占用** (`build_snn/scg_top_snn_route.area`, holdout 版本)：
+
+| 资源 | 占用 | 容量 | 使用率 |
 |---|---|---|---|
-| H=64 single-array W1 | **17,769 (90.6%)** | 16/64 | ❌ MSlice 16881 > 4900 (3.4× over) |
-| H=64 + W1 split 3-bank | 19,554 (99.8%) | **63/64 (98.4%)** | ❌ MSlice 5774 > 4900 (1.18× over) |
-| **H=32 single-array W1** | **41,214 (210%)** | **3/64 (4.7%)** | ❌ MSlice 8752 > 4900 (1.79× over) |
+| LUT4 | **2,098** | 19,600 | **10.70 %** |
+| REG | 1,971 | 19,600 | 10.06 % |
+| BRAM9K | **39** | 64 | **60.94 %** |
+| BRAM32K | 0 | 16 | 0 % |
+| DSP18 | 1 | 29 | 3.45 % |
+| MSlice | **2,430** | 4,900 | 49.6 % |
 
-**根因**：Anlogic TD 工具不honor `(* syn_ramstyle = "block_ram" *)` 属性 for 大 ROM (40 KB+)，把 W1 放进 LUT-RAM (LUT4 用量爆炸)，BRAM 几乎不被使用 (3/64)。Anlogic FPGA 对单一大 ROM 数组的 BRAM 推断有未公开的尺寸阈值。
+**训练协议（修正：原 ckpt 是窗级随机划分，存在 leakage）**：
 
-### 9.3 Honest Conclusion
+`tools/cross_val_multimodal.py:122-127, 137-141` 是**真正 subject-disjoint** 的 5-fold CV，但 `model/train_snn_multimodal.py:146-152` 的 sanity-check 模型用的是**窗级随机划分**——同一受试者的不同窗会同时进训练 + 验证集。**之前 §9 草稿引用的 95.24 % val 与 200-window 板上 98 % 都基于 leaky split**，不能作为部署精度。
 
-**多模态 SNN 在算法层面成立**（FOSTER 5-fold subject-disjoint CV 93.11 ± 2.10 %, 10-fold 93.59 ± 2.24 %, INT8 CPU sim 96.50 % 完美保留 FP32 精度），**但 EG4S20 物理资源（19,600 LUT + 64 BRAM9K）不足以承载 5-channel 多模态的 40-80 KB W1 ROM**。
+为得到论文级板上数字，我们写了 `model/train_snn_mm_holdout.py` —— 严格按 fold-0 的 8 个受试者完全不参与训练（subject-disjoint），重新训练 H=32 multimodal SNN，重新 export weights → 重新 5-bank 拆分 → 重新综合 → 重新烧 `scg_top_snn_multimodal_holdout.bit`，最后**只在这 8 个 hold-out 受试者的全部 40,575 窗上 bench**：
 
-部署到更大 FPGA（如 EG4D20 64K LUT+ 或 Lattice ECP5 25-85K LUT）是直接的工程升级路径——核心 RTL 不变，只需替换芯片。
+**Hold-out subjects** (fold-0): sub003, sub006, sub009, sub013, sub020, sub021, sub024, sub026
+**Train subjects**: 32 subjects (sub001/2/4/5, sub007/8, sub010-12, sub014-19, sub022/3/5, sub027-40)
+**Manifest**: `model/ckpt/best_snn_mm_h32_holdout_manifest.json` 完整记录受试者分配
 
-### 9.4 EG4S20 上的最终 deployable bitstream
+**板上 bench**（命令：`tools/bench_fpga_snn_holdout.py --port COM27 --data data_foster_multi/all.npz --holdout sub003 ... sub026 --n 0`，输出 `doc/bench_fpga_snn_multimodal_holdout.json`）：
 
-**保留单模态 SNN bitstream (build_snn/scg_top_snn.bit, 649 KB)** 作为 EG4S20 上的最终板上验证：
-- 5-fold subject-disjoint CV: 85.48 ± 2.02 %
-- Hold-out 9660 unseen samples: 77.72 % (FPGA = sim 比特级一致)
-- Run-only 7.88 ms / sample
-- LUT 15.9 %, BRAM9K 28.1 %, DSP 3.5 %
+| 指标 | FPGA on-board (40,575 windows) | CPU sim (FP32 ckpt, same hold-out) |
+|---|---|---|
+| **Overall accuracy** | **94.14 %** | 94.26 % |
+| **Macro-F1** | **91.32 %** | — |
+| BG accuracy / F1 | 97.16 % / 97.04 % | — |
+| Sys accuracy / F1 | 95.09 % / 93.11 % | — |
+| Dia accuracy / F1 | 81.13 % / 83.80 % | — |
+| Run-only inference latency | **8.65 ms / window** | — |
+| Round-trip (UART 1280 B upload + run) | 117.0 ms | — |
+| FPGA vs FP32 ckpt **Δ** | **-0.12 pp** (INT8 几乎 bit-exact) | — |
 
-多模态 weights 全部公开（`rtl/weights_snn/W1.hex` 40 KB, H=32, val 95.24%），任何用户**用更大 FPGA 即可立即部署**。
+**Per-subject acc**（全部 8 人 ≥ 91 %）：
+
+| Subject | n_windows | acc |
+|---|---|---|
+| sub009 | 5,082 | **98.76 %** ⭐ |
+| sub003 | 4,718 | 97.86 % |
+| sub020 | 4,569 | 95.91 % |
+| sub024 | 5,151 | 93.28 % |
+| sub006 | 4,903 | 93.13 % |
+| sub026 | 5,624 | 92.87 % |
+| sub021 | 5,439 | 91.06 % |
+| sub013 | 5,089 | 91.04 % |
+
+**Confusion matrix (全 8 受试者合并)**：
+```
+            pred BG    Sys    Dia
+true BG  [ 24985   138    592 ]
+true Sys [   177  7880    230 ]
+true Dia [   619   621   5333 ]
+```
+
+**与 5-fold CV 的一致性**：5-fold subject-disjoint CV mean = 93.11 ± 2.10 %，本次 fold-0 单板部署 = 94.14 %，**在 0.5σ 内**，与 CV 中 fold-0 ckpt 的 FP32 val 94.26 % 一致。
+
+> 历史误差说明：早期 §9 草稿（被本次推翻）报告"板上 98 % (n=200)"——那是用 *leaky split* 训练的 ckpt 在 *未过滤* 的前 200 窗上的结果，包含训练受试者的窗。本次实验是 *zero-leakage* 的 gold-standard 部署精度。
+
+### 9.5 Final EG4S20 deployable bitstreams
+
+| Bitstream | 模型 | 评估方法 | 板上 acc | LUT % | BRAM9K |
+|---|---|---|---|---|---|
+| `build_snn/scg_top_snn_singlemodal_backup.bit` | 单模态 H=64 SCG (CEBSDB) | 5-fold subject-disjoint hold-out 9,660 windows | 77.72 % | 15.9 % | 18 |
+| `build_snn/scg_top_snn_multimodal.bit` | 多模态 H=32 channel-bank, **leaky-split ckpt** | first-200 window (含训练受试者) | 98.00 % (无效) | 10.97 % | 39 |
+| `build_snn/scg_top_snn_multimodal_holdout.bit` | **多模态 H=32 channel-bank, subject-disjoint** | **40,575 windows × 8 hold-out 受试者** | **94.14 %** ⭐ | 10.70 % | 39 |
+
+**当前烧录**：`scg_top_snn_multimodal_holdout.bit` (gold-standard 多模态部署)。其它 bit 作 fallback 保留。
+
+**结论**：通过 (1) channel-bank ROM 重组绕开 Anlogic BRAM 推断阈值；(2) 严格 subject-disjoint 训练 + 测试避免 leakage —— **FOSTER 5-channel 多模态 SNN 在国产 EG4S20 FPGA 上以 94.14 % overall / 91.32 % macro-F1 完成 zero-leakage gold-standard 部署**，比单模态 SNN 的 77.72 % 高 16.4 pp，证明多模态融合的硬件可行性 + 临床部署级精度。
 
 ---
 
 ## 10. 结论
 
-### 10.1 三大贡献
+### 10.1 四大贡献
 
 #### 贡献 1：SNN 范式在国产 FPGA 上的首次完整实现
 - 256→64→3 LIF SNN 用手写 Verilog 实现
@@ -687,7 +761,14 @@ truth Dia      4358       3368       2832       (recall 26.8%)
 - Hold-out: 77.72 %（per-subject best 98.77 %）
 - 揭示 cross-subject 双峰分布——临床部署的关键挑战
 
-#### 贡献 3：架构层面 SNN 优于 CNN 的硬证据
+#### 贡献 3：FOSTER 5-channel 多模态 SNN 在 EG4S20 上的 zero-leakage gold-standard 部署
+- 经过 3 轮综合失败 + **channel-bank ROM 重组** (W1 切 5 个 8 KB 子数组) 突破 Anlogic BRAM 推断阈值
+- **subject-disjoint 8-人 hold-out × 40,575 窗 严格 bench**：板上 acc = **94.14 %**, macro-F1 = 91.32 %
+- FPGA vs FP32 sim Δ = -0.12 pp（INT8 几乎 bit-exact）
+- 资源 LUT 10.70 % / BRAM9K 60.94 % / DSP 3.45 %, inference 8.65 ms / 窗
+- **国产 FPGA 上多模态生理信号 SNN 推理的首次 zero-leakage 上板**，比单模态 SNN 的 77.72 % 高 16.4 pp
+
+#### 贡献 4：架构层面 SNN 优于 CNN 的硬证据
 - SNN 在难类（Sys/Dia）F1 比 CNN 高 10-14 pp
 - SNN train-val gap (10.9 pp) 显著小于 CNN (16.3 pp)
 - SSL pretraining 救不了 CNN（无论单语料还是大混合），但 SNN 不需要 SSL 就赢

@@ -1,11 +1,11 @@
 Created by          : Tang Dynasty v6.2.190657
                     : Copyright (c) 2012-2026 Anlogic Inc.
-Generated           : Wed May  6 19:50:36 2026
+Generated           : Thu May  7 19:41:15 2026
 
 Top Model           : scg_top_snn
 Device              : EG4S20BG256
 Speed               : NA
-STA coverage        : 83.23%
+STA coverage        : 86.83%
 Constraint File     : 
 Confidence          : Routed
 Check Corner        : Both (Slow and Fast)
@@ -24,8 +24,8 @@ Fast     | yes      yes
 
 Timing Status
 --------------------
-	SWNS: 2.397ns, STNS: 0.000ns
-	HWNS: 0.042ns, HTNS: 0.000ns
+	SWNS: 2.661ns, STNS: 0.000ns
+	HWNS: 0.086ns, HTNS: 0.000ns
 	Period Check WNS: 0.000ns
 
 
@@ -34,11 +34,11 @@ Clock Summary
 
        Clock-Id:       C-Freq       Fanout   Clock-Name
 --------------------------------------------------------------------------------
-           clk0:       50.000         2767   DeriveClock
+           clk0:       50.000         1396   DeriveClock
 --------------------------------------------------------------------------------
 
        Name            Type         Rise(ns)   Fall(ns)          C-Period(ns)     C-Freq(MHz)          R-Period(ns)     R-Freq(MHz)         SWNS(ns)   STNS(ns)         HWNS(ns)   HTNS(ns)         Skew(ns)           Fanout        Max-Level        CC-From    CC-To
-       clk0           local            0.000     10.000                20.000          50.000                17.603          56.809            2.397      0.000            0.042      0.000            0.000             2767               14             no       no
+       clk0           local            0.000     10.000                20.000          50.000                17.339          57.673            2.661      0.000            0.086      0.000            0.000             1396               13             no       no
 
 Notes
 ----------
@@ -62,959 +62,25 @@ Path Group     :     DeriveClock -> DeriveClock
 Type           :     Self
 From Clock     :     DeriveClock
 To Clock       :     DeriveClock
-Min Period     :     17.603ns
-Fmax           :     56.809MHz
+Min Period     :     17.339ns
+Fmax           :     57.673MHz
 
 Statistics:
-Max            : SWNS      2.397ns, STNS      0.000ns,         0 Viol Endpoints,      6203 Total Endpoints,1000000000 Paths Analyzed
-Min            : HWNS      0.042ns, HTNS      0.000ns,         0 Viol Endpoints,      6203 Total Endpoints,1000000000 Paths Analyzed
+Max            : SWNS      2.661ns, STNS      0.000ns,         0 Viol Endpoints,      3309 Total Endpoints, 349086006 Paths Analyzed
+Min            : HWNS      0.086ns, HTNS      0.000ns,         0 Viol Endpoints,      3309 Total Endpoints, 349086006 Paths Analyzed
 ----------------------------------------------------------------------------------------------------
 
 Max Paths
 ----------------------------------------------------------------------------------------------------
-Slack               : 2.397ns
-Begin Point         : u_engine/lif1_i_reg[2]_syn_37.clk (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
-End Point           : u_engine/v1_reg[820]_syn_4.mi[0] (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+Slack               : 2.661ns
+Begin Point         : ramread3_syn_92.clkb (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+End Point           : u_engine/fc1_acc_reg[12]_syn_4.d[0] (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
 Check Type          : setup
 Process             : slow
 Budget              : 20.000ns { DeriveClock rising@20.000ns - DeriveClock rising@0.000ns }
-Data Path Delay     : 17.387ns (cell 6.185ns (35%), net 11.202ns (65%))
+Data Path Delay     : 17.123ns (cell 10.488ns (61%), net 6.635ns (39%))
 Clock Skew          : 0.000ns
-Logic Level         : 11 ( ADDER=5  LUT5=3  LUT4=2  LUT2=1 )
-Max Fanout          : 101
-Clock Uncertainty   : 0.100ns (sdc uncertainty: 0.000ns, default uncertainty: 0.100ns)
-
-Delay Type          Location             Incr           Path   Level  Netlist Info
---------------------------------------------------------------------  ---------------
-launch edge                             0.000    r     0.000               
---------------------------------------------------------------------  ---------------
-clk2q               x018y050z3          0.146    r     0.146          pin: u_engine/lif1_i_reg[2]_syn_37.q[0]
-net (fo=47)                             0.972          1.118          net: u_engine/lif1_i[1]_dup_37,  ../rtl/scg_snn_engine.v(100)
-                                                                      pin: u_engine/v1_reg[122]_syn_4.c[0]
-LUT2                x019y053z1          0.251    r     1.369       1  pin: u_engine/v1_reg[122]_syn_4.f[0]
-net (fo=14)                             2.116          3.485          net: u_engine/lif1_blk$v_leak_b4[15]_syn_3,  NOFILE(0)
-                                                                      pin: u_engine/v1_reg[364]_syn_4.b[1]
-LUT5                x012y045z3          0.431    f     3.916       2  pin: u_engine/v1_reg[364]_syn_4.f[1]
-net (fo=1)                              0.594          4.510          net: u_engine/lif1_blk$v_leak_b4[8]_syn_12,  NOFILE(0)
-                                                                      pin: u_engine/lif1_i_reg[4]_syn_35.a[1]
-LUT5                x012y046z3          0.424    f     4.934       3  pin: u_engine/lif1_i_reg[4]_syn_35.f[1]
-net (fo=1)                              0.456          5.390          net: u_engine/lif1_blk$v_leak_b4[8]_syn_26,  NOFILE(0)
-                                                                      pin: u_engine/v1_reg[248]_syn_4.a[0]
-LUT4                x013y045z3          0.424    f     5.814       4  pin: u_engine/v1_reg[248]_syn_4.f[0]
-net (fo=1)                              0.594          6.408          net: u_engine/lif1_blk$v_leak_b4[8]_syn_28,  NOFILE(0)
-                                                                      pin: u_engine/lif1_blk$v_leak_b4[8]_syn_78.b[0]
-LUT5                x014y045z2          0.431    f     6.839       5  pin: u_engine/lif1_blk$v_leak_b4[8]_syn_78.f[0]
-net (fo=2)                              1.172          8.011          net: u_engine/lif1_blk$v_leak_b4[8],  NOFILE(0)
-                                                                      pin: u_engine/add12_syn_295.e[0]
-ADDER               x019y042z3          1.102    f     9.113       6  pin: u_engine/add12_syn_295.fx[1]
-net (fo=1)                              0.463          9.576          net: u_engine/add12_syn_3[6],  ../rtl/scg_snn_engine.v(202)
-                                                                      pin: u_engine/add12_syn_302.e[1]
-ADDER               x020y042z3          0.715    f    10.291       7  pin: u_engine/add12_syn_302.fco
-net (fo=1)                              0.000         10.291          net: u_engine/add12_syn_276,  ../rtl/scg_snn_engine.v(202)
-                                                                      pin: u_engine/add12_syn_303.fci
-ADDER               x020y043z2          0.453    f    10.744       8  pin: u_engine/add12_syn_303.fx[1]
-net (fo=7)                              0.892         11.636          net: u_engine/v1[0]_b194[10],  NOFILE(0)
-                                                                      pin: u_engine/lt4_syn_95.b[1]
-ADDER               x020y044z1          0.539    f    12.175       9  pin: u_engine/lt4_syn_95.fco
-net (fo=1)                              0.000         12.175          net: u_engine/lt4_syn_25,  ../rtl/scg_snn_engine.v(203)
-                                                                      pin: u_engine/lt4_syn_98.fci
-ADDER               x020y045z0          0.073    f    12.248          pin: u_engine/lt4_syn_98.fco
-net (fo=1)                              0.000         12.248          net: u_engine/lt4_syn_29,  ../rtl/scg_snn_engine.v(203)
-                                                                      pin: u_engine/lt4_syn_101.fci
-ADDER               x020y045z1          0.073    f    12.321          pin: u_engine/lt4_syn_101.fco
-net (fo=1)                              0.000         12.321          net: u_engine/lt4_syn_33,  ../rtl/scg_snn_engine.v(203)
-                                                                      pin: u_engine/lt4_syn_104.fci
-ADDER               x020y046z0          0.073    f    12.394          pin: u_engine/lt4_syn_104.fco
-net (fo=1)                              0.000         12.394          net: u_engine/lt4_syn_37,  ../rtl/scg_snn_engine.v(203)
-                                                                      pin: u_engine/lt4_syn_107.fci
-ADDER               x020y046z1          0.073    f    12.467          pin: u_engine/lt4_syn_107.fco
-net (fo=1)                              0.000         12.467          net: u_engine/lt4_syn_41,  ../rtl/scg_snn_engine.v(203)
-                                                                      pin: u_engine/lt4_syn_110.fci
-ADDER               x020y047z0          0.073    f    12.540          pin: u_engine/lt4_syn_110.fco
-net (fo=1)                              0.000         12.540          net: u_engine/lt4_syn_45,  ../rtl/scg_snn_engine.v(203)
-                                                                      pin: u_engine/lt4_syn_113.fci
-ADDER               x020y047z1          0.073    f    12.613          pin: u_engine/lt4_syn_113.fco
-net (fo=1)                              0.000         12.613          net: u_engine/lt4_syn_49,  ../rtl/scg_snn_engine.v(203)
-                                                                      pin: u_engine/lt4_syn_116.fci
-ADDER               x020y048z0          0.355    f    12.968      10  pin: u_engine/lt4_syn_116.f[1]
-net (fo=101)                            0.837         13.805          net: u_engine/s1_b1_n,  NOFILE(0)
-                                                                      pin: u_engine/v1_reg[316]_syn_6.b[0]
-LUT4                x017y041z0          0.333    f    14.138      11  pin: u_engine/v1_reg[316]_syn_6.f[0]
-net (fo=61)                             3.106         17.244          net: u_engine/mux50_syn_dup_11798,  ../rtl/scg_snn_engine.v(132)
-                                                                      pin: u_engine/v1_reg[820]_syn_4.mi[0]
-reg                 x010y048z0          0.143    r    17.387          net: u_engine/v1[29][4],  ../rtl/scg_snn_engine.v(67)
---------------------------------------------------------------------  ---------------
-Arrival                                               17.387               
-
-capture edge                           20.000    r    20.000               
---------------------------------------------------------------------  ---------------
-setup                                  -0.116         19.884               
-clock uncertainty                      -0.100         19.784               
-clock pessimism                         0.000         19.784               
---------------------------------------------------------------------  ---------------
-Required                                              19.784               
---------------------------------------------------------------------  ---------------
-Slack                                                  2.397               
-
-Slack               : 2.397ns
-Begin Point         : u_engine/lif1_i_reg[2]_syn_37.clk (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
-End Point           : u_engine/v1_reg[1492]_syn_4.mi[0] (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
-Check Type          : setup
-Process             : slow
-Budget              : 20.000ns { DeriveClock rising@20.000ns - DeriveClock rising@0.000ns }
-Data Path Delay     : 17.387ns (cell 6.185ns (35%), net 11.202ns (65%))
-Clock Skew          : 0.000ns
-Logic Level         : 11 ( ADDER=5  LUT5=3  LUT4=2  LUT2=1 )
-Max Fanout          : 101
-Clock Uncertainty   : 0.100ns (sdc uncertainty: 0.000ns, default uncertainty: 0.100ns)
-
-Delay Type          Location             Incr           Path   Level  Netlist Info
---------------------------------------------------------------------  ---------------
-launch edge                             0.000    r     0.000               
---------------------------------------------------------------------  ---------------
-clk2q               x018y050z3          0.146    r     0.146          pin: u_engine/lif1_i_reg[2]_syn_37.q[0]
-net (fo=47)                             0.972          1.118          net: u_engine/lif1_i[1]_dup_37,  ../rtl/scg_snn_engine.v(100)
-                                                                      pin: u_engine/v1_reg[122]_syn_4.c[0]
-LUT2                x019y053z1          0.251    r     1.369       1  pin: u_engine/v1_reg[122]_syn_4.f[0]
-net (fo=14)                             2.116          3.485          net: u_engine/lif1_blk$v_leak_b4[15]_syn_3,  NOFILE(0)
-                                                                      pin: u_engine/v1_reg[364]_syn_4.b[1]
-LUT5                x012y045z3          0.431    f     3.916       2  pin: u_engine/v1_reg[364]_syn_4.f[1]
-net (fo=1)                              0.594          4.510          net: u_engine/lif1_blk$v_leak_b4[8]_syn_12,  NOFILE(0)
-                                                                      pin: u_engine/lif1_i_reg[4]_syn_35.a[1]
-LUT5                x012y046z3          0.424    f     4.934       3  pin: u_engine/lif1_i_reg[4]_syn_35.f[1]
-net (fo=1)                              0.456          5.390          net: u_engine/lif1_blk$v_leak_b4[8]_syn_26,  NOFILE(0)
-                                                                      pin: u_engine/v1_reg[248]_syn_4.a[0]
-LUT4                x013y045z3          0.424    f     5.814       4  pin: u_engine/v1_reg[248]_syn_4.f[0]
-net (fo=1)                              0.594          6.408          net: u_engine/lif1_blk$v_leak_b4[8]_syn_28,  NOFILE(0)
-                                                                      pin: u_engine/lif1_blk$v_leak_b4[8]_syn_78.b[0]
-LUT5                x014y045z2          0.431    f     6.839       5  pin: u_engine/lif1_blk$v_leak_b4[8]_syn_78.f[0]
-net (fo=2)                              1.172          8.011          net: u_engine/lif1_blk$v_leak_b4[8],  NOFILE(0)
-                                                                      pin: u_engine/add12_syn_295.e[0]
-ADDER               x019y042z3          1.102    f     9.113       6  pin: u_engine/add12_syn_295.fx[1]
-net (fo=1)                              0.463          9.576          net: u_engine/add12_syn_3[6],  ../rtl/scg_snn_engine.v(202)
-                                                                      pin: u_engine/add12_syn_302.e[1]
-ADDER               x020y042z3          0.715    f    10.291       7  pin: u_engine/add12_syn_302.fco
-net (fo=1)                              0.000         10.291          net: u_engine/add12_syn_276,  ../rtl/scg_snn_engine.v(202)
-                                                                      pin: u_engine/add12_syn_303.fci
-ADDER               x020y043z2          0.453    f    10.744       8  pin: u_engine/add12_syn_303.fx[1]
-net (fo=7)                              0.892         11.636          net: u_engine/v1[0]_b194[10],  NOFILE(0)
-                                                                      pin: u_engine/lt4_syn_95.b[1]
-ADDER               x020y044z1          0.539    f    12.175       9  pin: u_engine/lt4_syn_95.fco
-net (fo=1)                              0.000         12.175          net: u_engine/lt4_syn_25,  ../rtl/scg_snn_engine.v(203)
-                                                                      pin: u_engine/lt4_syn_98.fci
-ADDER               x020y045z0          0.073    f    12.248          pin: u_engine/lt4_syn_98.fco
-net (fo=1)                              0.000         12.248          net: u_engine/lt4_syn_29,  ../rtl/scg_snn_engine.v(203)
-                                                                      pin: u_engine/lt4_syn_101.fci
-ADDER               x020y045z1          0.073    f    12.321          pin: u_engine/lt4_syn_101.fco
-net (fo=1)                              0.000         12.321          net: u_engine/lt4_syn_33,  ../rtl/scg_snn_engine.v(203)
-                                                                      pin: u_engine/lt4_syn_104.fci
-ADDER               x020y046z0          0.073    f    12.394          pin: u_engine/lt4_syn_104.fco
-net (fo=1)                              0.000         12.394          net: u_engine/lt4_syn_37,  ../rtl/scg_snn_engine.v(203)
-                                                                      pin: u_engine/lt4_syn_107.fci
-ADDER               x020y046z1          0.073    f    12.467          pin: u_engine/lt4_syn_107.fco
-net (fo=1)                              0.000         12.467          net: u_engine/lt4_syn_41,  ../rtl/scg_snn_engine.v(203)
-                                                                      pin: u_engine/lt4_syn_110.fci
-ADDER               x020y047z0          0.073    f    12.540          pin: u_engine/lt4_syn_110.fco
-net (fo=1)                              0.000         12.540          net: u_engine/lt4_syn_45,  ../rtl/scg_snn_engine.v(203)
-                                                                      pin: u_engine/lt4_syn_113.fci
-ADDER               x020y047z1          0.073    f    12.613          pin: u_engine/lt4_syn_113.fco
-net (fo=1)                              0.000         12.613          net: u_engine/lt4_syn_49,  ../rtl/scg_snn_engine.v(203)
-                                                                      pin: u_engine/lt4_syn_116.fci
-ADDER               x020y048z0          0.355    f    12.968      10  pin: u_engine/lt4_syn_116.f[1]
-net (fo=101)                            0.837         13.805          net: u_engine/s1_b1_n,  NOFILE(0)
-                                                                      pin: u_engine/v1_reg[316]_syn_6.b[0]
-LUT4                x017y041z0          0.333    f    14.138      11  pin: u_engine/v1_reg[316]_syn_6.f[0]
-net (fo=61)                             3.106         17.244          net: u_engine/mux50_syn_dup_11798,  ../rtl/scg_snn_engine.v(132)
-                                                                      pin: u_engine/v1_reg[1492]_syn_4.mi[0]
-reg                 x010y048z1          0.143    r    17.387          net: u_engine/v1[1][4],  ../rtl/scg_snn_engine.v(67)
---------------------------------------------------------------------  ---------------
-Arrival                                               17.387               
-
-capture edge                           20.000    r    20.000               
---------------------------------------------------------------------  ---------------
-setup                                  -0.116         19.884               
-clock uncertainty                      -0.100         19.784               
-clock pessimism                         0.000         19.784               
---------------------------------------------------------------------  ---------------
-Required                                              19.784               
---------------------------------------------------------------------  ---------------
-Slack                                                  2.397               
-
-Slack               : 2.401ns
-Begin Point         : u_engine/lif1_i_reg[2]_syn_37.clk (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
-End Point           : u_engine/v1_reg[1025]_syn_3.mi[0] (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
-Check Type          : setup
-Process             : slow
-Budget              : 20.000ns { DeriveClock rising@20.000ns - DeriveClock rising@0.000ns }
-Data Path Delay     : 17.383ns (cell 5.738ns (33%), net 11.645ns (67%))
-Clock Skew          : 0.000ns
-Logic Level         : 11 ( ADDER=5  LUT5=3  LUT4=2  LUT2=1 )
-Max Fanout          : 47
-Clock Uncertainty   : 0.100ns (sdc uncertainty: 0.000ns, default uncertainty: 0.100ns)
-
-Delay Type          Location             Incr           Path   Level  Netlist Info
---------------------------------------------------------------------  ---------------
-launch edge                             0.000    r     0.000               
---------------------------------------------------------------------  ---------------
-clk2q               x018y050z3          0.146    r     0.146          pin: u_engine/lif1_i_reg[2]_syn_37.q[0]
-net (fo=47)                             0.972          1.118          net: u_engine/lif1_i[1]_dup_37,  ../rtl/scg_snn_engine.v(100)
-                                                                      pin: u_engine/v1_reg[122]_syn_4.c[0]
-LUT2                x019y053z1          0.251    r     1.369       1  pin: u_engine/v1_reg[122]_syn_4.f[0]
-net (fo=14)                             2.116          3.485          net: u_engine/lif1_blk$v_leak_b4[15]_syn_3,  NOFILE(0)
-                                                                      pin: u_engine/v1_reg[364]_syn_4.b[1]
-LUT5                x012y045z3          0.431    f     3.916       2  pin: u_engine/v1_reg[364]_syn_4.f[1]
-net (fo=1)                              0.594          4.510          net: u_engine/lif1_blk$v_leak_b4[8]_syn_12,  NOFILE(0)
-                                                                      pin: u_engine/lif1_i_reg[4]_syn_35.a[1]
-LUT5                x012y046z3          0.424    f     4.934       3  pin: u_engine/lif1_i_reg[4]_syn_35.f[1]
-net (fo=1)                              0.456          5.390          net: u_engine/lif1_blk$v_leak_b4[8]_syn_26,  NOFILE(0)
-                                                                      pin: u_engine/v1_reg[248]_syn_4.a[0]
-LUT4                x013y045z3          0.424    f     5.814       4  pin: u_engine/v1_reg[248]_syn_4.f[0]
-net (fo=1)                              0.594          6.408          net: u_engine/lif1_blk$v_leak_b4[8]_syn_28,  NOFILE(0)
-                                                                      pin: u_engine/lif1_blk$v_leak_b4[8]_syn_78.b[0]
-LUT5                x014y045z2          0.431    f     6.839       5  pin: u_engine/lif1_blk$v_leak_b4[8]_syn_78.f[0]
-net (fo=2)                              1.172          8.011          net: u_engine/lif1_blk$v_leak_b4[8],  NOFILE(0)
-                                                                      pin: u_engine/add12_syn_295.e[0]
-ADDER               x019y042z3          0.781    f     8.792       6  pin: u_engine/add12_syn_295.fco
-net (fo=1)                              0.000          8.792          net: u_engine/add12_syn_153,  ../rtl/scg_snn_engine.v(202)
-                                                                      pin: u_engine/add12_syn_296.fci
-ADDER               x019y043z2          0.132    f     8.924          pin: u_engine/add12_syn_296.fco
-net (fo=1)                              0.000          8.924          net: u_engine/add12_syn_157,  ../rtl/scg_snn_engine.v(202)
-                                                                      pin: u_engine/add12_syn_297.fci
-ADDER               x019y043z3          0.387    f     9.311       7  pin: u_engine/add12_syn_297.fx[0]
-net (fo=1)                              0.607          9.918          net: u_engine/add12_syn_3[12],  ../rtl/scg_snn_engine.v(202)
-                                                                      pin: u_engine/add12_syn_304.e[0]
-ADDER               x020y043z3          0.781    f    10.699       8  pin: u_engine/add12_syn_304.fco
-net (fo=1)                              0.000         10.699          net: u_engine/add12_syn_284,  ../rtl/scg_snn_engine.v(202)
-                                                                      pin: u_engine/add12_syn_305.fci
-ADDER               x020y044z2          0.453    f    11.152       9  pin: u_engine/add12_syn_305.fx[1]
-net (fo=8)                              1.110         12.262          net: u_engine/v1[0]_b194[18],  NOFILE(0)
-                                                                      pin: u_engine/sub3_syn_156.b[0]
-ADDER               x021y046z2          0.703    f    12.965      10  pin: u_engine/sub3_syn_156.f[0]
-net (fo=5)                              2.376         15.341          net: u_engine/sub3_syn_4[15],  ../rtl/scg_snn_engine.v(205)
-                                                                      pin: u_engine/v1_reg[1433]_syn_7.c[0]
-LUT4                x021y034z0          0.251    r    15.592      11  pin: u_engine/v1_reg[1433]_syn_7.f[0]
-net (fo=37)                             1.648         17.240          net: u_engine/mux50_syn_6026,  ../rtl/scg_snn_engine.v(132)
-                                                                      pin: u_engine/v1_reg[1025]_syn_3.mi[0]
-reg                 x018y041z2          0.143    r    17.383          net: u_engine/v1[21][17],  ../rtl/scg_snn_engine.v(67)
---------------------------------------------------------------------  ---------------
-Arrival                                               17.383               
-
-capture edge                           20.000    r    20.000               
---------------------------------------------------------------------  ---------------
-setup                                  -0.116         19.884               
-clock uncertainty                      -0.100         19.784               
-clock pessimism                         0.000         19.784               
---------------------------------------------------------------------  ---------------
-Required                                              19.784               
---------------------------------------------------------------------  ---------------
-Slack                                                  2.401               
-
-Slack               : 2.564ns
-Begin Point         : u_engine/lif1_i_reg[2]_syn_37.clk (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
-End Point           : u_engine/add12_syn_301.mi[0] (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
-Check Type          : setup
-Process             : slow
-Budget              : 20.000ns { DeriveClock rising@20.000ns - DeriveClock rising@0.000ns }
-Data Path Delay     : 17.220ns (cell 5.738ns (33%), net 11.482ns (67%))
-Clock Skew          : 0.000ns
-Logic Level         : 11 ( ADDER=5  LUT5=3  LUT4=2  LUT2=1 )
-Max Fanout          : 47
-Clock Uncertainty   : 0.100ns (sdc uncertainty: 0.000ns, default uncertainty: 0.100ns)
-
-Delay Type          Location             Incr           Path   Level  Netlist Info
---------------------------------------------------------------------  ---------------
-launch edge                             0.000    r     0.000               
---------------------------------------------------------------------  ---------------
-clk2q               x018y050z3          0.146    r     0.146          pin: u_engine/lif1_i_reg[2]_syn_37.q[0]
-net (fo=47)                             0.972          1.118          net: u_engine/lif1_i[1]_dup_37,  ../rtl/scg_snn_engine.v(100)
-                                                                      pin: u_engine/v1_reg[122]_syn_4.c[0]
-LUT2                x019y053z1          0.251    r     1.369       1  pin: u_engine/v1_reg[122]_syn_4.f[0]
-net (fo=14)                             2.116          3.485          net: u_engine/lif1_blk$v_leak_b4[15]_syn_3,  NOFILE(0)
-                                                                      pin: u_engine/v1_reg[364]_syn_4.b[1]
-LUT5                x012y045z3          0.431    f     3.916       2  pin: u_engine/v1_reg[364]_syn_4.f[1]
-net (fo=1)                              0.594          4.510          net: u_engine/lif1_blk$v_leak_b4[8]_syn_12,  NOFILE(0)
-                                                                      pin: u_engine/lif1_i_reg[4]_syn_35.a[1]
-LUT5                x012y046z3          0.424    f     4.934       3  pin: u_engine/lif1_i_reg[4]_syn_35.f[1]
-net (fo=1)                              0.456          5.390          net: u_engine/lif1_blk$v_leak_b4[8]_syn_26,  NOFILE(0)
-                                                                      pin: u_engine/v1_reg[248]_syn_4.a[0]
-LUT4                x013y045z3          0.424    f     5.814       4  pin: u_engine/v1_reg[248]_syn_4.f[0]
-net (fo=1)                              0.594          6.408          net: u_engine/lif1_blk$v_leak_b4[8]_syn_28,  NOFILE(0)
-                                                                      pin: u_engine/lif1_blk$v_leak_b4[8]_syn_78.b[0]
-LUT5                x014y045z2          0.431    f     6.839       5  pin: u_engine/lif1_blk$v_leak_b4[8]_syn_78.f[0]
-net (fo=2)                              1.172          8.011          net: u_engine/lif1_blk$v_leak_b4[8],  NOFILE(0)
-                                                                      pin: u_engine/add12_syn_295.e[0]
-ADDER               x019y042z3          0.781    f     8.792       6  pin: u_engine/add12_syn_295.fco
-net (fo=1)                              0.000          8.792          net: u_engine/add12_syn_153,  ../rtl/scg_snn_engine.v(202)
-                                                                      pin: u_engine/add12_syn_296.fci
-ADDER               x019y043z2          0.132    f     8.924          pin: u_engine/add12_syn_296.fco
-net (fo=1)                              0.000          8.924          net: u_engine/add12_syn_157,  ../rtl/scg_snn_engine.v(202)
-                                                                      pin: u_engine/add12_syn_297.fci
-ADDER               x019y043z3          0.387    f     9.311       7  pin: u_engine/add12_syn_297.fx[0]
-net (fo=1)                              0.607          9.918          net: u_engine/add12_syn_3[12],  ../rtl/scg_snn_engine.v(202)
-                                                                      pin: u_engine/add12_syn_304.e[0]
-ADDER               x020y043z3          0.781    f    10.699       8  pin: u_engine/add12_syn_304.fco
-net (fo=1)                              0.000         10.699          net: u_engine/add12_syn_284,  ../rtl/scg_snn_engine.v(202)
-                                                                      pin: u_engine/add12_syn_305.fci
-ADDER               x020y044z2          0.453    f    11.152       9  pin: u_engine/add12_syn_305.fx[1]
-net (fo=8)                              1.110         12.262          net: u_engine/v1[0]_b194[18],  NOFILE(0)
-                                                                      pin: u_engine/sub3_syn_156.b[0]
-ADDER               x021y046z2          0.703    f    12.965      10  pin: u_engine/sub3_syn_156.f[0]
-net (fo=5)                              2.376         15.341          net: u_engine/sub3_syn_4[15],  ../rtl/scg_snn_engine.v(205)
-                                                                      pin: u_engine/v1_reg[1433]_syn_7.c[0]
-LUT4                x021y034z0          0.251    r    15.592      11  pin: u_engine/v1_reg[1433]_syn_7.f[0]
-net (fo=37)                             1.485         17.077          net: u_engine/mux50_syn_6026,  ../rtl/scg_snn_engine.v(132)
-                                                                      pin: u_engine/add12_syn_301.mi[0]
-ADDER (reg)         x020y042z2          0.143    r    17.220          net: u_engine/v1[0][17],  ../rtl/scg_snn_engine.v(67)
---------------------------------------------------------------------  ---------------
-Arrival                                               17.220               
-
-capture edge                           20.000    r    20.000               
---------------------------------------------------------------------  ---------------
-setup                                  -0.116         19.884               
-clock uncertainty                      -0.100         19.784               
-clock pessimism                         0.000         19.784               
---------------------------------------------------------------------  ---------------
-Required                                              19.784               
---------------------------------------------------------------------  ---------------
-Slack                                                  2.564               
-
-Slack               : 2.564ns
-Begin Point         : u_engine/lif1_i_reg[2]_syn_37.clk (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
-End Point           : u_engine/v1_reg[977]_syn_3.mi[0] (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
-Check Type          : setup
-Process             : slow
-Budget              : 20.000ns { DeriveClock rising@20.000ns - DeriveClock rising@0.000ns }
-Data Path Delay     : 17.220ns (cell 5.738ns (33%), net 11.482ns (67%))
-Clock Skew          : 0.000ns
-Logic Level         : 11 ( ADDER=5  LUT5=3  LUT4=2  LUT2=1 )
-Max Fanout          : 47
-Clock Uncertainty   : 0.100ns (sdc uncertainty: 0.000ns, default uncertainty: 0.100ns)
-
-Delay Type          Location             Incr           Path   Level  Netlist Info
---------------------------------------------------------------------  ---------------
-launch edge                             0.000    r     0.000               
---------------------------------------------------------------------  ---------------
-clk2q               x018y050z3          0.146    r     0.146          pin: u_engine/lif1_i_reg[2]_syn_37.q[0]
-net (fo=47)                             0.972          1.118          net: u_engine/lif1_i[1]_dup_37,  ../rtl/scg_snn_engine.v(100)
-                                                                      pin: u_engine/v1_reg[122]_syn_4.c[0]
-LUT2                x019y053z1          0.251    r     1.369       1  pin: u_engine/v1_reg[122]_syn_4.f[0]
-net (fo=14)                             2.116          3.485          net: u_engine/lif1_blk$v_leak_b4[15]_syn_3,  NOFILE(0)
-                                                                      pin: u_engine/v1_reg[364]_syn_4.b[1]
-LUT5                x012y045z3          0.431    f     3.916       2  pin: u_engine/v1_reg[364]_syn_4.f[1]
-net (fo=1)                              0.594          4.510          net: u_engine/lif1_blk$v_leak_b4[8]_syn_12,  NOFILE(0)
-                                                                      pin: u_engine/lif1_i_reg[4]_syn_35.a[1]
-LUT5                x012y046z3          0.424    f     4.934       3  pin: u_engine/lif1_i_reg[4]_syn_35.f[1]
-net (fo=1)                              0.456          5.390          net: u_engine/lif1_blk$v_leak_b4[8]_syn_26,  NOFILE(0)
-                                                                      pin: u_engine/v1_reg[248]_syn_4.a[0]
-LUT4                x013y045z3          0.424    f     5.814       4  pin: u_engine/v1_reg[248]_syn_4.f[0]
-net (fo=1)                              0.594          6.408          net: u_engine/lif1_blk$v_leak_b4[8]_syn_28,  NOFILE(0)
-                                                                      pin: u_engine/lif1_blk$v_leak_b4[8]_syn_78.b[0]
-LUT5                x014y045z2          0.431    f     6.839       5  pin: u_engine/lif1_blk$v_leak_b4[8]_syn_78.f[0]
-net (fo=2)                              1.172          8.011          net: u_engine/lif1_blk$v_leak_b4[8],  NOFILE(0)
-                                                                      pin: u_engine/add12_syn_295.e[0]
-ADDER               x019y042z3          0.781    f     8.792       6  pin: u_engine/add12_syn_295.fco
-net (fo=1)                              0.000          8.792          net: u_engine/add12_syn_153,  ../rtl/scg_snn_engine.v(202)
-                                                                      pin: u_engine/add12_syn_296.fci
-ADDER               x019y043z2          0.132    f     8.924          pin: u_engine/add12_syn_296.fco
-net (fo=1)                              0.000          8.924          net: u_engine/add12_syn_157,  ../rtl/scg_snn_engine.v(202)
-                                                                      pin: u_engine/add12_syn_297.fci
-ADDER               x019y043z3          0.387    f     9.311       7  pin: u_engine/add12_syn_297.fx[0]
-net (fo=1)                              0.607          9.918          net: u_engine/add12_syn_3[12],  ../rtl/scg_snn_engine.v(202)
-                                                                      pin: u_engine/add12_syn_304.e[0]
-ADDER               x020y043z3          0.781    f    10.699       8  pin: u_engine/add12_syn_304.fco
-net (fo=1)                              0.000         10.699          net: u_engine/add12_syn_284,  ../rtl/scg_snn_engine.v(202)
-                                                                      pin: u_engine/add12_syn_305.fci
-ADDER               x020y044z2          0.453    f    11.152       9  pin: u_engine/add12_syn_305.fx[1]
-net (fo=8)                              1.110         12.262          net: u_engine/v1[0]_b194[18],  NOFILE(0)
-                                                                      pin: u_engine/sub3_syn_156.b[0]
-ADDER               x021y046z2          0.703    f    12.965      10  pin: u_engine/sub3_syn_156.f[0]
-net (fo=5)                              2.376         15.341          net: u_engine/sub3_syn_4[15],  ../rtl/scg_snn_engine.v(205)
-                                                                      pin: u_engine/v1_reg[1433]_syn_7.c[0]
-LUT4                x021y034z0          0.251    r    15.592      11  pin: u_engine/v1_reg[1433]_syn_7.f[0]
-net (fo=37)                             1.485         17.077          net: u_engine/mux50_syn_6026,  ../rtl/scg_snn_engine.v(132)
-                                                                      pin: u_engine/v1_reg[977]_syn_3.mi[0]
-reg                 x018y040z2          0.143    r    17.220          net: u_engine/v1[23][17],  ../rtl/scg_snn_engine.v(67)
---------------------------------------------------------------------  ---------------
-Arrival                                               17.220               
-
-capture edge                           20.000    r    20.000               
---------------------------------------------------------------------  ---------------
-setup                                  -0.116         19.884               
-clock uncertainty                      -0.100         19.784               
-clock pessimism                         0.000         19.784               
---------------------------------------------------------------------  ---------------
-Required                                              19.784               
---------------------------------------------------------------------  ---------------
-Slack                                                  2.564               
-
-Slack               : 2.572ns
-Begin Point         : u_engine/lif1_i_reg[2]_syn_37.clk (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
-End Point           : u_engine/v1_reg[196]_syn_3.mi[0] (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
-Check Type          : setup
-Process             : slow
-Budget              : 20.000ns { DeriveClock rising@20.000ns - DeriveClock rising@0.000ns }
-Data Path Delay     : 17.212ns (cell 6.185ns (35%), net 11.027ns (65%))
-Clock Skew          : 0.000ns
-Logic Level         : 11 ( ADDER=5  LUT5=3  LUT4=2  LUT2=1 )
-Max Fanout          : 101
-Clock Uncertainty   : 0.100ns (sdc uncertainty: 0.000ns, default uncertainty: 0.100ns)
-
-Delay Type          Location             Incr           Path   Level  Netlist Info
---------------------------------------------------------------------  ---------------
-launch edge                             0.000    r     0.000               
---------------------------------------------------------------------  ---------------
-clk2q               x018y050z3          0.146    r     0.146          pin: u_engine/lif1_i_reg[2]_syn_37.q[0]
-net (fo=47)                             0.972          1.118          net: u_engine/lif1_i[1]_dup_37,  ../rtl/scg_snn_engine.v(100)
-                                                                      pin: u_engine/v1_reg[122]_syn_4.c[0]
-LUT2                x019y053z1          0.251    r     1.369       1  pin: u_engine/v1_reg[122]_syn_4.f[0]
-net (fo=14)                             2.116          3.485          net: u_engine/lif1_blk$v_leak_b4[15]_syn_3,  NOFILE(0)
-                                                                      pin: u_engine/v1_reg[364]_syn_4.b[1]
-LUT5                x012y045z3          0.431    f     3.916       2  pin: u_engine/v1_reg[364]_syn_4.f[1]
-net (fo=1)                              0.594          4.510          net: u_engine/lif1_blk$v_leak_b4[8]_syn_12,  NOFILE(0)
-                                                                      pin: u_engine/lif1_i_reg[4]_syn_35.a[1]
-LUT5                x012y046z3          0.424    f     4.934       3  pin: u_engine/lif1_i_reg[4]_syn_35.f[1]
-net (fo=1)                              0.456          5.390          net: u_engine/lif1_blk$v_leak_b4[8]_syn_26,  NOFILE(0)
-                                                                      pin: u_engine/v1_reg[248]_syn_4.a[0]
-LUT4                x013y045z3          0.424    f     5.814       4  pin: u_engine/v1_reg[248]_syn_4.f[0]
-net (fo=1)                              0.594          6.408          net: u_engine/lif1_blk$v_leak_b4[8]_syn_28,  NOFILE(0)
-                                                                      pin: u_engine/lif1_blk$v_leak_b4[8]_syn_78.b[0]
-LUT5                x014y045z2          0.431    f     6.839       5  pin: u_engine/lif1_blk$v_leak_b4[8]_syn_78.f[0]
-net (fo=2)                              1.172          8.011          net: u_engine/lif1_blk$v_leak_b4[8],  NOFILE(0)
-                                                                      pin: u_engine/add12_syn_295.e[0]
-ADDER               x019y042z3          1.102    f     9.113       6  pin: u_engine/add12_syn_295.fx[1]
-net (fo=1)                              0.463          9.576          net: u_engine/add12_syn_3[6],  ../rtl/scg_snn_engine.v(202)
-                                                                      pin: u_engine/add12_syn_302.e[1]
-ADDER               x020y042z3          0.715    f    10.291       7  pin: u_engine/add12_syn_302.fco
-net (fo=1)                              0.000         10.291          net: u_engine/add12_syn_276,  ../rtl/scg_snn_engine.v(202)
-                                                                      pin: u_engine/add12_syn_303.fci
-ADDER               x020y043z2          0.453    f    10.744       8  pin: u_engine/add12_syn_303.fx[1]
-net (fo=7)                              0.892         11.636          net: u_engine/v1[0]_b194[10],  NOFILE(0)
-                                                                      pin: u_engine/lt4_syn_95.b[1]
-ADDER               x020y044z1          0.539    f    12.175       9  pin: u_engine/lt4_syn_95.fco
-net (fo=1)                              0.000         12.175          net: u_engine/lt4_syn_25,  ../rtl/scg_snn_engine.v(203)
-                                                                      pin: u_engine/lt4_syn_98.fci
-ADDER               x020y045z0          0.073    f    12.248          pin: u_engine/lt4_syn_98.fco
-net (fo=1)                              0.000         12.248          net: u_engine/lt4_syn_29,  ../rtl/scg_snn_engine.v(203)
-                                                                      pin: u_engine/lt4_syn_101.fci
-ADDER               x020y045z1          0.073    f    12.321          pin: u_engine/lt4_syn_101.fco
-net (fo=1)                              0.000         12.321          net: u_engine/lt4_syn_33,  ../rtl/scg_snn_engine.v(203)
-                                                                      pin: u_engine/lt4_syn_104.fci
-ADDER               x020y046z0          0.073    f    12.394          pin: u_engine/lt4_syn_104.fco
-net (fo=1)                              0.000         12.394          net: u_engine/lt4_syn_37,  ../rtl/scg_snn_engine.v(203)
-                                                                      pin: u_engine/lt4_syn_107.fci
-ADDER               x020y046z1          0.073    f    12.467          pin: u_engine/lt4_syn_107.fco
-net (fo=1)                              0.000         12.467          net: u_engine/lt4_syn_41,  ../rtl/scg_snn_engine.v(203)
-                                                                      pin: u_engine/lt4_syn_110.fci
-ADDER               x020y047z0          0.073    f    12.540          pin: u_engine/lt4_syn_110.fco
-net (fo=1)                              0.000         12.540          net: u_engine/lt4_syn_45,  ../rtl/scg_snn_engine.v(203)
-                                                                      pin: u_engine/lt4_syn_113.fci
-ADDER               x020y047z1          0.073    f    12.613          pin: u_engine/lt4_syn_113.fco
-net (fo=1)                              0.000         12.613          net: u_engine/lt4_syn_49,  ../rtl/scg_snn_engine.v(203)
-                                                                      pin: u_engine/lt4_syn_116.fci
-ADDER               x020y048z0          0.355    f    12.968      10  pin: u_engine/lt4_syn_116.f[1]
-net (fo=101)                            0.837         13.805          net: u_engine/s1_b1_n,  NOFILE(0)
-                                                                      pin: u_engine/v1_reg[316]_syn_6.b[0]
-LUT4                x017y041z0          0.333    f    14.138      11  pin: u_engine/v1_reg[316]_syn_6.f[0]
-net (fo=61)                             2.931         17.069          net: u_engine/mux50_syn_dup_11798,  ../rtl/scg_snn_engine.v(132)
-                                                                      pin: u_engine/v1_reg[196]_syn_3.mi[0]
-reg                 x010y049z0          0.143    r    17.212          net: u_engine/v1[55][4],  ../rtl/scg_snn_engine.v(67)
---------------------------------------------------------------------  ---------------
-Arrival                                               17.212               
-
-capture edge                           20.000    r    20.000               
---------------------------------------------------------------------  ---------------
-setup                                  -0.116         19.884               
-clock uncertainty                      -0.100         19.784               
-clock pessimism                         0.000         19.784               
---------------------------------------------------------------------  ---------------
-Required                                              19.784               
---------------------------------------------------------------------  ---------------
-Slack                                                  2.572               
-
-Slack               : 2.572ns
-Begin Point         : u_engine/lif1_i_reg[2]_syn_37.clk (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
-End Point           : u_engine/v1_reg[940]_syn_4.mi[0] (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
-Check Type          : setup
-Process             : slow
-Budget              : 20.000ns { DeriveClock rising@20.000ns - DeriveClock rising@0.000ns }
-Data Path Delay     : 17.212ns (cell 6.185ns (35%), net 11.027ns (65%))
-Clock Skew          : 0.000ns
-Logic Level         : 11 ( ADDER=5  LUT5=3  LUT4=2  LUT2=1 )
-Max Fanout          : 101
-Clock Uncertainty   : 0.100ns (sdc uncertainty: 0.000ns, default uncertainty: 0.100ns)
-
-Delay Type          Location             Incr           Path   Level  Netlist Info
---------------------------------------------------------------------  ---------------
-launch edge                             0.000    r     0.000               
---------------------------------------------------------------------  ---------------
-clk2q               x018y050z3          0.146    r     0.146          pin: u_engine/lif1_i_reg[2]_syn_37.q[0]
-net (fo=47)                             0.972          1.118          net: u_engine/lif1_i[1]_dup_37,  ../rtl/scg_snn_engine.v(100)
-                                                                      pin: u_engine/v1_reg[122]_syn_4.c[0]
-LUT2                x019y053z1          0.251    r     1.369       1  pin: u_engine/v1_reg[122]_syn_4.f[0]
-net (fo=14)                             2.116          3.485          net: u_engine/lif1_blk$v_leak_b4[15]_syn_3,  NOFILE(0)
-                                                                      pin: u_engine/v1_reg[364]_syn_4.b[1]
-LUT5                x012y045z3          0.431    f     3.916       2  pin: u_engine/v1_reg[364]_syn_4.f[1]
-net (fo=1)                              0.594          4.510          net: u_engine/lif1_blk$v_leak_b4[8]_syn_12,  NOFILE(0)
-                                                                      pin: u_engine/lif1_i_reg[4]_syn_35.a[1]
-LUT5                x012y046z3          0.424    f     4.934       3  pin: u_engine/lif1_i_reg[4]_syn_35.f[1]
-net (fo=1)                              0.456          5.390          net: u_engine/lif1_blk$v_leak_b4[8]_syn_26,  NOFILE(0)
-                                                                      pin: u_engine/v1_reg[248]_syn_4.a[0]
-LUT4                x013y045z3          0.424    f     5.814       4  pin: u_engine/v1_reg[248]_syn_4.f[0]
-net (fo=1)                              0.594          6.408          net: u_engine/lif1_blk$v_leak_b4[8]_syn_28,  NOFILE(0)
-                                                                      pin: u_engine/lif1_blk$v_leak_b4[8]_syn_78.b[0]
-LUT5                x014y045z2          0.431    f     6.839       5  pin: u_engine/lif1_blk$v_leak_b4[8]_syn_78.f[0]
-net (fo=2)                              1.172          8.011          net: u_engine/lif1_blk$v_leak_b4[8],  NOFILE(0)
-                                                                      pin: u_engine/add12_syn_295.e[0]
-ADDER               x019y042z3          1.102    f     9.113       6  pin: u_engine/add12_syn_295.fx[1]
-net (fo=1)                              0.463          9.576          net: u_engine/add12_syn_3[6],  ../rtl/scg_snn_engine.v(202)
-                                                                      pin: u_engine/add12_syn_302.e[1]
-ADDER               x020y042z3          0.715    f    10.291       7  pin: u_engine/add12_syn_302.fco
-net (fo=1)                              0.000         10.291          net: u_engine/add12_syn_276,  ../rtl/scg_snn_engine.v(202)
-                                                                      pin: u_engine/add12_syn_303.fci
-ADDER               x020y043z2          0.453    f    10.744       8  pin: u_engine/add12_syn_303.fx[1]
-net (fo=7)                              0.892         11.636          net: u_engine/v1[0]_b194[10],  NOFILE(0)
-                                                                      pin: u_engine/lt4_syn_95.b[1]
-ADDER               x020y044z1          0.539    f    12.175       9  pin: u_engine/lt4_syn_95.fco
-net (fo=1)                              0.000         12.175          net: u_engine/lt4_syn_25,  ../rtl/scg_snn_engine.v(203)
-                                                                      pin: u_engine/lt4_syn_98.fci
-ADDER               x020y045z0          0.073    f    12.248          pin: u_engine/lt4_syn_98.fco
-net (fo=1)                              0.000         12.248          net: u_engine/lt4_syn_29,  ../rtl/scg_snn_engine.v(203)
-                                                                      pin: u_engine/lt4_syn_101.fci
-ADDER               x020y045z1          0.073    f    12.321          pin: u_engine/lt4_syn_101.fco
-net (fo=1)                              0.000         12.321          net: u_engine/lt4_syn_33,  ../rtl/scg_snn_engine.v(203)
-                                                                      pin: u_engine/lt4_syn_104.fci
-ADDER               x020y046z0          0.073    f    12.394          pin: u_engine/lt4_syn_104.fco
-net (fo=1)                              0.000         12.394          net: u_engine/lt4_syn_37,  ../rtl/scg_snn_engine.v(203)
-                                                                      pin: u_engine/lt4_syn_107.fci
-ADDER               x020y046z1          0.073    f    12.467          pin: u_engine/lt4_syn_107.fco
-net (fo=1)                              0.000         12.467          net: u_engine/lt4_syn_41,  ../rtl/scg_snn_engine.v(203)
-                                                                      pin: u_engine/lt4_syn_110.fci
-ADDER               x020y047z0          0.073    f    12.540          pin: u_engine/lt4_syn_110.fco
-net (fo=1)                              0.000         12.540          net: u_engine/lt4_syn_45,  ../rtl/scg_snn_engine.v(203)
-                                                                      pin: u_engine/lt4_syn_113.fci
-ADDER               x020y047z1          0.073    f    12.613          pin: u_engine/lt4_syn_113.fco
-net (fo=1)                              0.000         12.613          net: u_engine/lt4_syn_49,  ../rtl/scg_snn_engine.v(203)
-                                                                      pin: u_engine/lt4_syn_116.fci
-ADDER               x020y048z0          0.355    f    12.968      10  pin: u_engine/lt4_syn_116.f[1]
-net (fo=101)                            0.837         13.805          net: u_engine/s1_b1_n,  NOFILE(0)
-                                                                      pin: u_engine/v1_reg[316]_syn_6.b[0]
-LUT4                x017y041z0          0.333    f    14.138      11  pin: u_engine/v1_reg[316]_syn_6.f[0]
-net (fo=61)                             2.931         17.069          net: u_engine/mux50_syn_dup_11798,  ../rtl/scg_snn_engine.v(132)
-                                                                      pin: u_engine/v1_reg[940]_syn_4.mi[0]
-reg                 x010y049z1          0.143    r    17.212          net: u_engine/v1[24][4],  ../rtl/scg_snn_engine.v(67)
---------------------------------------------------------------------  ---------------
-Arrival                                               17.212               
-
-capture edge                           20.000    r    20.000               
---------------------------------------------------------------------  ---------------
-setup                                  -0.116         19.884               
-clock uncertainty                      -0.100         19.784               
-clock pessimism                         0.000         19.784               
---------------------------------------------------------------------  ---------------
-Required                                              19.784               
---------------------------------------------------------------------  ---------------
-Slack                                                  2.572               
-
-Slack               : 2.589ns
-Begin Point         : u_engine/lif1_i_reg[2]_syn_37.clk (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
-End Point           : u_engine/v1_reg[1073]_syn_3.mi[0] (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
-Check Type          : setup
-Process             : slow
-Budget              : 20.000ns { DeriveClock rising@20.000ns - DeriveClock rising@0.000ns }
-Data Path Delay     : 17.195ns (cell 5.738ns (33%), net 11.457ns (67%))
-Clock Skew          : 0.000ns
-Logic Level         : 11 ( ADDER=5  LUT5=3  LUT4=2  LUT2=1 )
-Max Fanout          : 47
-Clock Uncertainty   : 0.100ns (sdc uncertainty: 0.000ns, default uncertainty: 0.100ns)
-
-Delay Type          Location             Incr           Path   Level  Netlist Info
---------------------------------------------------------------------  ---------------
-launch edge                             0.000    r     0.000               
---------------------------------------------------------------------  ---------------
-clk2q               x018y050z3          0.146    r     0.146          pin: u_engine/lif1_i_reg[2]_syn_37.q[0]
-net (fo=47)                             0.972          1.118          net: u_engine/lif1_i[1]_dup_37,  ../rtl/scg_snn_engine.v(100)
-                                                                      pin: u_engine/v1_reg[122]_syn_4.c[0]
-LUT2                x019y053z1          0.251    r     1.369       1  pin: u_engine/v1_reg[122]_syn_4.f[0]
-net (fo=14)                             2.116          3.485          net: u_engine/lif1_blk$v_leak_b4[15]_syn_3,  NOFILE(0)
-                                                                      pin: u_engine/v1_reg[364]_syn_4.b[1]
-LUT5                x012y045z3          0.431    f     3.916       2  pin: u_engine/v1_reg[364]_syn_4.f[1]
-net (fo=1)                              0.594          4.510          net: u_engine/lif1_blk$v_leak_b4[8]_syn_12,  NOFILE(0)
-                                                                      pin: u_engine/lif1_i_reg[4]_syn_35.a[1]
-LUT5                x012y046z3          0.424    f     4.934       3  pin: u_engine/lif1_i_reg[4]_syn_35.f[1]
-net (fo=1)                              0.456          5.390          net: u_engine/lif1_blk$v_leak_b4[8]_syn_26,  NOFILE(0)
-                                                                      pin: u_engine/v1_reg[248]_syn_4.a[0]
-LUT4                x013y045z3          0.424    f     5.814       4  pin: u_engine/v1_reg[248]_syn_4.f[0]
-net (fo=1)                              0.594          6.408          net: u_engine/lif1_blk$v_leak_b4[8]_syn_28,  NOFILE(0)
-                                                                      pin: u_engine/lif1_blk$v_leak_b4[8]_syn_78.b[0]
-LUT5                x014y045z2          0.431    f     6.839       5  pin: u_engine/lif1_blk$v_leak_b4[8]_syn_78.f[0]
-net (fo=2)                              1.172          8.011          net: u_engine/lif1_blk$v_leak_b4[8],  NOFILE(0)
-                                                                      pin: u_engine/add12_syn_295.e[0]
-ADDER               x019y042z3          0.781    f     8.792       6  pin: u_engine/add12_syn_295.fco
-net (fo=1)                              0.000          8.792          net: u_engine/add12_syn_153,  ../rtl/scg_snn_engine.v(202)
-                                                                      pin: u_engine/add12_syn_296.fci
-ADDER               x019y043z2          0.132    f     8.924          pin: u_engine/add12_syn_296.fco
-net (fo=1)                              0.000          8.924          net: u_engine/add12_syn_157,  ../rtl/scg_snn_engine.v(202)
-                                                                      pin: u_engine/add12_syn_297.fci
-ADDER               x019y043z3          0.387    f     9.311       7  pin: u_engine/add12_syn_297.fx[0]
-net (fo=1)                              0.607          9.918          net: u_engine/add12_syn_3[12],  ../rtl/scg_snn_engine.v(202)
-                                                                      pin: u_engine/add12_syn_304.e[0]
-ADDER               x020y043z3          0.781    f    10.699       8  pin: u_engine/add12_syn_304.fco
-net (fo=1)                              0.000         10.699          net: u_engine/add12_syn_284,  ../rtl/scg_snn_engine.v(202)
-                                                                      pin: u_engine/add12_syn_305.fci
-ADDER               x020y044z2          0.453    f    11.152       9  pin: u_engine/add12_syn_305.fx[1]
-net (fo=8)                              1.110         12.262          net: u_engine/v1[0]_b194[18],  NOFILE(0)
-                                                                      pin: u_engine/sub3_syn_156.b[0]
-ADDER               x021y046z2          0.703    f    12.965      10  pin: u_engine/sub3_syn_156.f[0]
-net (fo=5)                              2.376         15.341          net: u_engine/sub3_syn_4[15],  ../rtl/scg_snn_engine.v(205)
-                                                                      pin: u_engine/v1_reg[1433]_syn_7.c[0]
-LUT4                x021y034z0          0.251    r    15.592      11  pin: u_engine/v1_reg[1433]_syn_7.f[0]
-net (fo=37)                             1.460         17.052          net: u_engine/mux50_syn_6026,  ../rtl/scg_snn_engine.v(132)
-                                                                      pin: u_engine/v1_reg[1073]_syn_3.mi[0]
-reg                 x018y039z2          0.143    r    17.195          net: u_engine/v1[19][17],  ../rtl/scg_snn_engine.v(67)
---------------------------------------------------------------------  ---------------
-Arrival                                               17.195               
-
-capture edge                           20.000    r    20.000               
---------------------------------------------------------------------  ---------------
-setup                                  -0.116         19.884               
-clock uncertainty                      -0.100         19.784               
-clock pessimism                         0.000         19.784               
---------------------------------------------------------------------  ---------------
-Required                                              19.784               
---------------------------------------------------------------------  ---------------
-Slack                                                  2.589               
-
-Slack               : 2.597ns
-Begin Point         : u_engine/lif1_i_reg[2]_syn_37.clk (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
-End Point           : u_engine/add12_syn_294.mi[0] (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
-Check Type          : setup
-Process             : slow
-Budget              : 20.000ns { DeriveClock rising@20.000ns - DeriveClock rising@0.000ns }
-Data Path Delay     : 17.187ns (cell 5.738ns (33%), net 11.449ns (67%))
-Clock Skew          : 0.000ns
-Logic Level         : 11 ( ADDER=5  LUT5=3  LUT4=2  LUT2=1 )
-Max Fanout          : 47
-Clock Uncertainty   : 0.100ns (sdc uncertainty: 0.000ns, default uncertainty: 0.100ns)
-
-Delay Type          Location             Incr           Path   Level  Netlist Info
---------------------------------------------------------------------  ---------------
-launch edge                             0.000    r     0.000               
---------------------------------------------------------------------  ---------------
-clk2q               x018y050z3          0.146    r     0.146          pin: u_engine/lif1_i_reg[2]_syn_37.q[0]
-net (fo=47)                             0.972          1.118          net: u_engine/lif1_i[1]_dup_37,  ../rtl/scg_snn_engine.v(100)
-                                                                      pin: u_engine/v1_reg[122]_syn_4.c[0]
-LUT2                x019y053z1          0.251    r     1.369       1  pin: u_engine/v1_reg[122]_syn_4.f[0]
-net (fo=14)                             2.116          3.485          net: u_engine/lif1_blk$v_leak_b4[15]_syn_3,  NOFILE(0)
-                                                                      pin: u_engine/v1_reg[364]_syn_4.b[1]
-LUT5                x012y045z3          0.431    f     3.916       2  pin: u_engine/v1_reg[364]_syn_4.f[1]
-net (fo=1)                              0.594          4.510          net: u_engine/lif1_blk$v_leak_b4[8]_syn_12,  NOFILE(0)
-                                                                      pin: u_engine/lif1_i_reg[4]_syn_35.a[1]
-LUT5                x012y046z3          0.424    f     4.934       3  pin: u_engine/lif1_i_reg[4]_syn_35.f[1]
-net (fo=1)                              0.456          5.390          net: u_engine/lif1_blk$v_leak_b4[8]_syn_26,  NOFILE(0)
-                                                                      pin: u_engine/v1_reg[248]_syn_4.a[0]
-LUT4                x013y045z3          0.424    f     5.814       4  pin: u_engine/v1_reg[248]_syn_4.f[0]
-net (fo=1)                              0.594          6.408          net: u_engine/lif1_blk$v_leak_b4[8]_syn_28,  NOFILE(0)
-                                                                      pin: u_engine/lif1_blk$v_leak_b4[8]_syn_78.b[0]
-LUT5                x014y045z2          0.431    f     6.839       5  pin: u_engine/lif1_blk$v_leak_b4[8]_syn_78.f[0]
-net (fo=2)                              1.172          8.011          net: u_engine/lif1_blk$v_leak_b4[8],  NOFILE(0)
-                                                                      pin: u_engine/add12_syn_295.e[0]
-ADDER               x019y042z3          0.781    f     8.792       6  pin: u_engine/add12_syn_295.fco
-net (fo=1)                              0.000          8.792          net: u_engine/add12_syn_153,  ../rtl/scg_snn_engine.v(202)
-                                                                      pin: u_engine/add12_syn_296.fci
-ADDER               x019y043z2          0.132    f     8.924          pin: u_engine/add12_syn_296.fco
-net (fo=1)                              0.000          8.924          net: u_engine/add12_syn_157,  ../rtl/scg_snn_engine.v(202)
-                                                                      pin: u_engine/add12_syn_297.fci
-ADDER               x019y043z3          0.387    f     9.311       7  pin: u_engine/add12_syn_297.fx[0]
-net (fo=1)                              0.607          9.918          net: u_engine/add12_syn_3[12],  ../rtl/scg_snn_engine.v(202)
-                                                                      pin: u_engine/add12_syn_304.e[0]
-ADDER               x020y043z3          0.781    f    10.699       8  pin: u_engine/add12_syn_304.fco
-net (fo=1)                              0.000         10.699          net: u_engine/add12_syn_284,  ../rtl/scg_snn_engine.v(202)
-                                                                      pin: u_engine/add12_syn_305.fci
-ADDER               x020y044z2          0.453    f    11.152       9  pin: u_engine/add12_syn_305.fx[1]
-net (fo=8)                              1.110         12.262          net: u_engine/v1[0]_b194[18],  NOFILE(0)
-                                                                      pin: u_engine/sub3_syn_156.b[0]
-ADDER               x021y046z2          0.703    f    12.965      10  pin: u_engine/sub3_syn_156.f[0]
-net (fo=5)                              2.376         15.341          net: u_engine/sub3_syn_4[15],  ../rtl/scg_snn_engine.v(205)
-                                                                      pin: u_engine/v1_reg[1433]_syn_7.c[0]
-LUT4                x021y034z0          0.251    r    15.592      11  pin: u_engine/v1_reg[1433]_syn_7.f[0]
-net (fo=37)                             1.452         17.044          net: u_engine/mux50_syn_6026,  ../rtl/scg_snn_engine.v(132)
-                                                                      pin: u_engine/add12_syn_294.mi[0]
-ADDER (reg)         x019y042z2          0.143    r    17.187          net: u_engine/v1[6][17],  ../rtl/scg_snn_engine.v(67)
---------------------------------------------------------------------  ---------------
-Arrival                                               17.187               
-
-capture edge                           20.000    r    20.000               
---------------------------------------------------------------------  ---------------
-setup                                  -0.116         19.884               
-clock uncertainty                      -0.100         19.784               
-clock pessimism                         0.000         19.784               
---------------------------------------------------------------------  ---------------
-Required                                              19.784               
---------------------------------------------------------------------  ---------------
-Slack                                                  2.597               
-
-Slack               : 2.643ns
-Begin Point         : u_engine/lif1_i_reg[2]_syn_37.clk (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
-End Point           : u_engine/v1_reg[868]_syn_4.mi[0] (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
-Check Type          : setup
-Process             : slow
-Budget              : 20.000ns { DeriveClock rising@20.000ns - DeriveClock rising@0.000ns }
-Data Path Delay     : 17.141ns (cell 6.185ns (36%), net 10.956ns (64%))
-Clock Skew          : 0.000ns
-Logic Level         : 11 ( ADDER=5  LUT5=3  LUT4=2  LUT2=1 )
-Max Fanout          : 101
-Clock Uncertainty   : 0.100ns (sdc uncertainty: 0.000ns, default uncertainty: 0.100ns)
-
-Delay Type          Location             Incr           Path   Level  Netlist Info
---------------------------------------------------------------------  ---------------
-launch edge                             0.000    r     0.000               
---------------------------------------------------------------------  ---------------
-clk2q               x018y050z3          0.146    r     0.146          pin: u_engine/lif1_i_reg[2]_syn_37.q[0]
-net (fo=47)                             0.972          1.118          net: u_engine/lif1_i[1]_dup_37,  ../rtl/scg_snn_engine.v(100)
-                                                                      pin: u_engine/v1_reg[122]_syn_4.c[0]
-LUT2                x019y053z1          0.251    r     1.369       1  pin: u_engine/v1_reg[122]_syn_4.f[0]
-net (fo=14)                             2.116          3.485          net: u_engine/lif1_blk$v_leak_b4[15]_syn_3,  NOFILE(0)
-                                                                      pin: u_engine/v1_reg[364]_syn_4.b[1]
-LUT5                x012y045z3          0.431    f     3.916       2  pin: u_engine/v1_reg[364]_syn_4.f[1]
-net (fo=1)                              0.594          4.510          net: u_engine/lif1_blk$v_leak_b4[8]_syn_12,  NOFILE(0)
-                                                                      pin: u_engine/lif1_i_reg[4]_syn_35.a[1]
-LUT5                x012y046z3          0.424    f     4.934       3  pin: u_engine/lif1_i_reg[4]_syn_35.f[1]
-net (fo=1)                              0.456          5.390          net: u_engine/lif1_blk$v_leak_b4[8]_syn_26,  NOFILE(0)
-                                                                      pin: u_engine/v1_reg[248]_syn_4.a[0]
-LUT4                x013y045z3          0.424    f     5.814       4  pin: u_engine/v1_reg[248]_syn_4.f[0]
-net (fo=1)                              0.594          6.408          net: u_engine/lif1_blk$v_leak_b4[8]_syn_28,  NOFILE(0)
-                                                                      pin: u_engine/lif1_blk$v_leak_b4[8]_syn_78.b[0]
-LUT5                x014y045z2          0.431    f     6.839       5  pin: u_engine/lif1_blk$v_leak_b4[8]_syn_78.f[0]
-net (fo=2)                              1.172          8.011          net: u_engine/lif1_blk$v_leak_b4[8],  NOFILE(0)
-                                                                      pin: u_engine/add12_syn_295.e[0]
-ADDER               x019y042z3          1.102    f     9.113       6  pin: u_engine/add12_syn_295.fx[1]
-net (fo=1)                              0.463          9.576          net: u_engine/add12_syn_3[6],  ../rtl/scg_snn_engine.v(202)
-                                                                      pin: u_engine/add12_syn_302.e[1]
-ADDER               x020y042z3          0.715    f    10.291       7  pin: u_engine/add12_syn_302.fco
-net (fo=1)                              0.000         10.291          net: u_engine/add12_syn_276,  ../rtl/scg_snn_engine.v(202)
-                                                                      pin: u_engine/add12_syn_303.fci
-ADDER               x020y043z2          0.453    f    10.744       8  pin: u_engine/add12_syn_303.fx[1]
-net (fo=7)                              0.892         11.636          net: u_engine/v1[0]_b194[10],  NOFILE(0)
-                                                                      pin: u_engine/lt4_syn_95.b[1]
-ADDER               x020y044z1          0.539    f    12.175       9  pin: u_engine/lt4_syn_95.fco
-net (fo=1)                              0.000         12.175          net: u_engine/lt4_syn_25,  ../rtl/scg_snn_engine.v(203)
-                                                                      pin: u_engine/lt4_syn_98.fci
-ADDER               x020y045z0          0.073    f    12.248          pin: u_engine/lt4_syn_98.fco
-net (fo=1)                              0.000         12.248          net: u_engine/lt4_syn_29,  ../rtl/scg_snn_engine.v(203)
-                                                                      pin: u_engine/lt4_syn_101.fci
-ADDER               x020y045z1          0.073    f    12.321          pin: u_engine/lt4_syn_101.fco
-net (fo=1)                              0.000         12.321          net: u_engine/lt4_syn_33,  ../rtl/scg_snn_engine.v(203)
-                                                                      pin: u_engine/lt4_syn_104.fci
-ADDER               x020y046z0          0.073    f    12.394          pin: u_engine/lt4_syn_104.fco
-net (fo=1)                              0.000         12.394          net: u_engine/lt4_syn_37,  ../rtl/scg_snn_engine.v(203)
-                                                                      pin: u_engine/lt4_syn_107.fci
-ADDER               x020y046z1          0.073    f    12.467          pin: u_engine/lt4_syn_107.fco
-net (fo=1)                              0.000         12.467          net: u_engine/lt4_syn_41,  ../rtl/scg_snn_engine.v(203)
-                                                                      pin: u_engine/lt4_syn_110.fci
-ADDER               x020y047z0          0.073    f    12.540          pin: u_engine/lt4_syn_110.fco
-net (fo=1)                              0.000         12.540          net: u_engine/lt4_syn_45,  ../rtl/scg_snn_engine.v(203)
-                                                                      pin: u_engine/lt4_syn_113.fci
-ADDER               x020y047z1          0.073    f    12.613          pin: u_engine/lt4_syn_113.fco
-net (fo=1)                              0.000         12.613          net: u_engine/lt4_syn_49,  ../rtl/scg_snn_engine.v(203)
-                                                                      pin: u_engine/lt4_syn_116.fci
-ADDER               x020y048z0          0.355    f    12.968      10  pin: u_engine/lt4_syn_116.f[1]
-net (fo=101)                            0.837         13.805          net: u_engine/s1_b1_n,  NOFILE(0)
-                                                                      pin: u_engine/v1_reg[316]_syn_6.b[0]
-LUT4                x017y041z0          0.333    f    14.138      11  pin: u_engine/v1_reg[316]_syn_6.f[0]
-net (fo=61)                             2.860         16.998          net: u_engine/mux50_syn_dup_11798,  ../rtl/scg_snn_engine.v(132)
-                                                                      pin: u_engine/v1_reg[868]_syn_4.mi[0]
-reg                 x013y053z3          0.143    r    17.141          net: u_engine/v1[27][4],  ../rtl/scg_snn_engine.v(67)
---------------------------------------------------------------------  ---------------
-Arrival                                               17.141               
-
-capture edge                           20.000    r    20.000               
---------------------------------------------------------------------  ---------------
-setup                                  -0.116         19.884               
-clock uncertainty                      -0.100         19.784               
-clock pessimism                         0.000         19.784               
---------------------------------------------------------------------  ---------------
-Required                                              19.784               
---------------------------------------------------------------------  ---------------
-Slack                                                  2.643               
-
-
-
-Min Paths
-----------------------------------------------------------------------------------------------------
-Slack               : 0.042ns
-Begin Point         : u_engine/w1_addr_o_reg[2]_syn_4.clk (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
-End Point           : ramread1_syn_41.addra[2] (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
-Check Type          : hold
-Process             : fast
-Budget              : 0.000ns { DeriveClock rising@0.000ns - DeriveClock rising@0.000ns }
-Data Path Delay     : 0.342ns (cell 0.109ns (31%), net 0.233ns (69%))
-Clock Skew          : 0.000ns
-Logic Level         : 1 ( EMB=1 )
-Max Fanout          : 33
-Clock Uncertainty   : 0.100ns (sdc uncertainty: 0.000ns, default uncertainty: 0.100ns)
-
-Delay Type          Location             Incr           Path   Level  Netlist Info
---------------------------------------------------------------------  ---------------
-launch edge                             0.000    r     0.000               
---------------------------------------------------------------------  ---------------
-clk2q               x022y014z2          0.109    f     0.109          pin: u_engine/w1_addr_o_reg[2]_syn_4.q[0]
-net (fo=33)                             0.233          0.342          net: u_engine/w1_addr_o[2],  ../rtl/scg_snn_engine.v(45)
-                                                                      pin: ramread1_syn_41.addra[2]
-EMB (reg)           x024y009            0.000    f     0.342       1       
---------------------------------------------------------------------  ---------------
-Arrival                                                0.342               
-
-capture edge                            0.000    r     0.000               
---------------------------------------------------------------------  ---------------
-hold                                    0.200          0.200               
-clock uncertainty                       0.100          0.300               
-clock pessimism                         0.000          0.300               
---------------------------------------------------------------------  ---------------
-Required                                               0.300               
---------------------------------------------------------------------  ---------------
-Slack                                                  0.042               
-
-Slack               : 0.042ns
-Begin Point         : u_engine/w1_addr_o_reg[2]_syn_4.clk (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
-End Point           : ramread1_syn_41.addrb[2] (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
-Check Type          : hold
-Process             : fast
-Budget              : 0.000ns { DeriveClock rising@0.000ns - DeriveClock rising@0.000ns }
-Data Path Delay     : 0.342ns (cell 0.109ns (31%), net 0.233ns (69%))
-Clock Skew          : 0.000ns
-Logic Level         : 1 ( EMB=1 )
-Max Fanout          : 33
-Clock Uncertainty   : 0.100ns (sdc uncertainty: 0.000ns, default uncertainty: 0.100ns)
-
-Delay Type          Location             Incr           Path   Level  Netlist Info
---------------------------------------------------------------------  ---------------
-launch edge                             0.000    r     0.000               
---------------------------------------------------------------------  ---------------
-clk2q               x022y014z2          0.109    f     0.109          pin: u_engine/w1_addr_o_reg[2]_syn_4.q[0]
-net (fo=33)                             0.233          0.342          net: u_engine/w1_addr_o[2],  ../rtl/scg_snn_engine.v(45)
-                                                                      pin: ramread1_syn_41.addrb[2]
-EMB (reg)           x024y009            0.000    f     0.342       1       
---------------------------------------------------------------------  ---------------
-Arrival                                                0.342               
-
-capture edge                            0.000    r     0.000               
---------------------------------------------------------------------  ---------------
-hold                                    0.200          0.200               
-clock uncertainty                       0.100          0.300               
-clock pessimism                         0.000          0.300               
---------------------------------------------------------------------  ---------------
-Required                                               0.300               
---------------------------------------------------------------------  ---------------
-Slack                                                  0.042               
-
-Slack               : 0.049ns
-Begin Point         : u_engine/w1_addr_o_reg[10]_syn_4.clk (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
-End Point           : ramread1_syn_23.addra[9] (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
-Check Type          : hold
-Process             : fast
-Budget              : 0.000ns { DeriveClock rising@0.000ns - DeriveClock rising@0.000ns }
-Data Path Delay     : 0.349ns (cell 0.109ns (31%), net 0.240ns (69%))
-Clock Skew          : 0.000ns
-Logic Level         : 1 ( EMB=1 )
-Max Fanout          : 33
-Clock Uncertainty   : 0.100ns (sdc uncertainty: 0.000ns, default uncertainty: 0.100ns)
-
-Delay Type          Location             Incr           Path   Level  Netlist Info
---------------------------------------------------------------------  ---------------
-launch edge                             0.000    r     0.000               
---------------------------------------------------------------------  ---------------
-clk2q               x022y016z2          0.109    f     0.109          pin: u_engine/w1_addr_o_reg[10]_syn_4.q[0]
-net (fo=33)                             0.240          0.349          net: u_engine/w1_addr_o[9],  ../rtl/scg_snn_engine.v(45)
-                                                                      pin: ramread1_syn_23.addra[9]
-EMB (reg)           x024y009            0.000    f     0.349       1       
---------------------------------------------------------------------  ---------------
-Arrival                                                0.349               
-
-capture edge                            0.000    r     0.000               
---------------------------------------------------------------------  ---------------
-hold                                    0.200          0.200               
-clock uncertainty                       0.100          0.300               
-clock pessimism                         0.000          0.300               
---------------------------------------------------------------------  ---------------
-Required                                               0.300               
---------------------------------------------------------------------  ---------------
-Slack                                                  0.049               
-
-Slack               : 0.061ns
-Begin Point         : u_engine/w1_addr_o_reg[10]_syn_4.clk (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
-End Point           : ramread1_syn_23.addrb[10] (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
-Check Type          : hold
-Process             : fast
-Budget              : 0.000ns { DeriveClock rising@0.000ns - DeriveClock rising@0.000ns }
-Data Path Delay     : 0.361ns (cell 0.109ns (30%), net 0.252ns (70%))
-Clock Skew          : 0.000ns
-Logic Level         : 1 ( EMB=1 )
-Max Fanout          : 33
-Clock Uncertainty   : 0.100ns (sdc uncertainty: 0.000ns, default uncertainty: 0.100ns)
-
-Delay Type          Location             Incr           Path   Level  Netlist Info
---------------------------------------------------------------------  ---------------
-launch edge                             0.000    r     0.000               
---------------------------------------------------------------------  ---------------
-clk2q               x022y016z2          0.109    f     0.109          pin: u_engine/w1_addr_o_reg[10]_syn_4.q[1]
-net (fo=33)                             0.252          0.361          net: u_engine/w1_addr_o[10],  ../rtl/scg_snn_engine.v(45)
-                                                                      pin: ramread1_syn_23.addrb[10]
-EMB (reg)           x024y009            0.000    f     0.361       1       
---------------------------------------------------------------------  ---------------
-Arrival                                                0.361               
-
-capture edge                            0.000    r     0.000               
---------------------------------------------------------------------  ---------------
-hold                                    0.200          0.200               
-clock uncertainty                       0.100          0.300               
-clock pessimism                         0.000          0.300               
---------------------------------------------------------------------  ---------------
-Required                                               0.300               
---------------------------------------------------------------------  ---------------
-Slack                                                  0.061               
-
-Slack               : 0.140ns
-Begin Point         : count_reg[4]_syn_4.clk (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
-End Point           : ramread0_syn_11.addra[9] (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
-Check Type          : hold
-Process             : fast
-Budget              : 0.000ns { DeriveClock rising@0.000ns - DeriveClock rising@0.000ns }
-Data Path Delay     : 0.440ns (cell 0.109ns (24%), net 0.331ns (76%))
-Clock Skew          : 0.000ns
-Logic Level         : 1 ( EMB=1 )
-Max Fanout          : 2
-Clock Uncertainty   : 0.100ns (sdc uncertainty: 0.000ns, default uncertainty: 0.100ns)
-
-Delay Type          Location             Incr           Path   Level  Netlist Info
---------------------------------------------------------------------  ---------------
-launch edge                             0.000    r     0.000               
---------------------------------------------------------------------  ---------------
-clk2q               x005y020z0          0.109    f     0.109          pin: count_reg[4]_syn_4.q[0]
-net (fo=2)                              0.331          0.440          net: count[6],  ../rtl/scg_top_snn.v(160)
-                                                                      pin: ramread0_syn_11.addra[9]
-EMB (reg)           x008y018            0.000    f     0.440       1       
---------------------------------------------------------------------  ---------------
-Arrival                                                0.440               
-
-capture edge                            0.000    r     0.000               
---------------------------------------------------------------------  ---------------
-hold                                    0.200          0.200               
-clock uncertainty                       0.100          0.300               
-clock pessimism                         0.000          0.300               
---------------------------------------------------------------------  ---------------
-Required                                               0.300               
---------------------------------------------------------------------  ---------------
-Slack                                                  0.140               
-
-Slack               : 0.141ns
-Begin Point         : u_engine/x_addr_o_reg[2]_syn_4.clk (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
-End Point           : ramread0_syn_11.addrb[3] (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
-Check Type          : hold
-Process             : fast
-Budget              : 0.000ns { DeriveClock rising@0.000ns - DeriveClock rising@0.000ns }
-Data Path Delay     : 0.441ns (cell 0.109ns (24%), net 0.332ns (76%))
-Clock Skew          : 0.000ns
-Logic Level         : 1 ( EMB=1 )
+Logic Level         : 9 ( LUT4=3  LUT5=2  ADDER=2  MULT18=1  LUT2=1 )
 Max Fanout          : 1
 Clock Uncertainty   : 0.100ns (sdc uncertainty: 0.000ns, default uncertainty: 0.100ns)
 
@@ -1022,45 +88,676 @@ Delay Type          Location             Incr           Path   Level  Netlist In
 --------------------------------------------------------------------  ---------------
 launch edge                             0.000    r     0.000               
 --------------------------------------------------------------------  ---------------
-clk2q               x005y021z0          0.109    f     0.109          pin: u_engine/x_addr_o_reg[2]_syn_4.q[0]
-net (fo=1)                              0.332          0.441          net: u_engine/x_addr_o[0],  ../rtl/scg_snn_engine.v(41)
-                                                                      pin: ramread0_syn_11.addrb[3]
-EMB (reg)           x008y018            0.000    f     0.441       1       
+EMB (clk2q)         x008y018            3.245    f     3.245          pin: ramread3_syn_92.dob[2]
+net (fo=1)                              0.676          3.921          net: ramread3_syn_95,  ../rtl/scg_top_snn.v(175)
+                                                                      pin: sel5_syn_628.a[0]
+LUT4                x010y023z1          0.408    f     4.329       1  pin: sel5_syn_628.f[0]
+net (fo=1)                              1.119          5.448          net: sel5_syn_452,  ../rtl/scg_top_snn.v(184)
+                                                                      pin: u_engine/I1_reg[233]_syn_4.c[0]
+LUT4                x021y018z2          0.348    f     5.796       2  pin: u_engine/I1_reg[233]_syn_4.f[0]
+net (fo=1)                              0.669          6.465          net: ramread3_syn_438,  ../rtl/scg_top_snn.v(175)
+                                                                      pin: u_engine/I1_reg[479]_syn_4.b[0]
+LUT4                x020y023z0          0.333    f     6.798       3  pin: u_engine/I1_reg[479]_syn_4.f[0]
+net (fo=1)                              1.082          7.880          net: sel5_syn_455,  ../rtl/scg_top_snn.v(184)
+                                                                      pin: u_engine/I1_reg[736]_syn_4.c[1]
+LUT5                x020y029z3          0.348    f     8.228       4  pin: u_engine/I1_reg[736]_syn_4.f[1]
+net (fo=1)                              0.594          8.822          net: sel5_syn_20[2],  ../rtl/scg_top_snn.v(184)
+                                                                      pin: u_engine/I1_reg[499]_syn_4.b[0]
+LUT5                x020y031z2          0.431    f     9.253       5  pin: u_engine/I1_reg[499]_syn_4.f[0]
+net (fo=1)                              1.115         10.368          net: sel5_syn_2[2],  ../rtl/scg_top_snn.v(184)
+                                                                      pin: u_engine/mult0_syn_1.b[2]
+MULT18              x016y009            3.563    f    13.931       6  pin: u_engine/mult0_syn_1.p[2]
+net (fo=1)                              0.626         14.557          net: u_engine/fc1_acc_b6[2],  NOFILE(0)
+                                                                      pin: u_engine/add0_syn_132.e[1]
+ADDER               x015y016z2          0.715    f    15.272       7  pin: u_engine/add0_syn_132.fco
+net (fo=1)                              0.000         15.272          net: u_engine/add0_syn_110,  ../rtl/scg_snn_engine.v(184)
+                                                                      pin: u_engine/add0_syn_133.fci
+ADDER               x015y016z3          0.132    f    15.404          pin: u_engine/add0_syn_133.fco
+net (fo=1)                              0.000         15.404          net: u_engine/add0_syn_114,  ../rtl/scg_snn_engine.v(184)
+                                                                      pin: u_engine/add0_syn_134.fci
+ADDER               x015y017z2          0.132    f    15.536          pin: u_engine/add0_syn_134.fco
+net (fo=1)                              0.000         15.536          net: u_engine/add0_syn_118,  ../rtl/scg_snn_engine.v(184)
+                                                                      pin: u_engine/add0_syn_135.fci
+ADDER               x015y017z3          0.132    f    15.668          pin: u_engine/add0_syn_135.fco
+net (fo=1)                              0.000         15.668          net: u_engine/add0_syn_122,  ../rtl/scg_snn_engine.v(184)
+                                                                      pin: u_engine/add0_syn_136.fci
+ADDER               x015y018z2          0.387    f    16.055       8  pin: u_engine/add0_syn_136.fx[0]
+net (fo=1)                              0.754         16.809          net: u_engine/fc1_acc_b2[16],  NOFILE(0)
+                                                                      pin: u_engine/fc1_acc_reg[12]_syn_4.d[0]
+LUT2 (reg)          x015y018z0          0.314    r    17.123       9  net: u_engine/fc1_acc[16],  ../rtl/scg_snn_engine.v(102)
 --------------------------------------------------------------------  ---------------
-Arrival                                                0.441               
+Arrival                                               17.123               
 
-capture edge                            0.000    r     0.000               
+capture edge                           20.000    r    20.000               
 --------------------------------------------------------------------  ---------------
-hold                                    0.200          0.200               
-clock uncertainty                       0.100          0.300               
-clock pessimism                         0.000          0.300               
+setup                                  -0.116         19.884               
+clock uncertainty                      -0.100         19.784               
+clock pessimism                         0.000         19.784               
 --------------------------------------------------------------------  ---------------
-Required                                               0.300               
+Required                                              19.784               
 --------------------------------------------------------------------  ---------------
-Slack                                                  0.141               
+Slack                                                  2.661               
 
-Slack               : 0.172ns
-Begin Point         : u_engine/w1_addr_o_reg[11]_syn_4.clk (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
-End Point           : ramread1_syn_39.addra[11] (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+Slack               : 2.692ns
+Begin Point         : ramread3_syn_92.clkb (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+End Point           : u_engine/fc1_acc_reg[20]_syn_4.d[1] (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+Check Type          : setup
+Process             : slow
+Budget              : 20.000ns { DeriveClock rising@20.000ns - DeriveClock rising@0.000ns }
+Data Path Delay     : 17.092ns (cell 10.620ns (62%), net 6.472ns (38%))
+Clock Skew          : 0.000ns
+Logic Level         : 9 ( LUT4=3  LUT5=2  ADDER=2  MULT18=1  LUT2=1 )
+Max Fanout          : 1
+Clock Uncertainty   : 0.100ns (sdc uncertainty: 0.000ns, default uncertainty: 0.100ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+EMB (clk2q)         x008y018            3.245    f     3.245          pin: ramread3_syn_92.dob[2]
+net (fo=1)                              0.676          3.921          net: ramread3_syn_95,  ../rtl/scg_top_snn.v(175)
+                                                                      pin: sel5_syn_628.a[0]
+LUT4                x010y023z1          0.408    f     4.329       1  pin: sel5_syn_628.f[0]
+net (fo=1)                              1.119          5.448          net: sel5_syn_452,  ../rtl/scg_top_snn.v(184)
+                                                                      pin: u_engine/I1_reg[233]_syn_4.c[0]
+LUT4                x021y018z2          0.348    f     5.796       2  pin: u_engine/I1_reg[233]_syn_4.f[0]
+net (fo=1)                              0.669          6.465          net: ramread3_syn_438,  ../rtl/scg_top_snn.v(175)
+                                                                      pin: u_engine/I1_reg[479]_syn_4.b[0]
+LUT4                x020y023z0          0.333    f     6.798       3  pin: u_engine/I1_reg[479]_syn_4.f[0]
+net (fo=1)                              1.082          7.880          net: sel5_syn_455,  ../rtl/scg_top_snn.v(184)
+                                                                      pin: u_engine/I1_reg[736]_syn_4.c[1]
+LUT5                x020y029z3          0.348    f     8.228       4  pin: u_engine/I1_reg[736]_syn_4.f[1]
+net (fo=1)                              0.594          8.822          net: sel5_syn_20[2],  ../rtl/scg_top_snn.v(184)
+                                                                      pin: u_engine/I1_reg[499]_syn_4.b[0]
+LUT5                x020y031z2          0.431    f     9.253       5  pin: u_engine/I1_reg[499]_syn_4.f[0]
+net (fo=1)                              1.115         10.368          net: sel5_syn_2[2],  ../rtl/scg_top_snn.v(184)
+                                                                      pin: u_engine/mult0_syn_1.b[2]
+MULT18              x016y009            3.563    f    13.931       6  pin: u_engine/mult0_syn_1.p[2]
+net (fo=1)                              0.626         14.557          net: u_engine/fc1_acc_b6[2],  NOFILE(0)
+                                                                      pin: u_engine/add0_syn_132.e[1]
+ADDER               x015y016z2          0.715    f    15.272       7  pin: u_engine/add0_syn_132.fco
+net (fo=1)                              0.000         15.272          net: u_engine/add0_syn_110,  ../rtl/scg_snn_engine.v(184)
+                                                                      pin: u_engine/add0_syn_133.fci
+ADDER               x015y016z3          0.132    f    15.404          pin: u_engine/add0_syn_133.fco
+net (fo=1)                              0.000         15.404          net: u_engine/add0_syn_114,  ../rtl/scg_snn_engine.v(184)
+                                                                      pin: u_engine/add0_syn_134.fci
+ADDER               x015y017z2          0.132    f    15.536          pin: u_engine/add0_syn_134.fco
+net (fo=1)                              0.000         15.536          net: u_engine/add0_syn_118,  ../rtl/scg_snn_engine.v(184)
+                                                                      pin: u_engine/add0_syn_135.fci
+ADDER               x015y017z3          0.132    f    15.668          pin: u_engine/add0_syn_135.fco
+net (fo=1)                              0.000         15.668          net: u_engine/add0_syn_122,  ../rtl/scg_snn_engine.v(184)
+                                                                      pin: u_engine/add0_syn_136.fci
+ADDER               x015y018z2          0.132    f    15.800          pin: u_engine/add0_syn_136.fco
+net (fo=1)                              0.000         15.800          net: u_engine/add0_syn_126,  ../rtl/scg_snn_engine.v(184)
+                                                                      pin: u_engine/add0_syn_137.fci
+ADDER               x015y018z3          0.387    f    16.187       8  pin: u_engine/add0_syn_137.fx[0]
+net (fo=1)                              0.591         16.778          net: u_engine/fc1_acc_b2[20],  NOFILE(0)
+                                                                      pin: u_engine/fc1_acc_reg[20]_syn_4.d[1]
+LUT2 (reg)          x015y019z0          0.314    r    17.092       9  net: u_engine/fc1_acc[20],  ../rtl/scg_snn_engine.v(102)
+--------------------------------------------------------------------  ---------------
+Arrival                                               17.092               
+
+capture edge                           20.000    r    20.000               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.116         19.884               
+clock uncertainty                      -0.100         19.784               
+clock pessimism                         0.000         19.784               
+--------------------------------------------------------------------  ---------------
+Required                                              19.784               
+--------------------------------------------------------------------  ---------------
+Slack                                                  2.692               
+
+Slack               : 2.805ns
+Begin Point         : ramread3_syn_92.clkb (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+End Point           : u_engine/fc1_acc_reg[12]_syn_4.d[1] (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+Check Type          : setup
+Process             : slow
+Budget              : 20.000ns { DeriveClock rising@20.000ns - DeriveClock rising@0.000ns }
+Data Path Delay     : 16.979ns (cell 10.356ns (60%), net 6.623ns (40%))
+Clock Skew          : 0.000ns
+Logic Level         : 9 ( LUT4=3  LUT5=2  ADDER=2  MULT18=1  LUT2=1 )
+Max Fanout          : 1
+Clock Uncertainty   : 0.100ns (sdc uncertainty: 0.000ns, default uncertainty: 0.100ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+EMB (clk2q)         x008y018            3.245    f     3.245          pin: ramread3_syn_92.dob[2]
+net (fo=1)                              0.676          3.921          net: ramread3_syn_95,  ../rtl/scg_top_snn.v(175)
+                                                                      pin: sel5_syn_628.a[0]
+LUT4                x010y023z1          0.408    f     4.329       1  pin: sel5_syn_628.f[0]
+net (fo=1)                              1.119          5.448          net: sel5_syn_452,  ../rtl/scg_top_snn.v(184)
+                                                                      pin: u_engine/I1_reg[233]_syn_4.c[0]
+LUT4                x021y018z2          0.348    f     5.796       2  pin: u_engine/I1_reg[233]_syn_4.f[0]
+net (fo=1)                              0.669          6.465          net: ramread3_syn_438,  ../rtl/scg_top_snn.v(175)
+                                                                      pin: u_engine/I1_reg[479]_syn_4.b[0]
+LUT4                x020y023z0          0.333    f     6.798       3  pin: u_engine/I1_reg[479]_syn_4.f[0]
+net (fo=1)                              1.082          7.880          net: sel5_syn_455,  ../rtl/scg_top_snn.v(184)
+                                                                      pin: u_engine/I1_reg[736]_syn_4.c[1]
+LUT5                x020y029z3          0.348    f     8.228       4  pin: u_engine/I1_reg[736]_syn_4.f[1]
+net (fo=1)                              0.594          8.822          net: sel5_syn_20[2],  ../rtl/scg_top_snn.v(184)
+                                                                      pin: u_engine/I1_reg[499]_syn_4.b[0]
+LUT5                x020y031z2          0.431    f     9.253       5  pin: u_engine/I1_reg[499]_syn_4.f[0]
+net (fo=1)                              1.115         10.368          net: sel5_syn_2[2],  ../rtl/scg_top_snn.v(184)
+                                                                      pin: u_engine/mult0_syn_1.b[2]
+MULT18              x016y009            3.563    f    13.931       6  pin: u_engine/mult0_syn_1.p[2]
+net (fo=1)                              0.626         14.557          net: u_engine/fc1_acc_b6[2],  NOFILE(0)
+                                                                      pin: u_engine/add0_syn_132.e[1]
+ADDER               x015y016z2          0.715    f    15.272       7  pin: u_engine/add0_syn_132.fco
+net (fo=1)                              0.000         15.272          net: u_engine/add0_syn_110,  ../rtl/scg_snn_engine.v(184)
+                                                                      pin: u_engine/add0_syn_133.fci
+ADDER               x015y016z3          0.132    f    15.404          pin: u_engine/add0_syn_133.fco
+net (fo=1)                              0.000         15.404          net: u_engine/add0_syn_114,  ../rtl/scg_snn_engine.v(184)
+                                                                      pin: u_engine/add0_syn_134.fci
+ADDER               x015y017z2          0.132    f    15.536          pin: u_engine/add0_syn_134.fco
+net (fo=1)                              0.000         15.536          net: u_engine/add0_syn_118,  ../rtl/scg_snn_engine.v(184)
+                                                                      pin: u_engine/add0_syn_135.fci
+ADDER               x015y017z3          0.387    f    15.923       8  pin: u_engine/add0_syn_135.fx[0]
+net (fo=1)                              0.742         16.665          net: u_engine/fc1_acc_b2[12],  NOFILE(0)
+                                                                      pin: u_engine/fc1_acc_reg[12]_syn_4.d[1]
+LUT2 (reg)          x015y018z0          0.314    r    16.979       9  net: u_engine/fc1_acc[12],  ../rtl/scg_snn_engine.v(102)
+--------------------------------------------------------------------  ---------------
+Arrival                                               16.979               
+
+capture edge                           20.000    r    20.000               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.116         19.884               
+clock uncertainty                      -0.100         19.784               
+clock pessimism                         0.000         19.784               
+--------------------------------------------------------------------  ---------------
+Required                                              19.784               
+--------------------------------------------------------------------  ---------------
+Slack                                                  2.805               
+
+Slack               : 2.812ns
+Begin Point         : ramread3_syn_92.clkb (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+End Point           : u_engine/fc1_acc_reg[20]_syn_4.d[0] (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+Check Type          : setup
+Process             : slow
+Budget              : 20.000ns { DeriveClock rising@20.000ns - DeriveClock rising@0.000ns }
+Data Path Delay     : 16.972ns (cell 10.497ns (61%), net 6.475ns (39%))
+Clock Skew          : 0.000ns
+Logic Level         : 9 ( LUT4=3  LUT5=2  ADDER=2  MULT18=1  LUT2=1 )
+Max Fanout          : 1
+Clock Uncertainty   : 0.100ns (sdc uncertainty: 0.000ns, default uncertainty: 0.100ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+EMB (clk2q)         x008y018            3.245    f     3.245          pin: ramread3_syn_92.dob[2]
+net (fo=1)                              0.676          3.921          net: ramread3_syn_95,  ../rtl/scg_top_snn.v(175)
+                                                                      pin: sel5_syn_628.a[0]
+LUT4                x010y023z1          0.408    f     4.329       1  pin: sel5_syn_628.f[0]
+net (fo=1)                              1.119          5.448          net: sel5_syn_452,  ../rtl/scg_top_snn.v(184)
+                                                                      pin: u_engine/I1_reg[233]_syn_4.c[0]
+LUT4                x021y018z2          0.348    f     5.796       2  pin: u_engine/I1_reg[233]_syn_4.f[0]
+net (fo=1)                              0.669          6.465          net: ramread3_syn_438,  ../rtl/scg_top_snn.v(175)
+                                                                      pin: u_engine/I1_reg[479]_syn_4.b[0]
+LUT4                x020y023z0          0.333    f     6.798       3  pin: u_engine/I1_reg[479]_syn_4.f[0]
+net (fo=1)                              1.082          7.880          net: sel5_syn_455,  ../rtl/scg_top_snn.v(184)
+                                                                      pin: u_engine/I1_reg[736]_syn_4.c[1]
+LUT5                x020y029z3          0.348    f     8.228       4  pin: u_engine/I1_reg[736]_syn_4.f[1]
+net (fo=1)                              0.594          8.822          net: sel5_syn_20[2],  ../rtl/scg_top_snn.v(184)
+                                                                      pin: u_engine/I1_reg[499]_syn_4.b[0]
+LUT5                x020y031z2          0.431    f     9.253       5  pin: u_engine/I1_reg[499]_syn_4.f[0]
+net (fo=1)                              1.115         10.368          net: sel5_syn_2[2],  ../rtl/scg_top_snn.v(184)
+                                                                      pin: u_engine/mult0_syn_1.b[2]
+MULT18              x016y009            3.563    f    13.931       6  pin: u_engine/mult0_syn_1.p[2]
+net (fo=1)                              0.626         14.557          net: u_engine/fc1_acc_b6[2],  NOFILE(0)
+                                                                      pin: u_engine/add0_syn_132.e[1]
+ADDER               x015y016z2          0.715    f    15.272       7  pin: u_engine/add0_syn_132.fco
+net (fo=1)                              0.000         15.272          net: u_engine/add0_syn_110,  ../rtl/scg_snn_engine.v(184)
+                                                                      pin: u_engine/add0_syn_133.fci
+ADDER               x015y016z3          0.132    f    15.404          pin: u_engine/add0_syn_133.fco
+net (fo=1)                              0.000         15.404          net: u_engine/add0_syn_114,  ../rtl/scg_snn_engine.v(184)
+                                                                      pin: u_engine/add0_syn_134.fci
+ADDER               x015y017z2          0.132    f    15.536          pin: u_engine/add0_syn_134.fco
+net (fo=1)                              0.000         15.536          net: u_engine/add0_syn_118,  ../rtl/scg_snn_engine.v(184)
+                                                                      pin: u_engine/add0_syn_135.fci
+ADDER               x015y017z3          0.132    f    15.668          pin: u_engine/add0_syn_135.fco
+net (fo=1)                              0.000         15.668          net: u_engine/add0_syn_122,  ../rtl/scg_snn_engine.v(184)
+                                                                      pin: u_engine/add0_syn_136.fci
+ADDER               x015y018z2          0.132    f    15.800          pin: u_engine/add0_syn_136.fco
+net (fo=1)                              0.000         15.800          net: u_engine/add0_syn_126,  ../rtl/scg_snn_engine.v(184)
+                                                                      pin: u_engine/add0_syn_137.fci
+ADDER               x015y018z3          0.264    r    16.064       8  pin: u_engine/add0_syn_137.f[1]
+net (fo=1)                              0.594         16.658          net: u_engine/fc1_acc_b2[21],  NOFILE(0)
+                                                                      pin: u_engine/fc1_acc_reg[20]_syn_4.d[0]
+LUT2 (reg)          x015y019z0          0.314    r    16.972       9  net: u_engine/fc1_acc[21],  ../rtl/scg_snn_engine.v(102)
+--------------------------------------------------------------------  ---------------
+Arrival                                               16.972               
+
+capture edge                           20.000    r    20.000               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.116         19.884               
+clock uncertainty                      -0.100         19.784               
+clock pessimism                         0.000         19.784               
+--------------------------------------------------------------------  ---------------
+Required                                              19.784               
+--------------------------------------------------------------------  ---------------
+Slack                                                  2.812               
+
+Slack               : 2.884ns
+Begin Point         : ramread3_syn_92.clkb (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+End Point           : u_engine/fc1_acc_reg[22]_syn_4.d[0] (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+Check Type          : setup
+Process             : slow
+Budget              : 20.000ns { DeriveClock rising@20.000ns - DeriveClock rising@0.000ns }
+Data Path Delay     : 16.900ns (cell 10.563ns (62%), net 6.337ns (38%))
+Clock Skew          : 0.000ns
+Logic Level         : 9 ( LUT4=3  LUT5=2  ADDER=2  MULT18=1  LUT2=1 )
+Max Fanout          : 1
+Clock Uncertainty   : 0.100ns (sdc uncertainty: 0.000ns, default uncertainty: 0.100ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+EMB (clk2q)         x008y018            3.245    f     3.245          pin: ramread3_syn_92.dob[2]
+net (fo=1)                              0.676          3.921          net: ramread3_syn_95,  ../rtl/scg_top_snn.v(175)
+                                                                      pin: sel5_syn_628.a[0]
+LUT4                x010y023z1          0.408    f     4.329       1  pin: sel5_syn_628.f[0]
+net (fo=1)                              1.119          5.448          net: sel5_syn_452,  ../rtl/scg_top_snn.v(184)
+                                                                      pin: u_engine/I1_reg[233]_syn_4.c[0]
+LUT4                x021y018z2          0.348    f     5.796       2  pin: u_engine/I1_reg[233]_syn_4.f[0]
+net (fo=1)                              0.669          6.465          net: ramread3_syn_438,  ../rtl/scg_top_snn.v(175)
+                                                                      pin: u_engine/I1_reg[479]_syn_4.b[0]
+LUT4                x020y023z0          0.333    f     6.798       3  pin: u_engine/I1_reg[479]_syn_4.f[0]
+net (fo=1)                              1.082          7.880          net: sel5_syn_455,  ../rtl/scg_top_snn.v(184)
+                                                                      pin: u_engine/I1_reg[736]_syn_4.c[1]
+LUT5                x020y029z3          0.348    f     8.228       4  pin: u_engine/I1_reg[736]_syn_4.f[1]
+net (fo=1)                              0.594          8.822          net: sel5_syn_20[2],  ../rtl/scg_top_snn.v(184)
+                                                                      pin: u_engine/I1_reg[499]_syn_4.b[0]
+LUT5                x020y031z2          0.431    f     9.253       5  pin: u_engine/I1_reg[499]_syn_4.f[0]
+net (fo=1)                              1.115         10.368          net: sel5_syn_2[2],  ../rtl/scg_top_snn.v(184)
+                                                                      pin: u_engine/mult0_syn_1.b[2]
+MULT18              x016y009            3.563    f    13.931       6  pin: u_engine/mult0_syn_1.p[2]
+net (fo=1)                              0.626         14.557          net: u_engine/fc1_acc_b6[2],  NOFILE(0)
+                                                                      pin: u_engine/add0_syn_132.e[1]
+ADDER               x015y016z2          0.715    f    15.272       7  pin: u_engine/add0_syn_132.fco
+net (fo=1)                              0.000         15.272          net: u_engine/add0_syn_110,  ../rtl/scg_snn_engine.v(184)
+                                                                      pin: u_engine/add0_syn_133.fci
+ADDER               x015y016z3          0.132    f    15.404          pin: u_engine/add0_syn_133.fco
+net (fo=1)                              0.000         15.404          net: u_engine/add0_syn_114,  ../rtl/scg_snn_engine.v(184)
+                                                                      pin: u_engine/add0_syn_134.fci
+ADDER               x015y017z2          0.132    f    15.536          pin: u_engine/add0_syn_134.fco
+net (fo=1)                              0.000         15.536          net: u_engine/add0_syn_118,  ../rtl/scg_snn_engine.v(184)
+                                                                      pin: u_engine/add0_syn_135.fci
+ADDER               x015y017z3          0.132    f    15.668          pin: u_engine/add0_syn_135.fco
+net (fo=1)                              0.000         15.668          net: u_engine/add0_syn_122,  ../rtl/scg_snn_engine.v(184)
+                                                                      pin: u_engine/add0_syn_136.fci
+ADDER               x015y018z2          0.132    f    15.800          pin: u_engine/add0_syn_136.fco
+net (fo=1)                              0.000         15.800          net: u_engine/add0_syn_126,  ../rtl/scg_snn_engine.v(184)
+                                                                      pin: u_engine/add0_syn_137.fci
+ADDER               x015y018z3          0.132    f    15.932          pin: u_engine/add0_syn_137.fco
+net (fo=1)                              0.000         15.932          net: u_engine/add0_syn_130,  ../rtl/scg_snn_engine.v(184)
+                                                                      pin: u_engine/add0_syn_138.fci
+ADDER               x015y019z2          0.198    r    16.130       8  pin: u_engine/add0_syn_138.f[0]
+net (fo=1)                              0.456         16.586          net: u_engine/fc1_acc_b2[23],  NOFILE(0)
+                                                                      pin: u_engine/fc1_acc_reg[22]_syn_4.d[0]
+LUT2 (reg)          x015y019z1          0.314    r    16.900       9  net: u_engine/fc1_acc[23],  ../rtl/scg_snn_engine.v(102)
+--------------------------------------------------------------------  ---------------
+Arrival                                               16.900               
+
+capture edge                           20.000    r    20.000               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.116         19.884               
+clock uncertainty                      -0.100         19.784               
+clock pessimism                         0.000         19.784               
+--------------------------------------------------------------------  ---------------
+Required                                              19.784               
+--------------------------------------------------------------------  ---------------
+Slack                                                  2.884               
+
+Slack               : 2.904ns
+Begin Point         : ramread3_syn_92.clkb (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+End Point           : u_engine/fc1_acc_reg[22]_syn_4.d[1] (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+Check Type          : setup
+Process             : slow
+Budget              : 20.000ns { DeriveClock rising@20.000ns - DeriveClock rising@0.000ns }
+Data Path Delay     : 16.880ns (cell 10.686ns (63%), net 6.194ns (37%))
+Clock Skew          : 0.000ns
+Logic Level         : 9 ( LUT4=3  LUT5=2  ADDER=2  MULT18=1  LUT2=1 )
+Max Fanout          : 1
+Clock Uncertainty   : 0.100ns (sdc uncertainty: 0.000ns, default uncertainty: 0.100ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+EMB (clk2q)         x008y018            3.245    f     3.245          pin: ramread3_syn_92.dob[2]
+net (fo=1)                              0.676          3.921          net: ramread3_syn_95,  ../rtl/scg_top_snn.v(175)
+                                                                      pin: sel5_syn_628.a[0]
+LUT4                x010y023z1          0.408    f     4.329       1  pin: sel5_syn_628.f[0]
+net (fo=1)                              1.119          5.448          net: sel5_syn_452,  ../rtl/scg_top_snn.v(184)
+                                                                      pin: u_engine/I1_reg[233]_syn_4.c[0]
+LUT4                x021y018z2          0.348    f     5.796       2  pin: u_engine/I1_reg[233]_syn_4.f[0]
+net (fo=1)                              0.669          6.465          net: ramread3_syn_438,  ../rtl/scg_top_snn.v(175)
+                                                                      pin: u_engine/I1_reg[479]_syn_4.b[0]
+LUT4                x020y023z0          0.333    f     6.798       3  pin: u_engine/I1_reg[479]_syn_4.f[0]
+net (fo=1)                              1.082          7.880          net: sel5_syn_455,  ../rtl/scg_top_snn.v(184)
+                                                                      pin: u_engine/I1_reg[736]_syn_4.c[1]
+LUT5                x020y029z3          0.348    f     8.228       4  pin: u_engine/I1_reg[736]_syn_4.f[1]
+net (fo=1)                              0.594          8.822          net: sel5_syn_20[2],  ../rtl/scg_top_snn.v(184)
+                                                                      pin: u_engine/I1_reg[499]_syn_4.b[0]
+LUT5                x020y031z2          0.431    f     9.253       5  pin: u_engine/I1_reg[499]_syn_4.f[0]
+net (fo=1)                              1.115         10.368          net: sel5_syn_2[2],  ../rtl/scg_top_snn.v(184)
+                                                                      pin: u_engine/mult0_syn_1.b[2]
+MULT18              x016y009            3.563    f    13.931       6  pin: u_engine/mult0_syn_1.p[2]
+net (fo=1)                              0.626         14.557          net: u_engine/fc1_acc_b6[2],  NOFILE(0)
+                                                                      pin: u_engine/add0_syn_132.e[1]
+ADDER               x015y016z2          0.715    f    15.272       7  pin: u_engine/add0_syn_132.fco
+net (fo=1)                              0.000         15.272          net: u_engine/add0_syn_110,  ../rtl/scg_snn_engine.v(184)
+                                                                      pin: u_engine/add0_syn_133.fci
+ADDER               x015y016z3          0.132    f    15.404          pin: u_engine/add0_syn_133.fco
+net (fo=1)                              0.000         15.404          net: u_engine/add0_syn_114,  ../rtl/scg_snn_engine.v(184)
+                                                                      pin: u_engine/add0_syn_134.fci
+ADDER               x015y017z2          0.132    f    15.536          pin: u_engine/add0_syn_134.fco
+net (fo=1)                              0.000         15.536          net: u_engine/add0_syn_118,  ../rtl/scg_snn_engine.v(184)
+                                                                      pin: u_engine/add0_syn_135.fci
+ADDER               x015y017z3          0.132    f    15.668          pin: u_engine/add0_syn_135.fco
+net (fo=1)                              0.000         15.668          net: u_engine/add0_syn_122,  ../rtl/scg_snn_engine.v(184)
+                                                                      pin: u_engine/add0_syn_136.fci
+ADDER               x015y018z2          0.132    f    15.800          pin: u_engine/add0_syn_136.fco
+net (fo=1)                              0.000         15.800          net: u_engine/add0_syn_126,  ../rtl/scg_snn_engine.v(184)
+                                                                      pin: u_engine/add0_syn_137.fci
+ADDER               x015y018z3          0.453    f    16.253       8  pin: u_engine/add0_syn_137.fx[1]
+net (fo=1)                              0.313         16.566          net: u_engine/fc1_acc_b2[22],  NOFILE(0)
+                                                                      pin: u_engine/fc1_acc_reg[22]_syn_4.d[1]
+LUT2 (reg)          x015y019z1          0.314    r    16.880       9  net: u_engine/fc1_acc[22],  ../rtl/scg_snn_engine.v(102)
+--------------------------------------------------------------------  ---------------
+Arrival                                               16.880               
+
+capture edge                           20.000    r    20.000               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.116         19.884               
+clock uncertainty                      -0.100         19.784               
+clock pessimism                         0.000         19.784               
+--------------------------------------------------------------------  ---------------
+Required                                              19.784               
+--------------------------------------------------------------------  ---------------
+Slack                                                  2.904               
+
+Slack               : 2.964ns
+Begin Point         : ramread3_syn_92.clkb (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+End Point           : u_engine/fc1_acc_reg[11]_syn_4.d[0] (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+Check Type          : setup
+Process             : slow
+Budget              : 20.000ns { DeriveClock rising@20.000ns - DeriveClock rising@0.000ns }
+Data Path Delay     : 16.820ns (cell 10.479ns (62%), net 6.341ns (38%))
+Clock Skew          : 0.000ns
+Logic Level         : 9 ( LUT4=3  LUT5=2  ADDER=2  MULT18=1  LUT2=1 )
+Max Fanout          : 1
+Clock Uncertainty   : 0.100ns (sdc uncertainty: 0.000ns, default uncertainty: 0.100ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+EMB (clk2q)         x008y018            3.245    f     3.245          pin: ramread3_syn_92.dob[2]
+net (fo=1)                              0.676          3.921          net: ramread3_syn_95,  ../rtl/scg_top_snn.v(175)
+                                                                      pin: sel5_syn_628.a[0]
+LUT4                x010y023z1          0.408    f     4.329       1  pin: sel5_syn_628.f[0]
+net (fo=1)                              1.119          5.448          net: sel5_syn_452,  ../rtl/scg_top_snn.v(184)
+                                                                      pin: u_engine/I1_reg[233]_syn_4.c[0]
+LUT4                x021y018z2          0.348    f     5.796       2  pin: u_engine/I1_reg[233]_syn_4.f[0]
+net (fo=1)                              0.669          6.465          net: ramread3_syn_438,  ../rtl/scg_top_snn.v(175)
+                                                                      pin: u_engine/I1_reg[479]_syn_4.b[0]
+LUT4                x020y023z0          0.333    f     6.798       3  pin: u_engine/I1_reg[479]_syn_4.f[0]
+net (fo=1)                              1.082          7.880          net: sel5_syn_455,  ../rtl/scg_top_snn.v(184)
+                                                                      pin: u_engine/I1_reg[736]_syn_4.c[1]
+LUT5                x020y029z3          0.348    f     8.228       4  pin: u_engine/I1_reg[736]_syn_4.f[1]
+net (fo=1)                              0.594          8.822          net: sel5_syn_20[2],  ../rtl/scg_top_snn.v(184)
+                                                                      pin: u_engine/I1_reg[499]_syn_4.b[0]
+LUT5                x020y031z2          0.431    f     9.253       5  pin: u_engine/I1_reg[499]_syn_4.f[0]
+net (fo=1)                              1.115         10.368          net: sel5_syn_2[2],  ../rtl/scg_top_snn.v(184)
+                                                                      pin: u_engine/mult0_syn_1.b[2]
+MULT18              x016y009            3.563    f    13.931       6  pin: u_engine/mult0_syn_1.p[2]
+net (fo=1)                              0.626         14.557          net: u_engine/fc1_acc_b6[2],  NOFILE(0)
+                                                                      pin: u_engine/add0_syn_132.e[1]
+ADDER               x015y016z2          0.715    f    15.272       7  pin: u_engine/add0_syn_132.fco
+net (fo=1)                              0.000         15.272          net: u_engine/add0_syn_110,  ../rtl/scg_snn_engine.v(184)
+                                                                      pin: u_engine/add0_syn_133.fci
+ADDER               x015y016z3          0.132    f    15.404          pin: u_engine/add0_syn_133.fco
+net (fo=1)                              0.000         15.404          net: u_engine/add0_syn_114,  ../rtl/scg_snn_engine.v(184)
+                                                                      pin: u_engine/add0_syn_134.fci
+ADDER               x015y017z2          0.132    f    15.536          pin: u_engine/add0_syn_134.fco
+net (fo=1)                              0.000         15.536          net: u_engine/add0_syn_118,  ../rtl/scg_snn_engine.v(184)
+                                                                      pin: u_engine/add0_syn_135.fci
+ADDER               x015y017z3          0.453    f    15.989       8  pin: u_engine/add0_syn_135.fx[1]
+net (fo=1)                              0.460         16.449          net: u_engine/fc1_acc_b2[14],  NOFILE(0)
+                                                                      pin: u_engine/fc1_acc_reg[11]_syn_4.d[0]
+LUT2 (reg)          x014y018z2          0.371    r    16.820       9  net: u_engine/fc1_acc[14],  ../rtl/scg_snn_engine.v(102)
+--------------------------------------------------------------------  ---------------
+Arrival                                               16.820               
+
+capture edge                           20.000    r    20.000               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.116         19.884               
+clock uncertainty                      -0.100         19.784               
+clock pessimism                         0.000         19.784               
+--------------------------------------------------------------------  ---------------
+Required                                              19.784               
+--------------------------------------------------------------------  ---------------
+Slack                                                  2.964               
+
+Slack               : 2.979ns
+Begin Point         : ramread3_syn_92.clkb (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+End Point           : u_engine/fc1_acc_reg[18]_syn_4.d[1] (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+Check Type          : setup
+Process             : slow
+Budget              : 20.000ns { DeriveClock rising@20.000ns - DeriveClock rising@0.000ns }
+Data Path Delay     : 16.805ns (cell 10.611ns (63%), net 6.194ns (37%))
+Clock Skew          : 0.000ns
+Logic Level         : 9 ( LUT4=3  LUT5=2  ADDER=2  MULT18=1  LUT2=1 )
+Max Fanout          : 1
+Clock Uncertainty   : 0.100ns (sdc uncertainty: 0.000ns, default uncertainty: 0.100ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+EMB (clk2q)         x008y018            3.245    f     3.245          pin: ramread3_syn_92.dob[2]
+net (fo=1)                              0.676          3.921          net: ramread3_syn_95,  ../rtl/scg_top_snn.v(175)
+                                                                      pin: sel5_syn_628.a[0]
+LUT4                x010y023z1          0.408    f     4.329       1  pin: sel5_syn_628.f[0]
+net (fo=1)                              1.119          5.448          net: sel5_syn_452,  ../rtl/scg_top_snn.v(184)
+                                                                      pin: u_engine/I1_reg[233]_syn_4.c[0]
+LUT4                x021y018z2          0.348    f     5.796       2  pin: u_engine/I1_reg[233]_syn_4.f[0]
+net (fo=1)                              0.669          6.465          net: ramread3_syn_438,  ../rtl/scg_top_snn.v(175)
+                                                                      pin: u_engine/I1_reg[479]_syn_4.b[0]
+LUT4                x020y023z0          0.333    f     6.798       3  pin: u_engine/I1_reg[479]_syn_4.f[0]
+net (fo=1)                              1.082          7.880          net: sel5_syn_455,  ../rtl/scg_top_snn.v(184)
+                                                                      pin: u_engine/I1_reg[736]_syn_4.c[1]
+LUT5                x020y029z3          0.348    f     8.228       4  pin: u_engine/I1_reg[736]_syn_4.f[1]
+net (fo=1)                              0.594          8.822          net: sel5_syn_20[2],  ../rtl/scg_top_snn.v(184)
+                                                                      pin: u_engine/I1_reg[499]_syn_4.b[0]
+LUT5                x020y031z2          0.431    f     9.253       5  pin: u_engine/I1_reg[499]_syn_4.f[0]
+net (fo=1)                              1.115         10.368          net: sel5_syn_2[2],  ../rtl/scg_top_snn.v(184)
+                                                                      pin: u_engine/mult0_syn_1.b[2]
+MULT18              x016y009            3.563    f    13.931       6  pin: u_engine/mult0_syn_1.p[2]
+net (fo=1)                              0.626         14.557          net: u_engine/fc1_acc_b6[2],  NOFILE(0)
+                                                                      pin: u_engine/add0_syn_132.e[1]
+ADDER               x015y016z2          0.715    f    15.272       7  pin: u_engine/add0_syn_132.fco
+net (fo=1)                              0.000         15.272          net: u_engine/add0_syn_110,  ../rtl/scg_snn_engine.v(184)
+                                                                      pin: u_engine/add0_syn_133.fci
+ADDER               x015y016z3          0.132    f    15.404          pin: u_engine/add0_syn_133.fco
+net (fo=1)                              0.000         15.404          net: u_engine/add0_syn_114,  ../rtl/scg_snn_engine.v(184)
+                                                                      pin: u_engine/add0_syn_134.fci
+ADDER               x015y017z2          0.132    f    15.536          pin: u_engine/add0_syn_134.fco
+net (fo=1)                              0.000         15.536          net: u_engine/add0_syn_118,  ../rtl/scg_snn_engine.v(184)
+                                                                      pin: u_engine/add0_syn_135.fci
+ADDER               x015y017z3          0.132    f    15.668          pin: u_engine/add0_syn_135.fco
+net (fo=1)                              0.000         15.668          net: u_engine/add0_syn_122,  ../rtl/scg_snn_engine.v(184)
+                                                                      pin: u_engine/add0_syn_136.fci
+ADDER               x015y018z2          0.453    f    16.121       8  pin: u_engine/add0_syn_136.fx[1]
+net (fo=1)                              0.313         16.434          net: u_engine/fc1_acc_b2[18],  NOFILE(0)
+                                                                      pin: u_engine/fc1_acc_reg[18]_syn_4.d[1]
+LUT2 (reg)          x014y018z3          0.371    r    16.805       9  net: u_engine/fc1_acc[18],  ../rtl/scg_snn_engine.v(102)
+--------------------------------------------------------------------  ---------------
+Arrival                                               16.805               
+
+capture edge                           20.000    r    20.000               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.116         19.884               
+clock uncertainty                      -0.100         19.784               
+clock pessimism                         0.000         19.784               
+--------------------------------------------------------------------  ---------------
+Required                                              19.784               
+--------------------------------------------------------------------  ---------------
+Slack                                                  2.979               
+
+Slack               : 3.019ns
+Begin Point         : ramread3_syn_92.clkb (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+End Point           : u_engine/fc1_acc_reg[13]_syn_4.d[1] (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+Check Type          : setup
+Process             : slow
+Budget              : 20.000ns { DeriveClock rising@20.000ns - DeriveClock rising@0.000ns }
+Data Path Delay     : 16.765ns (cell 10.290ns (61%), net 6.475ns (39%))
+Clock Skew          : 0.000ns
+Logic Level         : 9 ( LUT4=3  LUT5=2  ADDER=2  MULT18=1  LUT2=1 )
+Max Fanout          : 1
+Clock Uncertainty   : 0.100ns (sdc uncertainty: 0.000ns, default uncertainty: 0.100ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+EMB (clk2q)         x008y018            3.245    f     3.245          pin: ramread3_syn_92.dob[2]
+net (fo=1)                              0.676          3.921          net: ramread3_syn_95,  ../rtl/scg_top_snn.v(175)
+                                                                      pin: sel5_syn_628.a[0]
+LUT4                x010y023z1          0.408    f     4.329       1  pin: sel5_syn_628.f[0]
+net (fo=1)                              1.119          5.448          net: sel5_syn_452,  ../rtl/scg_top_snn.v(184)
+                                                                      pin: u_engine/I1_reg[233]_syn_4.c[0]
+LUT4                x021y018z2          0.348    f     5.796       2  pin: u_engine/I1_reg[233]_syn_4.f[0]
+net (fo=1)                              0.669          6.465          net: ramread3_syn_438,  ../rtl/scg_top_snn.v(175)
+                                                                      pin: u_engine/I1_reg[479]_syn_4.b[0]
+LUT4                x020y023z0          0.333    f     6.798       3  pin: u_engine/I1_reg[479]_syn_4.f[0]
+net (fo=1)                              1.082          7.880          net: sel5_syn_455,  ../rtl/scg_top_snn.v(184)
+                                                                      pin: u_engine/I1_reg[736]_syn_4.c[1]
+LUT5                x020y029z3          0.348    f     8.228       4  pin: u_engine/I1_reg[736]_syn_4.f[1]
+net (fo=1)                              0.594          8.822          net: sel5_syn_20[2],  ../rtl/scg_top_snn.v(184)
+                                                                      pin: u_engine/I1_reg[499]_syn_4.b[0]
+LUT5                x020y031z2          0.431    f     9.253       5  pin: u_engine/I1_reg[499]_syn_4.f[0]
+net (fo=1)                              1.115         10.368          net: sel5_syn_2[2],  ../rtl/scg_top_snn.v(184)
+                                                                      pin: u_engine/mult0_syn_1.b[2]
+MULT18              x016y009            3.563    f    13.931       6  pin: u_engine/mult0_syn_1.p[2]
+net (fo=1)                              0.626         14.557          net: u_engine/fc1_acc_b6[2],  NOFILE(0)
+                                                                      pin: u_engine/add0_syn_132.e[1]
+ADDER               x015y016z2          0.715    f    15.272       7  pin: u_engine/add0_syn_132.fco
+net (fo=1)                              0.000         15.272          net: u_engine/add0_syn_110,  ../rtl/scg_snn_engine.v(184)
+                                                                      pin: u_engine/add0_syn_133.fci
+ADDER               x015y016z3          0.132    f    15.404          pin: u_engine/add0_syn_133.fco
+net (fo=1)                              0.000         15.404          net: u_engine/add0_syn_114,  ../rtl/scg_snn_engine.v(184)
+                                                                      pin: u_engine/add0_syn_134.fci
+ADDER               x015y017z2          0.132    f    15.536          pin: u_engine/add0_syn_134.fco
+net (fo=1)                              0.000         15.536          net: u_engine/add0_syn_118,  ../rtl/scg_snn_engine.v(184)
+                                                                      pin: u_engine/add0_syn_135.fci
+ADDER               x015y017z3          0.264    r    15.800       8  pin: u_engine/add0_syn_135.f[1]
+net (fo=1)                              0.594         16.394          net: u_engine/fc1_acc_b2[13],  NOFILE(0)
+                                                                      pin: u_engine/fc1_acc_reg[13]_syn_4.d[1]
+LUT2 (reg)          x014y017z2          0.371    r    16.765       9  net: u_engine/fc1_acc[13],  ../rtl/scg_snn_engine.v(102)
+--------------------------------------------------------------------  ---------------
+Arrival                                               16.765               
+
+capture edge                           20.000    r    20.000               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.116         19.884               
+clock uncertainty                      -0.100         19.784               
+clock pessimism                         0.000         19.784               
+--------------------------------------------------------------------  ---------------
+Required                                              19.784               
+--------------------------------------------------------------------  ---------------
+Slack                                                  3.019               
+
+Slack               : 3.088ns
+Begin Point         : ramread3_syn_92.clkb (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+End Point           : u_engine/fc1_acc_reg[7]_syn_4.d[0] (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+Check Type          : setup
+Process             : slow
+Budget              : 20.000ns { DeriveClock rising@20.000ns - DeriveClock rising@0.000ns }
+Data Path Delay     : 16.696ns (cell 10.224ns (61%), net 6.472ns (39%))
+Clock Skew          : 0.000ns
+Logic Level         : 9 ( LUT4=3  LUT5=2  ADDER=2  MULT18=1  LUT2=1 )
+Max Fanout          : 1
+Clock Uncertainty   : 0.100ns (sdc uncertainty: 0.000ns, default uncertainty: 0.100ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+EMB (clk2q)         x008y018            3.245    f     3.245          pin: ramread3_syn_92.dob[2]
+net (fo=1)                              0.676          3.921          net: ramread3_syn_95,  ../rtl/scg_top_snn.v(175)
+                                                                      pin: sel5_syn_628.a[0]
+LUT4                x010y023z1          0.408    f     4.329       1  pin: sel5_syn_628.f[0]
+net (fo=1)                              1.119          5.448          net: sel5_syn_452,  ../rtl/scg_top_snn.v(184)
+                                                                      pin: u_engine/I1_reg[233]_syn_4.c[0]
+LUT4                x021y018z2          0.348    f     5.796       2  pin: u_engine/I1_reg[233]_syn_4.f[0]
+net (fo=1)                              0.669          6.465          net: ramread3_syn_438,  ../rtl/scg_top_snn.v(175)
+                                                                      pin: u_engine/I1_reg[479]_syn_4.b[0]
+LUT4                x020y023z0          0.333    f     6.798       3  pin: u_engine/I1_reg[479]_syn_4.f[0]
+net (fo=1)                              1.082          7.880          net: sel5_syn_455,  ../rtl/scg_top_snn.v(184)
+                                                                      pin: u_engine/I1_reg[736]_syn_4.c[1]
+LUT5                x020y029z3          0.348    f     8.228       4  pin: u_engine/I1_reg[736]_syn_4.f[1]
+net (fo=1)                              0.594          8.822          net: sel5_syn_20[2],  ../rtl/scg_top_snn.v(184)
+                                                                      pin: u_engine/I1_reg[499]_syn_4.b[0]
+LUT5                x020y031z2          0.431    f     9.253       5  pin: u_engine/I1_reg[499]_syn_4.f[0]
+net (fo=1)                              1.115         10.368          net: sel5_syn_2[2],  ../rtl/scg_top_snn.v(184)
+                                                                      pin: u_engine/mult0_syn_1.b[2]
+MULT18              x016y009            3.563    f    13.931       6  pin: u_engine/mult0_syn_1.p[2]
+net (fo=1)                              0.626         14.557          net: u_engine/fc1_acc_b6[2],  NOFILE(0)
+                                                                      pin: u_engine/add0_syn_132.e[1]
+ADDER               x015y016z2          0.715    f    15.272       7  pin: u_engine/add0_syn_132.fco
+net (fo=1)                              0.000         15.272          net: u_engine/add0_syn_110,  ../rtl/scg_snn_engine.v(184)
+                                                                      pin: u_engine/add0_syn_133.fci
+ADDER               x015y016z3          0.132    f    15.404          pin: u_engine/add0_syn_133.fco
+net (fo=1)                              0.000         15.404          net: u_engine/add0_syn_114,  ../rtl/scg_snn_engine.v(184)
+                                                                      pin: u_engine/add0_syn_134.fci
+ADDER               x015y017z2          0.387    f    15.791       8  pin: u_engine/add0_syn_134.fx[0]
+net (fo=1)                              0.591         16.382          net: u_engine/fc1_acc_b2[8],  NOFILE(0)
+                                                                      pin: u_engine/fc1_acc_reg[7]_syn_4.d[0]
+LUT2 (reg)          x014y017z1          0.314    r    16.696       9  net: u_engine/fc1_acc[8],  ../rtl/scg_snn_engine.v(102)
+--------------------------------------------------------------------  ---------------
+Arrival                                               16.696               
+
+capture edge                           20.000    r    20.000               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.116         19.884               
+clock uncertainty                      -0.100         19.784               
+clock pessimism                         0.000         19.784               
+--------------------------------------------------------------------  ---------------
+Required                                              19.784               
+--------------------------------------------------------------------  ---------------
+Slack                                                  3.088               
+
+
+
+Min Paths
+----------------------------------------------------------------------------------------------------
+Slack               : 0.086ns
+Begin Point         : u_engine/w2_addr_o_reg[3]_syn_4.clk (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+End Point           : ramread6_syn_11.addra[7] (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
 Check Type          : hold
 Process             : fast
 Budget              : 0.000ns { DeriveClock rising@0.000ns - DeriveClock rising@0.000ns }
-Data Path Delay     : 0.472ns (cell 0.109ns (23%), net 0.363ns (77%))
+Data Path Delay     : 0.386ns (cell 0.109ns (28%), net 0.277ns (72%))
 Clock Skew          : 0.000ns
 Logic Level         : 1 ( EMB=1 )
-Max Fanout          : 33
+Max Fanout          : 3
 Clock Uncertainty   : 0.100ns (sdc uncertainty: 0.000ns, default uncertainty: 0.100ns)
 
 Delay Type          Location             Incr           Path   Level  Netlist Info
 --------------------------------------------------------------------  ---------------
 launch edge                             0.000    r     0.000               
 --------------------------------------------------------------------  ---------------
-clk2q               x021y017z2          0.109    f     0.109          pin: u_engine/w1_addr_o_reg[11]_syn_4.q[0]
-net (fo=33)                             0.363          0.472          net: u_engine/w1_addr_o[11],  ../rtl/scg_snn_engine.v(45)
-                                                                      pin: ramread1_syn_39.addra[11]
-EMB (reg)           x024y018            0.000    f     0.472       1       
+clk2q               x033y029z3          0.109    f     0.109          pin: u_engine/w2_addr_o_reg[3]_syn_4.q[0]
+net (fo=3)                              0.277          0.386          net: u_engine/w2_addr_o[4],  ../rtl/scg_snn_engine.v(55)
+                                                                      pin: ramread6_syn_11.addra[7]
+EMB (reg)           x032y027            0.000    f     0.386       1       
 --------------------------------------------------------------------  ---------------
-Arrival                                                0.472               
+Arrival                                                0.386               
 
 capture edge                            0.000    r     0.000               
 --------------------------------------------------------------------  ---------------
@@ -1070,30 +767,30 @@ clock pessimism                         0.000          0.300
 --------------------------------------------------------------------  ---------------
 Required                                               0.300               
 --------------------------------------------------------------------  ---------------
-Slack                                                  0.172               
+Slack                                                  0.086               
 
-Slack               : 0.172ns
-Begin Point         : u_engine/w1_addr_o_reg[11]_syn_4.clk (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
-End Point           : ramread1_syn_39.addrb[11] (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+Slack               : 0.086ns
+Begin Point         : u_engine/w2_addr_o_reg[3]_syn_4.clk (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+End Point           : ramread6_syn_11.addrb[6] (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
 Check Type          : hold
 Process             : fast
 Budget              : 0.000ns { DeriveClock rising@0.000ns - DeriveClock rising@0.000ns }
-Data Path Delay     : 0.472ns (cell 0.109ns (23%), net 0.363ns (77%))
+Data Path Delay     : 0.386ns (cell 0.109ns (28%), net 0.277ns (72%))
 Clock Skew          : 0.000ns
 Logic Level         : 1 ( EMB=1 )
-Max Fanout          : 33
+Max Fanout          : 3
 Clock Uncertainty   : 0.100ns (sdc uncertainty: 0.000ns, default uncertainty: 0.100ns)
 
 Delay Type          Location             Incr           Path   Level  Netlist Info
 --------------------------------------------------------------------  ---------------
 launch edge                             0.000    r     0.000               
 --------------------------------------------------------------------  ---------------
-clk2q               x021y017z2          0.109    f     0.109          pin: u_engine/w1_addr_o_reg[11]_syn_4.q[0]
-net (fo=33)                             0.363          0.472          net: u_engine/w1_addr_o[11],  ../rtl/scg_snn_engine.v(45)
-                                                                      pin: ramread1_syn_39.addrb[11]
-EMB (reg)           x024y018            0.000    f     0.472       1       
+clk2q               x033y029z3          0.109    f     0.109          pin: u_engine/w2_addr_o_reg[3]_syn_4.q[1]
+net (fo=3)                              0.277          0.386          net: u_engine/w2_addr_o[3],  ../rtl/scg_snn_engine.v(55)
+                                                                      pin: ramread6_syn_11.addrb[6]
+EMB (reg)           x032y027            0.000    f     0.386       1       
 --------------------------------------------------------------------  ---------------
-Arrival                                                0.472               
+Arrival                                                0.386               
 
 capture edge                            0.000    r     0.000               
 --------------------------------------------------------------------  ---------------
@@ -1103,30 +800,30 @@ clock pessimism                         0.000          0.300
 --------------------------------------------------------------------  ---------------
 Required                                               0.300               
 --------------------------------------------------------------------  ---------------
-Slack                                                  0.172               
+Slack                                                  0.086               
 
-Slack               : 0.220ns
-Begin Point         : rx_data_reg[4]_syn_4.clk (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
-End Point           : ramread0_syn_11.dia[4] (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+Slack               : 0.191ns
+Begin Point         : u_engine/mux166_syn_749.clk (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+End Point           : ramread3_syn_42.addra[10] (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
 Check Type          : hold
 Process             : fast
 Budget              : 0.000ns { DeriveClock rising@0.000ns - DeriveClock rising@0.000ns }
-Data Path Delay     : 0.520ns (cell 0.109ns (20%), net 0.411ns (80%))
+Data Path Delay     : 0.491ns (cell 0.109ns (22%), net 0.382ns (78%))
 Clock Skew          : 0.000ns
 Logic Level         : 1 ( EMB=1 )
-Max Fanout          : 2
+Max Fanout          : 74
 Clock Uncertainty   : 0.100ns (sdc uncertainty: 0.000ns, default uncertainty: 0.100ns)
 
 Delay Type          Location             Incr           Path   Level  Netlist Info
 --------------------------------------------------------------------  ---------------
 launch edge                             0.000    r     0.000               
 --------------------------------------------------------------------  ---------------
-clk2q               x010y016z3          0.109    f     0.109          pin: rx_data_reg[4]_syn_4.q[1]
-net (fo=2)                              0.411          0.520          net: rx_data[4],  ../rtl/scg_top_snn.v(63)
-                                                                      pin: ramread0_syn_11.dia[4]
-EMB (reg)           x008y018            0.000    f     0.520       1       
+clk2q               x010y031z2          0.109    f     0.109          pin: u_engine/mux166_syn_749.q[0]
+net (fo=74)                             0.382          0.491          net: u_engine/w1_addr_o[7],  ../rtl/scg_snn_engine.v(50)
+                                                                      pin: ramread3_syn_42.addra[10]
+EMB (reg)           x008y027            0.000    f     0.491       1       
 --------------------------------------------------------------------  ---------------
-Arrival                                                0.520               
+Arrival                                                0.491               
 
 capture edge                            0.000    r     0.000               
 --------------------------------------------------------------------  ---------------
@@ -1136,30 +833,30 @@ clock pessimism                         0.000          0.300
 --------------------------------------------------------------------  ---------------
 Required                                               0.300               
 --------------------------------------------------------------------  ---------------
-Slack                                                  0.220               
+Slack                                                  0.191               
 
-Slack               : 0.262ns
-Begin Point         : u_engine/w1_addr_o_reg[12]_syn_4.clk (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
-End Point           : ramread1_syn_23.csa[0] (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+Slack               : 0.191ns
+Begin Point         : u_engine/mux166_syn_749.clk (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+End Point           : ramread3_syn_42.addrb[10] (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
 Check Type          : hold
 Process             : fast
 Budget              : 0.000ns { DeriveClock rising@0.000ns - DeriveClock rising@0.000ns }
-Data Path Delay     : 0.562ns (cell 0.109ns (19%), net 0.453ns (81%))
+Data Path Delay     : 0.491ns (cell 0.109ns (22%), net 0.382ns (78%))
 Clock Skew          : 0.000ns
-Logic Level         : 0
-Max Fanout          : 34
+Logic Level         : 1 ( EMB=1 )
+Max Fanout          : 74
 Clock Uncertainty   : 0.100ns (sdc uncertainty: 0.000ns, default uncertainty: 0.100ns)
 
 Delay Type          Location             Incr           Path   Level  Netlist Info
 --------------------------------------------------------------------  ---------------
 launch edge                             0.000    r     0.000               
 --------------------------------------------------------------------  ---------------
-clk2q               x022y017z2          0.109    f     0.109          pin: u_engine/w1_addr_o_reg[12]_syn_4.q[0]
-net (fo=34)                             0.453          0.562          net: u_engine/w1_addr_o[13],  ../rtl/scg_snn_engine.v(45)
-                                                                      pin: ramread1_syn_23.csa[0]
-EMB (reg)           x024y009            0.000    f     0.562               
+clk2q               x010y031z2          0.109    f     0.109          pin: u_engine/mux166_syn_749.q[0]
+net (fo=74)                             0.382          0.491          net: u_engine/w1_addr_o[7],  ../rtl/scg_snn_engine.v(50)
+                                                                      pin: ramread3_syn_42.addrb[10]
+EMB (reg)           x008y027            0.000    f     0.491       1       
 --------------------------------------------------------------------  ---------------
-Arrival                                                0.562               
+Arrival                                                0.491               
 
 capture edge                            0.000    r     0.000               
 --------------------------------------------------------------------  ---------------
@@ -1169,7 +866,205 @@ clock pessimism                         0.000          0.300
 --------------------------------------------------------------------  ---------------
 Required                                               0.300               
 --------------------------------------------------------------------  ---------------
-Slack                                                  0.262               
+Slack                                                  0.191               
+
+Slack               : 0.198ns
+Begin Point         : u_engine/w1_addr_o_reg[5]_syn_4.clk (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+End Point           : ramread3_syn_92.addrb[9] (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+Check Type          : hold
+Process             : fast
+Budget              : 0.000ns { DeriveClock rising@0.000ns - DeriveClock rising@0.000ns }
+Data Path Delay     : 0.498ns (cell 0.109ns (21%), net 0.389ns (79%))
+Clock Skew          : 0.000ns
+Logic Level         : 1 ( EMB=1 )
+Max Fanout          : 74
+Clock Uncertainty   : 0.100ns (sdc uncertainty: 0.000ns, default uncertainty: 0.100ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+clk2q               x010y026z3          0.109    f     0.109          pin: u_engine/w1_addr_o_reg[5]_syn_4.q[0]
+net (fo=74)                             0.389          0.498          net: u_engine/w1_addr_o[6],  ../rtl/scg_snn_engine.v(50)
+                                                                      pin: ramread3_syn_92.addrb[9]
+EMB (reg)           x008y018            0.000    f     0.498       1       
+--------------------------------------------------------------------  ---------------
+Arrival                                                0.498               
+
+capture edge                            0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+hold                                    0.200          0.200               
+clock uncertainty                       0.100          0.300               
+clock pessimism                         0.000          0.300               
+--------------------------------------------------------------------  ---------------
+Required                                               0.300               
+--------------------------------------------------------------------  ---------------
+Slack                                                  0.198               
+
+Slack               : 0.198ns
+Begin Point         : u_engine/w1_addr_o_reg[5]_syn_4.clk (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+End Point           : ramread3_syn_162.addrb[9] (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+Check Type          : hold
+Process             : fast
+Budget              : 0.000ns { DeriveClock rising@0.000ns - DeriveClock rising@0.000ns }
+Data Path Delay     : 0.498ns (cell 0.109ns (21%), net 0.389ns (79%))
+Clock Skew          : 0.000ns
+Logic Level         : 1 ( EMB=1 )
+Max Fanout          : 74
+Clock Uncertainty   : 0.100ns (sdc uncertainty: 0.000ns, default uncertainty: 0.100ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+clk2q               x010y026z3          0.109    f     0.109          pin: u_engine/w1_addr_o_reg[5]_syn_4.q[0]
+net (fo=74)                             0.389          0.498          net: u_engine/w1_addr_o[6],  ../rtl/scg_snn_engine.v(50)
+                                                                      pin: ramread3_syn_162.addrb[9]
+EMB (reg)           x008y027            0.000    f     0.498       1       
+--------------------------------------------------------------------  ---------------
+Arrival                                                0.498               
+
+capture edge                            0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+hold                                    0.200          0.200               
+clock uncertainty                       0.100          0.300               
+clock pessimism                         0.000          0.300               
+--------------------------------------------------------------------  ---------------
+Required                                               0.300               
+--------------------------------------------------------------------  ---------------
+Slack                                                  0.198               
+
+Slack               : 0.209ns
+Begin Point         : u_engine/w1_addr_o_reg[5]_syn_4.clk (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+End Point           : ramread3_syn_162.addra[8] (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+Check Type          : hold
+Process             : fast
+Budget              : 0.000ns { DeriveClock rising@0.000ns - DeriveClock rising@0.000ns }
+Data Path Delay     : 0.509ns (cell 0.109ns (21%), net 0.400ns (79%))
+Clock Skew          : 0.000ns
+Logic Level         : 1 ( EMB=1 )
+Max Fanout          : 74
+Clock Uncertainty   : 0.100ns (sdc uncertainty: 0.000ns, default uncertainty: 0.100ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+clk2q               x010y026z3          0.109    f     0.109          pin: u_engine/w1_addr_o_reg[5]_syn_4.q[1]
+net (fo=74)                             0.400          0.509          net: u_engine/w1_addr_o[5],  ../rtl/scg_snn_engine.v(50)
+                                                                      pin: ramread3_syn_162.addra[8]
+EMB (reg)           x008y027            0.000    f     0.509       1       
+--------------------------------------------------------------------  ---------------
+Arrival                                                0.509               
+
+capture edge                            0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+hold                                    0.200          0.200               
+clock uncertainty                       0.100          0.300               
+clock pessimism                         0.000          0.300               
+--------------------------------------------------------------------  ---------------
+Required                                               0.300               
+--------------------------------------------------------------------  ---------------
+Slack                                                  0.209               
+
+Slack               : 0.234ns
+Begin Point         : u_engine/w1_addr_o_reg[3]_syn_4.clk (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+End Point           : ramread3_syn_92.addra[6] (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+Check Type          : hold
+Process             : fast
+Budget              : 0.000ns { DeriveClock rising@0.000ns - DeriveClock rising@0.000ns }
+Data Path Delay     : 0.534ns (cell 0.109ns (20%), net 0.425ns (80%))
+Clock Skew          : 0.000ns
+Logic Level         : 1 ( EMB=1 )
+Max Fanout          : 74
+Clock Uncertainty   : 0.100ns (sdc uncertainty: 0.000ns, default uncertainty: 0.100ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+clk2q               x011y026z1          0.109    f     0.109          pin: u_engine/w1_addr_o_reg[3]_syn_4.q[1]
+net (fo=74)                             0.425          0.534          net: u_engine/w1_addr_o[3],  ../rtl/scg_snn_engine.v(50)
+                                                                      pin: ramread3_syn_92.addra[6]
+EMB (reg)           x008y018            0.000    f     0.534       1       
+--------------------------------------------------------------------  ---------------
+Arrival                                                0.534               
+
+capture edge                            0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+hold                                    0.200          0.200               
+clock uncertainty                       0.100          0.300               
+clock pessimism                         0.000          0.300               
+--------------------------------------------------------------------  ---------------
+Required                                               0.300               
+--------------------------------------------------------------------  ---------------
+Slack                                                  0.234               
+
+Slack               : 0.294ns
+Begin Point         : x_waddr_reg[10]_syn_4.clk (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+End Point           : ramread0_syn_16.addra[12] (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+Check Type          : hold
+Process             : fast
+Budget              : 0.000ns { DeriveClock rising@0.000ns - DeriveClock rising@0.000ns }
+Data Path Delay     : 0.594ns (cell 0.109ns (18%), net 0.485ns (82%))
+Clock Skew          : 0.000ns
+Logic Level         : 1 ( EMB=1 )
+Max Fanout          : 3
+Clock Uncertainty   : 0.100ns (sdc uncertainty: 0.000ns, default uncertainty: 0.100ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+clk2q               x017y004z1          0.109    f     0.109          pin: x_waddr_reg[10]_syn_4.q[1]
+net (fo=3)                              0.485          0.594          net: x_waddr[10],  ../rtl/scg_top_snn.v(203)
+                                                                      pin: ramread0_syn_16.addra[12]
+EMB (reg)           x024y000            0.000    f     0.594       1       
+--------------------------------------------------------------------  ---------------
+Arrival                                                0.594               
+
+capture edge                            0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+hold                                    0.200          0.200               
+clock uncertainty                       0.100          0.300               
+clock pessimism                         0.000          0.300               
+--------------------------------------------------------------------  ---------------
+Required                                               0.300               
+--------------------------------------------------------------------  ---------------
+Slack                                                  0.294               
+
+Slack               : 0.308ns
+Begin Point         : u_engine/w1_addr_o_reg[9]_syn_4.clk (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+End Point           : ramread3_syn_122.addra[12] (rising edge triggered by clock DeriveClock  { rise@0.000000ns  fall@10.000000ns  period=20.000000 })
+Check Type          : hold
+Process             : fast
+Budget              : 0.000ns { DeriveClock rising@0.000ns - DeriveClock rising@0.000ns }
+Data Path Delay     : 0.608ns (cell 0.109ns (17%), net 0.499ns (83%))
+Clock Skew          : 0.000ns
+Logic Level         : 1 ( EMB=1 )
+Max Fanout          : 72
+Clock Uncertainty   : 0.100ns (sdc uncertainty: 0.000ns, default uncertainty: 0.100ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+clk2q               x013y029z1          0.109    f     0.109          pin: u_engine/w1_addr_o_reg[9]_syn_4.q[1]
+net (fo=72)                             0.499          0.608          net: u_engine/w1_addr_o[9],  ../rtl/scg_snn_engine.v(50)
+                                                                      pin: ramread3_syn_122.addra[12]
+EMB (reg)           x008y027            0.000    f     0.608       1       
+--------------------------------------------------------------------  ---------------
+Arrival                                                0.608               
+
+capture edge                            0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+hold                                    0.200          0.200               
+clock uncertainty                       0.100          0.300               
+clock pessimism                         0.000          0.300               
+--------------------------------------------------------------------  ---------------
+Required                                               0.300               
+--------------------------------------------------------------------  ---------------
+Slack                                                  0.308               
 
 
 Inter clock domain timing

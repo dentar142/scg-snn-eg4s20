@@ -24,8 +24,12 @@ build_v7/*
 !build_v7/scg_top_v7_route.area
 build_snn/*
 !build_snn/scg_top_snn.bit
+!build_snn/scg_top_snn_multimodal.bit
+!build_snn/scg_top_snn_multimodal_holdout.bit
+!build_snn/scg_top_snn_singlemodal_backup.bit
 !build_snn/scg_top_snn_route_timing.rpt
 !build_snn/scg_top_snn_route.area
+!build_snn/scg_top_snn_route.qor
 
 # --- runtime logs / scratch ---
 *.log

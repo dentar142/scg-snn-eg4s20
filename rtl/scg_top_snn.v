@@ -31,8 +31,8 @@ module scg_top_snn #(
     parameter integer N_CLASSES   = 3,                // 3-class multimodal SNN
     parameter integer T           = 32,
     parameter integer LEAK_SHIFT  = 4,
-    parameter signed [23:0] THETA1 = 24'sd14166,      // overwritten by build .tcl from meta.json
-    parameter signed [23:0] THETA2 = 24'sd2324
+    parameter signed [23:0] THETA1 = 24'sd13756,      // overwritten by build .tcl from meta.json
+    parameter signed [23:0] THETA2 = 24'sd1397
 ) (
     input  wire        clk_i,
     input  wire        rst_n_i,
@@ -131,33 +131,63 @@ module scg_top_snn #(
 
     //--------------------------------------------------------------------
     // BRAMs
-    //   * x_bram   :  N_IN bytes input (registered read; loaded by UART)
-    //                 N_IN=1280 -> ~1.4 x BRAM9K
-    //   * w1_rom   :  H * N_IN bytes (= 64 * 1280 = 81920 B for multimodal),
-    //                 $readmemh from rtl/weights_snn/W1.hex.  Synth tool will
-    //                 auto-pack into BRAM32K instances.
-    //   * w2_rom   :  N_CLASSES * H bytes ($readmemh from W2.hex).
+    //   * x_bram         : N_IN bytes input (loaded by UART)
+    //   * w1_ch0..w1_ch4 : H * WIN_LEN bytes per channel-bank (= 8 KB each
+    //                      for H=32 WIN_LEN=256). Splitting into 5 banks
+    //                      forces Anlogic synth to use BRAM9K (8 BRAM9K
+    //                      per bank in 1Kx8 mode = 40 BRAM9K total).
+    //                      Single 40 KB array does NOT trigger BRAM
+    //                      inference and falls back to LUT-RAM.
+    //   * w2_rom         : N_CLASSES * H bytes ($readmemh from W2.hex).
     //--------------------------------------------------------------------
     (* syn_ramstyle = "block_ram" *) reg  [7:0] x_bram   [0:N_IN-1];
-    (* syn_ramstyle = "block_ram" *) reg  [7:0] w1_rom   [0:H*N_IN-1];
+    (* syn_ramstyle = "block_ram" *) reg  [7:0] w1_ch0   [0:H*WIN_LEN-1];
+    (* syn_ramstyle = "block_ram" *) reg  [7:0] w1_ch1   [0:H*WIN_LEN-1];
+    (* syn_ramstyle = "block_ram" *) reg  [7:0] w1_ch2   [0:H*WIN_LEN-1];
+    (* syn_ramstyle = "block_ram" *) reg  [7:0] w1_ch3   [0:H*WIN_LEN-1];
+    (* syn_ramstyle = "block_ram" *) reg  [7:0] w1_ch4   [0:H*WIN_LEN-1];
     (* syn_ramstyle = "block_ram" *) reg  [7:0] w2_rom   [0:N_CLASSES*H-1];
 
     // Synthesis runs from build_snn/, so the hex files are one dir up.
     initial begin
-        $readmemh("../rtl/weights_snn/W1.hex", w1_rom);
+        $readmemh("../rtl/weights_snn/W1_ch0.hex", w1_ch0);
+        $readmemh("../rtl/weights_snn/W1_ch1.hex", w1_ch1);
+        $readmemh("../rtl/weights_snn/W1_ch2.hex", w1_ch2);
+        $readmemh("../rtl/weights_snn/W1_ch3.hex", w1_ch3);
+        $readmemh("../rtl/weights_snn/W1_ch4.hex", w1_ch4);
         $readmemh("../rtl/weights_snn/W2.hex", w2_rom);
     end
 
     // SNN engine read addresses and buses
-    wire [$clog2(N_IN)-1:0]        eng_x_addr;
-    wire [$clog2(H*N_IN)-1:0]      eng_w1_addr;
-    wire [$clog2(N_CLASSES*H)-1:0] eng_w2_addr;
+    wire [$clog2(N_IN)-1:0]            eng_x_addr;
+    wire [$clog2(H*WIN_LEN)-1:0]       eng_w1_addr;        // bank-internal
+    wire [$clog2(N_CHAN+1)-1:0]        eng_w1_chan;        // 0..N_CHAN-1
+    wire [$clog2(N_CLASSES*H)-1:0]     eng_w2_addr;
 
-    reg  signed [7:0]  x_dout, w1_dout, w2_dout;
+    // Bank reads: sync read, all banks read in parallel; channel mux is comb
+    reg signed [7:0]  x_dout, w2_dout;
+    reg signed [7:0]  w1_b0, w1_b1, w1_b2, w1_b3, w1_b4;
+    reg [$clog2(N_CHAN+1)-1:0] w1_chan_d;            // registered chan select
     always @(posedge clk) begin
-        x_dout  <= x_bram[eng_x_addr];
-        w1_dout <= w1_rom[eng_w1_addr];
-        w2_dout <= w2_rom[eng_w2_addr];
+        x_dout    <= x_bram[eng_x_addr];
+        w1_b0     <= w1_ch0[eng_w1_addr];
+        w1_b1     <= w1_ch1[eng_w1_addr];
+        w1_b2     <= w1_ch2[eng_w1_addr];
+        w1_b3     <= w1_ch3[eng_w1_addr];
+        w1_b4     <= w1_ch4[eng_w1_addr];
+        w1_chan_d <= eng_w1_chan;
+        w2_dout   <= w2_rom[eng_w2_addr];
+    end
+    // Combinational mux on registered chan select keeps latency at 1 cycle
+    reg signed [7:0] w1_dout;
+    always @(*) begin
+        case (w1_chan_d)
+            3'd0:    w1_dout = w1_b0;
+            3'd1:    w1_dout = w1_b1;
+            3'd2:    w1_dout = w1_b2;
+            3'd3:    w1_dout = w1_b3;
+            default: w1_dout = w1_b4;
+        endcase
     end
 
     //--------------------------------------------------------------------
@@ -218,7 +248,8 @@ module scg_top_snn #(
     // SNN engine
     //--------------------------------------------------------------------
     scg_snn_engine #(
-        .N_IN(N_IN), .H(H), .N_CLASSES(N_CLASSES),
+        .N_IN(N_IN), .N_CHAN(N_CHAN), .WIN_LEN(WIN_LEN),
+        .H(H), .N_CLASSES(N_CLASSES),
         .T(T), .LEAK_SHIFT(LEAK_SHIFT)
     ) u_engine (
         .clk      (clk),
@@ -230,6 +261,7 @@ module scg_top_snn #(
         .x_data_i (x_dout),
 
         .w1_addr_o(eng_w1_addr),
+        .w1_chan_o(eng_w1_chan),
         .w1_data_i(w1_dout),
 
         .w2_addr_o(eng_w2_addr),

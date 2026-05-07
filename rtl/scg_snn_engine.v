@@ -27,6 +27,8 @@
 
 module scg_snn_engine #(
     parameter integer N_IN       = 256,
+    parameter integer N_CHAN     = 1,                    // 1 for single-modal, 5 for multi-modal
+    parameter integer WIN_LEN    = N_IN / N_CHAN,        // samples per channel
     parameter integer H          = 64,
     parameter integer N_CLASSES  = 3,
     parameter integer T          = 32,
@@ -43,8 +45,10 @@ module scg_snn_engine #(
     output reg  [$clog2(N_IN)-1:0]    x_addr_o,
     input  wire signed [7:0]          x_data_i,
 
-    // W1 ROM (H * N_IN bytes; address = i * N_IN + j)
-    output reg  [$clog2(H*N_IN)-1:0]  w1_addr_o,
+    // W1 ROM (channel-banked: H * WIN_LEN bytes per bank;
+    //   bank-internal address = fc1_i * WIN_LEN + fc1_k)
+    output reg  [$clog2(H*WIN_LEN)-1:0] w1_addr_o,
+    output reg  [$clog2(N_CHAN+1)-1:0]  w1_chan_o,        // bank select (0..N_CHAN-1)
     input  wire signed [7:0]          w1_data_i,
 
     // W2 ROM (N_CLASSES * H bytes; address = c * H + i)
@@ -91,10 +95,11 @@ module scg_snn_engine #(
 
     reg [3:0] state;
 
-    // FC1 loop counters
-    reg [$clog2(H+1)-1:0]    fc1_i;
-    reg [$clog2(N_IN+1)-1:0] fc1_j;
-    reg signed [23:0]        fc1_acc;
+    // FC1 loop counters (split j into c + k for channel-banked W1 ROM)
+    reg [$clog2(H+1)-1:0]       fc1_i;
+    reg [$clog2(N_CHAN+1)-1:0]  fc1_c;     // channel 0..N_CHAN-1
+    reg [$clog2(WIN_LEN+1)-1:0] fc1_k;     // sample 0..WIN_LEN-1
+    reg signed [23:0]           fc1_acc;
 
     // Time-step counter
     reg [$clog2(T+1)-1:0]    t_idx;
@@ -124,8 +129,8 @@ module scg_snn_engine #(
             state    <= S_IDLE;
             done_o   <= 1'b0;
             pred_o   <= {PRED_W{1'b0}};
-            x_addr_o <= 0; w1_addr_o <= 0; w2_addr_o <= 0;
-            fc1_i <= 0; fc1_j <= 0; fc1_acc <= 0;
+            x_addr_o <= 0; w1_addr_o <= 0; w1_chan_o <= 0; w2_addr_o <= 0;
+            fc1_i <= 0; fc1_c <= 0; fc1_k <= 0; fc1_acc <= 0;
             t_idx <= 0; lif1_i <= 0;
             fc2_c <= 0; fc2_i <= 0; fc2_acc <= 0;
             lif2_c <= 0;
@@ -142,7 +147,7 @@ module scg_snn_engine #(
             S_IDLE: begin
                 done_o <= 1'b0;
                 if (start_i) begin
-                    fc1_i <= 0; fc1_j <= 0; fc1_acc <= 0;
+                    fc1_i <= 0; fc1_c <= 0; fc1_k <= 0; fc1_acc <= 0;
                     t_idx <= 0;
                     state <= S_INIT;
                 end
@@ -155,9 +160,10 @@ module scg_snn_engine #(
                 for (k = 0; k < N_CLASSES; k = k + 1) begin
                     v2[k] <= 0; sc[k] <= 8'd0;
                 end
-                // Issue first FC1 fetch (i=0, j=0)
-                x_addr_o  <= 0;
-                w1_addr_o <= 0;
+                // Issue first FC1 fetch (i=0, c=0, k=0)
+                x_addr_o  <= 0;             // = c*WIN_LEN+k = 0
+                w1_addr_o <= 0;             // = i*WIN_LEN+k = 0 (bank-internal)
+                w1_chan_o <= 0;             // bank 0
                 state <= S_FC1_FETCH;
             end
 
@@ -171,14 +177,29 @@ module scg_snn_engine #(
                 state <= S_FC1_MAC;
             end
 
-            S_FC1_MAC: begin
+            S_FC1_MAC: begin: fc1_mac_blk
+                // Compute next (c, k) and corresponding addresses for next FETCH
+                reg [$clog2(N_CHAN+1)-1:0] next_c;
+                reg [$clog2(WIN_LEN+1)-1:0] next_k;
                 fc1_acc <= fc1_acc + $signed(x_data_i) * $signed(w1_data_i);
-                if (fc1_j == N_IN - 1) begin
+                // Done with this neuron when (c, k) reach (N_CHAN-1, WIN_LEN-1)
+                if (fc1_c == N_CHAN - 1 && fc1_k == WIN_LEN - 1) begin
                     state <= S_FC1_NEXT;
                 end else begin
-                    fc1_j     <= fc1_j + 1;
-                    x_addr_o  <= fc1_j + 1;
-                    w1_addr_o <= w1_addr_o + 1;
+                    if (fc1_k == WIN_LEN - 1) begin
+                        next_c = fc1_c + 1;
+                        next_k = 0;
+                    end else begin
+                        next_c = fc1_c;
+                        next_k = fc1_k + 1;
+                    end
+                    fc1_c     <= next_c;
+                    fc1_k     <= next_k;
+                    // x flat addr = c * WIN_LEN + k.  WIN_LEN is power of 2 → just concat.
+                    x_addr_o  <= next_c * WIN_LEN + next_k;
+                    // w1 bank-internal addr = i * WIN_LEN + k
+                    w1_addr_o <= fc1_i * WIN_LEN + next_k;
+                    w1_chan_o <= next_c;
                     state     <= S_FC1_FETCH;
                 end
             end
@@ -193,9 +214,11 @@ module scg_snn_engine #(
                     state  <= S_LIF1;
                 end else begin
                     fc1_i     <= fc1_i + 1;
-                    fc1_j     <= 0;
-                    x_addr_o  <= 0;
-                    w1_addr_o <= w1_addr_o + 1;  // start of next neuron's row
+                    fc1_c     <= 0;
+                    fc1_k     <= 0;
+                    x_addr_o  <= 0;                                // c=0,k=0
+                    w1_addr_o <= (fc1_i + 1) * WIN_LEN;            // (i+1)*WIN_LEN+0
+                    w1_chan_o <= 0;
                     state     <= S_FC1_FETCH;
                 end
             end
