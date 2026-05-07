@@ -631,9 +631,44 @@ truth Dia      4358       3368       2832       (recall 26.8%)
 
 ---
 
-## 9. 结论
+## 9. Multi-Modal FPGA Deployment
 
-### 7.1 三大贡献
+> 把 FOSTER 5-channel 多模态 SNN 烧到 EG4S20 上。
+
+### 9.1 模型选择（H=32 fallback）
+H=64 多模态 W1 = 80 KB 物理超 EG4S20 BRAM 容量（综合时 PHY-9009: MSlice 5774 > 4900）。
+解决方案：H 从 64 降到 32：
+- W1 = 32 × 1280 = **40 KB**（40 BRAM9K，62.5% 占用）✓
+- 模型容量减半但 5-modality 信息冗余使精度仍 ~95%
+
+### 9.2 H=32 多模态精度
+| 指标 | H=64 多模态 | **H=32 多模态** |
+|---|---|---|
+| Random-shuffle val acc (FP32) | 92.80 % | **95.24 %** ⭐ |
+| INT8 CPU sim (200 samples) | 97.00 % | 96.50 % |
+| FPGA on-board (200 samples) | N/A（capacity）| **TBD（综合中）** |
+
+### 9.3 资源（综合中，待填）
+| 资源 | H=32 多模态 |
+|---|---|
+| LUT4 | TBD |
+| BRAM9K | TBD（预估 40-45）|
+| DSP18 | 1（无变化）|
+| Setup WNS @ 50 MHz | TBD |
+
+### 9.4 板上 Bench（待数据）
+单次推理时延：
+- 估算 FPGA run-only ≈ 1.0 ms（H × N_IN = 32 × 1280 = 40960 cycles + T=32 × ~140 cy ≈ 45 K cy @ 50 MHz）
+- UART 上传 1280 字节 @ 115200 baud ≈ 110 ms
+- 总 round-trip ≈ 110-115 ms
+
+> 数据由综合 + bench 完成后填入。
+
+---
+
+## 10. 结论
+
+### 10.1 三大贡献
 
 #### 贡献 1：SNN 范式在国产 FPGA 上的首次完整实现
 - 256→64→3 LIF SNN 用手写 Verilog 实现
@@ -650,7 +685,7 @@ truth Dia      4358       3368       2832       (recall 26.8%)
 - SNN train-val gap (10.9 pp) 显著小于 CNN (16.3 pp)
 - SSL pretraining 救不了 CNN（无论单语料还是大混合），但 SNN 不需要 SSL 就赢
 
-### 7.2 局限性
+### 10.2 局限性
 1. **静态功耗劣势**：55 nm vs 40 nm ULP 的工艺差距（80 mW vs 8.55 mW），属物理硬约束
 2. **Hold-out 仅 3 受试者**：受具体 hold-out 选择影响（含 b002 这个最难 fold 的代表）
 3. **功耗未实测**：TD `calculate_power` toolchain bug，仅 datasheet 估算
@@ -658,28 +693,28 @@ truth Dia      4358       3368       2832       (recall 26.8%)
 
 ---
 
-## 10. 未来工作
+## 11. 未来工作
 
-### 10.1 学术方向
+### 11.1 学术方向
 1. **Subject-supervised contrastive SSL**：替代 SimCLR，正样本=同被试不同窗，可能教模型学到 cross-subject invariance
 2. **Cross-domain 验证**：补 PN2016 PCG zip，做 SCG → PCG 跨域测试
 3. **Sys/Dia recall 提升**：当前 hold-out Sys/Dia recall 仅 40-44 %，需用 focal loss / threshold tuning / ensemble 改善
 4. **病人适配性筛查方案**：上线前用模型置信度 + ECG 同步信号判断"该病人是否适合此模型"，分流到人工修正
 
-### 8.2 工程方向
+### 11.2 工程方向
 1. **重做 v7 流水线**：S_MUL 阶段加回 `gen_rtl_v7.py`，闭合 50 MHz Setup WNS
 2. **SDRAM 权重存储**：解锁更大模型（200K+ 参数），可能突破 88 % 架构天花板
 3. **外接电流测量**：补真实功耗 / 能效数字，消除 datasheet 估算的不确定性
 4. **多通道 SCG**：EG4S20 还有 96.5 % DSP 闲置，可加 ECG 同步通道做多模态融合
 
-### 8.3 临床方向
+### 11.3 临床方向
 1. **真实病人数据采集**：CEBSDB 19 受试者太少；用 MEMS 加速度计 + Arduino + 50 志愿者扩 train set
 2. **SDR 指标计算 + 报告**：从 Sys/Dia 时序衍生收缩-舒张比，与心血管科医生合作验证临床价值
 3. **可穿戴/航天场景验证**：低重力 / 振动环境下的 SCG 信号特性变化研究
 
 ---
 
-## 9. 复现命令（完整 pipeline）
+## 12. 复现命令（完整 pipeline）
 
 ```bash
 # Step 1: 下载 CEBSDB（如缺）
@@ -717,7 +752,7 @@ python tools/bench_fpga_snn.py --port COM27 --n 9660 --data data_excl100/holdout
 
 ---
 
-## 10. 文件清单
+## 13. 文件清单
 
 ### 模型与训练
 - `model/dataset_pipeline.py` — 数据预处理 + temporal exclusion
@@ -757,7 +792,7 @@ python tools/bench_fpga_snn.py --port COM27 --n 9660 --data data_excl100/holdout
 
 ---
 
-## 11. 致谢与许可
+## 14. 致谢与许可
 
 - **数据集**：PhysioNet CEBSDB（García-González MÁ et al.），ODC-BY 1.0
 - **对标论文**：Rahman et al., DCOSS-IoT 2026，CC BY 4.0
@@ -768,7 +803,7 @@ python tools/bench_fpga_snn.py --port COM27 --n 9660 --data data_excl100/holdout
 
 ---
 
-## 12. 引用建议（如发表）
+## 15. 引用建议（如发表）
 
 ```bibtex
 @misc{scg-snn-eg4s20-2026,
