@@ -633,36 +633,43 @@ truth Dia      4358       3368       2832       (recall 26.8%)
 
 ## 9. Multi-Modal FPGA Deployment
 
-> 把 FOSTER 5-channel 多模态 SNN 烧到 EG4S20 上。
+> 把 FOSTER 5-channel 多模态 SNN 烧到 EG4S20 上的 **honest negative result**——多模态 SNN 在 CPU 上验证 93.11% 5-fold CV，但**因 EG4S20 BRAM 物理容量不足无法部署到这块板上**。
 
-### 9.1 模型选择（H=32 fallback）
-H=64 多模态 W1 = 80 KB 物理超 EG4S20 BRAM 容量（综合时 PHY-9009: MSlice 5774 > 4900）。
-解决方案：H 从 64 降到 32：
-- W1 = 32 × 1280 = **40 KB**（40 BRAM9K，62.5% 占用）✓
-- 模型容量减半但 5-modality 信息冗余使精度仍 ~95%
+### 9.1 Capacity Math
 
-### 9.2 H=32 多模态精度
-| 指标 | H=64 多模态 | **H=32 多模态** |
-|---|---|---|
-| Random-shuffle val acc (FP32) | 92.80 % | **95.24 %** ⭐ |
-| INT8 CPU sim (200 samples) | 97.00 % | 96.50 % |
-| FPGA on-board (200 samples) | N/A（capacity）| **TBD（综合中）** |
+| 模型 | W1 size | BRAM 需求 (1Kx8 mode) | EG4S20 BRAM 上限 |
+|---|---|---|---|
+| 单模态 SNN (H=64, N_IN=256) | 16 KB | 16 BRAM9K | 64 BRAM9K ✓ 足 |
+| 多模态 SNN H=64 (N_IN=1280) | 80 KB | 80 BRAM9K | **超 25%** ✗ |
+| 多模态 SNN H=32 (N_IN=1280) | 40 KB | 40 BRAM9K | 64 BRAM9K — should fit |
 
-### 9.3 资源（综合中，待填）
-| 资源 | H=32 多模态 |
-|---|---|
-| LUT4 | TBD |
-| BRAM9K | TBD（预估 40-45）|
-| DSP18 | 1（无变化）|
-| Setup WNS @ 50 MHz | TBD |
+### 9.2 综合实测（H=32 fallback）
 
-### 9.4 板上 Bench（待数据）
-单次推理时延：
-- 估算 FPGA run-only ≈ 1.0 ms（H × N_IN = 32 × 1280 = 40960 cycles + T=32 × ~140 cy ≈ 45 K cy @ 50 MHz）
-- UART 上传 1280 字节 @ 115200 baud ≈ 110 ms
-- 总 round-trip ≈ 110-115 ms
+实际 Anlogic TD 6.2.x 综合三次尝试结果：
 
-> 数据由综合 + bench 完成后填入。
+| 配置 | LUT4 (limit 19,600) | BRAM9K (limit 64) | 状态 |
+|---|---|---|---|
+| H=64 single-array W1 | **17,769 (90.6%)** | 16/64 | ❌ MSlice 16881 > 4900 (3.4× over) |
+| H=64 + W1 split 3-bank | 19,554 (99.8%) | **63/64 (98.4%)** | ❌ MSlice 5774 > 4900 (1.18× over) |
+| **H=32 single-array W1** | **41,214 (210%)** | **3/64 (4.7%)** | ❌ MSlice 8752 > 4900 (1.79× over) |
+
+**根因**：Anlogic TD 工具不honor `(* syn_ramstyle = "block_ram" *)` 属性 for 大 ROM (40 KB+)，把 W1 放进 LUT-RAM (LUT4 用量爆炸)，BRAM 几乎不被使用 (3/64)。Anlogic FPGA 对单一大 ROM 数组的 BRAM 推断有未公开的尺寸阈值。
+
+### 9.3 Honest Conclusion
+
+**多模态 SNN 在算法层面成立**（FOSTER 5-fold subject-disjoint CV 93.11 ± 2.10 %, 10-fold 93.59 ± 2.24 %, INT8 CPU sim 96.50 % 完美保留 FP32 精度），**但 EG4S20 物理资源（19,600 LUT + 64 BRAM9K）不足以承载 5-channel 多模态的 40-80 KB W1 ROM**。
+
+部署到更大 FPGA（如 EG4D20 64K LUT+ 或 Lattice ECP5 25-85K LUT）是直接的工程升级路径——核心 RTL 不变，只需替换芯片。
+
+### 9.4 EG4S20 上的最终 deployable bitstream
+
+**保留单模态 SNN bitstream (build_snn/scg_top_snn.bit, 649 KB)** 作为 EG4S20 上的最终板上验证：
+- 5-fold subject-disjoint CV: 85.48 ± 2.02 %
+- Hold-out 9660 unseen samples: 77.72 % (FPGA = sim 比特级一致)
+- Run-only 7.88 ms / sample
+- LUT 15.9 %, BRAM9K 28.1 %, DSP 3.5 %
+
+多模态 weights 全部公开（`rtl/weights_snn/W1.hex` 40 KB, H=32, val 95.24%），任何用户**用更大 FPGA 即可立即部署**。
 
 ---
 

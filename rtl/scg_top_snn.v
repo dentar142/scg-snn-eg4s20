@@ -31,8 +31,8 @@ module scg_top_snn #(
     parameter integer N_CLASSES   = 3,                // 3-class multimodal SNN
     parameter integer T           = 32,
     parameter integer LEAK_SHIFT  = 4,
-    parameter signed [23:0] THETA1 = 24'sd19046,      // overwritten by build .tcl from meta.json
-    parameter signed [23:0] THETA2 = 24'sd3045
+    parameter signed [23:0] THETA1 = 24'sd14166,      // overwritten by build .tcl from meta.json
+    parameter signed [23:0] THETA2 = 24'sd2324
 ) (
     input  wire        clk_i,
     input  wire        rst_n_i,
