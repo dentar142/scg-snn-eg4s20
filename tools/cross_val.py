@@ -40,27 +40,28 @@ sys.path.insert(0, str(REPO / "model"))
 def make_balanced_sampler(y: torch.Tensor, n_classes: int = 3,
                           power: float = 0.5) -> WeightedRandomSampler:
     counts = torch.bincount(y, minlength=n_classes).float()
+    counts = counts.clamp(min=1.0)
     weights = (1.0 / counts[y]) ** power
     return WeightedRandomSampler(weights, num_samples=len(y), replacement=True)
 
 
-def build_model(name: str, device):
+def build_model(name: str, device, n_classes: int = 3):
     if name == "snn":
         from train_snn_v1 import SCGSnn
-        return SCGSnn(n_in=256, n_hidden=64, n_classes=3,
+        return SCGSnn(n_in=256, n_hidden=64, n_classes=n_classes,
                       beta=0.9, threshold=1.0, T=32).to(device)
     elif name == "cnn":
         from train_qat_v2 import SCGNetV2
-        return SCGNetV2(n_classes=3, k_first=5,
+        return SCGNetV2(n_classes=n_classes, k_first=5,
                         channels=(32, 64, 128), no_pool=False, stride2=False).to(device)
     raise ValueError(name)
 
 
 @torch.no_grad()
-def evaluate(model, loader, device):
+def evaluate(model, loader, device, n_classes: int = 3):
     model.eval()
     correct = total = 0
-    cm = np.zeros((3, 3), dtype=np.int64)
+    cm = np.zeros((n_classes, n_classes), dtype=np.int64)
     loss_sum = 0.0
     for x, y in loader:
         x, y = x.to(device), y.to(device)
@@ -75,17 +76,18 @@ def evaluate(model, loader, device):
 
 
 def train_one_fold(model_name: str, X_tr, y_tr, X_va, y_va, *,
-                   epochs: int, bs: int, lr: float, device, log_prefix: str):
+                   epochs: int, bs: int, lr: float, device, log_prefix: str,
+                   n_classes: int = 3):
     device = torch.device(device)
-    model = build_model(model_name, device)
+    model = build_model(model_name, device, n_classes=n_classes)
 
-    # Convert to float in [-1, 1]; CNN uses (B, 1, 256), SNN does too — both OK
+    # Convert to float in [-1, 1]; CNN uses (B, 1, 256), SNN does too -- both OK
     Xtr_t = torch.from_numpy(X_tr.astype(np.float32) / 127.0)
     ytr_t = torch.from_numpy(y_tr).long()
     Xva_t = torch.from_numpy(X_va.astype(np.float32) / 127.0)
     yva_t = torch.from_numpy(y_va).long()
 
-    sampler = make_balanced_sampler(ytr_t)
+    sampler = make_balanced_sampler(ytr_t, n_classes=n_classes)
     train_dl = DataLoader(TensorDataset(Xtr_t, ytr_t), bs, sampler=sampler,
                           drop_last=True, num_workers=0)
     val_dl = DataLoader(TensorDataset(Xva_t, yva_t), 512, shuffle=False,
@@ -111,7 +113,7 @@ def train_one_fold(model_name: str, X_tr, y_tr, X_va, y_va, *,
             train_total += y.numel()
         sch.step()
         train_acc = train_correct / max(train_total, 1)
-        val_loss, val_acc, cm = evaluate(model, val_dl, device)
+        val_loss, val_acc, cm = evaluate(model, val_dl, device, n_classes=n_classes)
         if val_acc > best_acc:
             best_acc = val_acc; best_cm = cm; best_train_acc = train_acc
         if ep == 1 or ep % 5 == 0 or ep == epochs:
@@ -119,6 +121,21 @@ def train_one_fold(model_name: str, X_tr, y_tr, X_va, y_va, *,
             print(f"  {log_prefix} ep {ep:02d}  train_acc={train_acc*100:.2f}%  "
                   f"val_acc={val_acc*100:.2f}%  ({elapsed:.0f}s)", flush=True)
     return best_acc, best_train_acc, best_cm
+
+
+def per_class_f1(cm: np.ndarray) -> list:
+    """Return per-class F1 from a confusion matrix (rows=truth, cols=pred)."""
+    K = cm.shape[0]
+    f1s = []
+    for c in range(K):
+        tp = int(cm[c, c])
+        fp = int(cm[:, c].sum() - tp)
+        fn = int(cm[c, :].sum() - tp)
+        if 2 * tp + fp + fn == 0:
+            f1s.append(0.0)
+        else:
+            f1s.append(2 * tp / (2 * tp + fp + fn))
+    return f1s
 
 
 def main():
@@ -130,6 +147,8 @@ def main():
     p.add_argument("--epochs", type=int, default=30)
     p.add_argument("--bs", type=int, default=256)
     p.add_argument("--lr", type=float, default=2e-3)
+    p.add_argument("--n-classes", type=int, default=None,
+                   help="number of classes; if None, inferred from y")
     p.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
     p.add_argument("--seed", type=int, default=42)
     args = p.parse_args()
@@ -141,18 +160,21 @@ def main():
     y = d["y"].astype(np.int64)
     sid = d["sid"].astype(np.int64)
     rec_names = d["record_names"]
-    print(f"loaded {args.data}: N={len(X)}  unique subjects={sorted(set(sid.tolist()))}")
+    K = args.n_classes if args.n_classes is not None else int(y.max()) + 1
+    print(f"loaded {args.data}: N={len(X)}  K={K}  "
+          f"unique subjects={sorted(set(sid.tolist()))}")
     print(f"  records: {[str(r) for r in rec_names]}")
+    print(f"  per-class={np.bincount(y, minlength=K).tolist()}")
 
     # Subject-disjoint K-fold: assign each unique subject id to one fold
     unique_sids = sorted(set(sid.tolist()))
-    K = args.folds
+    n_folds = args.folds
     rng = np.random.RandomState(args.seed)
     perm = list(unique_sids)
     rng.shuffle(perm)
-    fold_assign = {s: i % K for i, s in enumerate(perm)}
-    folds = [[s for s in unique_sids if fold_assign[s] == k] for k in range(K)]
-    print(f"\n{K}-fold subject-disjoint split:")
+    fold_assign = {s: i % n_folds for i, s in enumerate(perm)}
+    folds = [[s for s in unique_sids if fold_assign[s] == k] for k in range(n_folds)]
+    print(f"\n{n_folds}-fold subject-disjoint split:")
     for k, fs in enumerate(folds):
         names = [str(rec_names[s]) for s in fs]
         n_win = int((np.isin(sid, fs)).sum())
@@ -160,19 +182,20 @@ def main():
 
     fold_results = []
     t_total = time.time()
-    for k in range(K):
+    for k in range(n_folds):
         val_subjects = folds[k]
         val_mask = np.isin(sid, val_subjects)
         train_mask = ~val_mask
         X_tr, y_tr = X[train_mask], y[train_mask]
         X_va, y_va = X[val_mask], y[val_mask]
-        print(f"\n=== Fold {k+1}/{K} ===  train={len(X_tr)}  val={len(X_va)}  "
+        print(f"\n=== Fold {k+1}/{n_folds} ===  train={len(X_tr)}  val={len(X_va)}  "
               f"val_subjects={[str(rec_names[s]) for s in val_subjects]}")
         best_val_acc, best_train_acc, cm = train_one_fold(
             args.model, X_tr, y_tr, X_va, y_va,
             epochs=args.epochs, bs=args.bs, lr=args.lr,
-            device=args.device, log_prefix=f"[F{k+1}]")
+            device=args.device, log_prefix=f"[F{k+1}]", n_classes=K)
         per_class = (cm.diagonal() / cm.sum(axis=1).clip(min=1)).tolist()
+        f1s = per_class_f1(cm)
         fold_results.append({
             "fold": k,
             "val_subjects": [str(rec_names[s]) for s in val_subjects],
@@ -181,6 +204,7 @@ def main():
             "best_train_acc": float(best_train_acc),
             "train_val_gap": float(best_train_acc - best_val_acc),
             "per_class_acc": per_class,
+            "per_class_f1": f1s,
             "confusion_matrix": cm.tolist(),
         })
         print(f"  [done] Fold {k+1}: best_val={best_val_acc*100:.2f}%  "
@@ -189,9 +213,16 @@ def main():
     # Aggregate
     accs = [r["best_val_acc"] for r in fold_results]
     train_accs = [r["best_train_acc"] for r in fold_results]
+    # Mean per-class F1 across folds
+    mean_f1_per_class = [
+        statistics.mean(r["per_class_f1"][c] for r in fold_results)
+        for c in range(K)
+    ]
+    macro_f1_per_fold = [statistics.mean(r["per_class_f1"]) for r in fold_results]
     summary = {
         "model": args.model,
-        "folds": K,
+        "n_classes": K,
+        "folds": args.folds,
         "epochs": args.epochs,
         "data_source": str(args.data),
         "fold_results": fold_results,
@@ -206,11 +237,17 @@ def main():
         },
         "mean_train_val_gap": statistics.mean(
             [r["train_val_gap"] for r in fold_results]),
+        "mean_per_class_f1": mean_f1_per_class,
+        "macro_f1": {
+            "mean": statistics.mean(macro_f1_per_fold),
+            "std":  statistics.stdev(macro_f1_per_fold) if len(macro_f1_per_fold) > 1 else 0.0,
+        },
         "elapsed_sec": time.time() - t_total,
     }
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(summary, indent=2, default=str))
-    print(f"\n=== {args.model.upper()} {K}-fold subject-disjoint CV ===")
+    print(f"\n=== {args.model.upper()} {n_folds}-fold subject-disjoint CV "
+          f"(K={K} classes) ===")
     print(f"  mean val_acc   = {summary['val_acc']['mean']*100:.2f} +/- "
           f"{summary['val_acc']['std']*100:.2f} %")
     print(f"  range          = [{summary['val_acc']['min']*100:.2f}, "
@@ -218,6 +255,9 @@ def main():
     print(f"  mean train_acc = {summary['train_acc']['mean']*100:.2f} +/- "
           f"{summary['train_acc']['std']*100:.2f} %")
     print(f"  mean gap       = {summary['mean_train_val_gap']*100:.2f} pp")
+    print(f"  macro F1       = {summary['macro_f1']['mean']*100:.2f} +/- "
+          f"{summary['macro_f1']['std']*100:.2f} %")
+    print(f"  per-class F1   = {[f'{f*100:.1f}' for f in mean_f1_per_class]}")
     print(f"  elapsed        = {summary['elapsed_sec']/60:.1f} min")
     print(f"\n-> wrote {args.out}")
 

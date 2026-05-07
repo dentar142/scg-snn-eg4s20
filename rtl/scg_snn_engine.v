@@ -1,24 +1,24 @@
 // =============================================================================
-// scg_snn_engine.v — INT8 LIF SNN inference for 256→64→3 SCG classification
+// scg_snn_engine.v - INT8 LIF SNN inference for 256->H->K SCG classification
 // =============================================================================
 // Architecture (matches tools/sim_snn.py exactly):
-//   1) FC1 precompute: I1[i] = sum_{j=0..255} x[j] * W1[i,j]   (INT24 accum)
+//   1) FC1 precompute: I1[i] = sum_{j=0..N_IN-1} x[j] * W1[i,j]   (INT24 accum)
 //   2) for t in 0..T-1:
-//        v1[i]  ← (v1[i] - (v1[i] >>> LEAK_SHIFT)) + I1[i]      (i ∈ 0..63)
-//        s1[i]  ← (v1[i] >= θ1)
-//        v1[i]  ← v1[i] - s1[i]*θ1                              (soft reset)
-//        I2[c]  = sum_{i: s1[i]=1} W2[c,i]                      (binary fan-in)
-//        v2[c]  ← (v2[c] - (v2[c] >>> LEAK_SHIFT)) + I2[c]
-//        s2[c]  ← (v2[c] >= θ2)
-//        v2[c]  ← v2[c] - s2[c]*θ2
-//        sc[c]  ← sc[c] + s2[c]
-//   3) pred = argmax(sc[0..2])
+//        v1[i]  <- (v1[i] - (v1[i] >>> LEAK_SHIFT)) + I1[i]      (i in 0..H-1)
+//        s1[i]  <- (v1[i] >= theta1)
+//        v1[i]  <- v1[i] - s1[i]*theta1                          (soft reset)
+//        I2[c]  = sum_{i: s1[i]=1} W2[c,i]                       (binary fan-in)
+//        v2[c]  <- (v2[c] - (v2[c] >>> LEAK_SHIFT)) + I2[c]
+//        s2[c]  <- (v2[c] >= theta2)
+//        v2[c]  <- v2[c] - s2[c]*theta2
+//        sc[c]  <- sc[c] + s2[c]
+//   3) pred = argmax(sc[0..N_CLASSES-1])  (generic loop over K classes)
 //
-// Resource budget for EG4S20: 1 INT8×INT8 DSP MAC + ~1500 LUT + 1×BRAM32K (W1)
-// Latency estimate @ 50 MHz, T=32, H=64, LEAK_SHIFT=4:
-//   FC1 precompute = 64 × 256 = 16384 cycles  (one-time)
-//   per timestep   = 64 (LIF1) + 64×3 (FC2) + 3 (LIF2) ≈ 260 cycles
-//   total = 16384 + 32×260 = 24704 cycles ≈ 0.49 ms / inference
+// Resource budget for EG4S20: 1 INT8xINT8 DSP MAC + ~1500 LUT + 1xBRAM32K (W1)
+// Latency estimate @ 50 MHz, T=32, H=64, K=5, LEAK_SHIFT=4:
+//   FC1 precompute = H * N_IN = 16384 cycles  (one-time)
+//   per timestep   = H (LIF1) + H*K (FC2) + K (LIF2) ~ 64+320+5 = 389 cycles
+//   total ~ 16384 + 32*389 = 28832 cycles ~ 0.58 ms / inference
 // =============================================================================
 
 `timescale 1ns / 1ps
@@ -53,12 +53,12 @@ module scg_snn_engine #(
     input  wire signed [23:0]  theta1_i,
     input  wire signed [23:0]  theta2_i,
 
-    // Outputs
-    output reg  [1:0]          pred_o,
-    output reg  [7:0]          sc0_o,
-    output reg  [7:0]          sc1_o,
-    output reg  [7:0]          sc2_o
+    // Outputs (pred_o width = ceil(log2(N_CLASSES)); 2 bits for K=3, 3 bits for K=5)
+    output reg  [$clog2(N_CLASSES)-1:0]   pred_o
 );
+
+    // For internal use (same as port width)
+    localparam integer PRED_W = $clog2(N_CLASSES);
 
     // -------------------------------------------------------------------------
     // Storage
@@ -84,7 +84,8 @@ module scg_snn_engine #(
                S_LIF2      = 4'd9,
                S_TS_NEXT   = 4'd10,
                S_ARGMAX    = 4'd11,
-               S_DONE      = 4'd12;
+               S_DONE      = 4'd12,
+               S_AM_STEP   = 4'd13;
 
     reg [3:0] state;
 
@@ -107,6 +108,11 @@ module scg_snn_engine #(
     // LIF2 counter
     reg [$clog2(N_CLASSES+1)-1:0] lif2_c;
 
+    // Argmax loop variables
+    reg [$clog2(N_CLASSES+1)-1:0] am_idx;       // sweep over classes 1..K-1
+    reg [7:0]                     am_best_val;
+    reg [PRED_W-1:0]              am_best_idx;
+
     // -------------------------------------------------------------------------
     // Main FSM
     // -------------------------------------------------------------------------
@@ -115,13 +121,13 @@ module scg_snn_engine #(
         if (!rst_n) begin
             state    <= S_IDLE;
             done_o   <= 1'b0;
-            pred_o   <= 2'd0;
-            sc0_o    <= 8'd0; sc1_o <= 8'd0; sc2_o <= 8'd0;
+            pred_o   <= {PRED_W{1'b0}};
             x_addr_o <= 0; w1_addr_o <= 0; w2_addr_o <= 0;
             fc1_i <= 0; fc1_j <= 0; fc1_acc <= 0;
             t_idx <= 0; lif1_i <= 0;
             fc2_c <= 0; fc2_i <= 0; fc2_acc <= 0;
             lif2_c <= 0;
+            am_idx <= 0; am_best_val <= 8'd0; am_best_idx <= {PRED_W{1'b0}};
             for (k = 0; k < H; k = k + 1) begin
                 I1[k] <= 0; v1[k] <= 0; s1[k] <= 1'b0;
             end
@@ -276,15 +282,37 @@ module scg_snn_engine #(
                 end
             end
 
+            // Generic argmax across N_CLASSES counters.
+            //   S_ARGMAX  : seed best with sc[0], idx 1 -> S_AM_STEP
+            //   S_AM_STEP : compare sc[am_idx] with current best; advance idx;
+            //               when am_idx == N_CLASSES-1 done -> S_DONE
             S_ARGMAX: begin
-                sc0_o <= sc[0];
-                sc1_o <= sc[1];
-                sc2_o <= sc[2];
-                if (sc[0] >= sc[1] && sc[0] >= sc[2])      pred_o <= 2'd0;
-                else if (sc[1] >= sc[2])                   pred_o <= 2'd1;
-                else                                       pred_o <= 2'd2;
-                done_o <= 1'b1;
-                state  <= S_DONE;
+                am_best_val <= sc[0];
+                am_best_idx <= {PRED_W{1'b0}};
+                if (N_CLASSES <= 1) begin
+                    pred_o <= {PRED_W{1'b0}};
+                    done_o <= 1'b1;
+                    state  <= S_DONE;
+                end else begin
+                    am_idx <= 1;
+                    state  <= S_AM_STEP;
+                end
+            end
+
+            S_AM_STEP: begin
+                if (sc[am_idx] > am_best_val) begin
+                    am_best_val <= sc[am_idx];
+                    am_best_idx <= am_idx[PRED_W-1:0];
+                end
+                if (am_idx == N_CLASSES - 1) begin
+                    // commit final argmax
+                    pred_o <= (sc[am_idx] > am_best_val) ?
+                              am_idx[PRED_W-1:0] : am_best_idx;
+                    done_o <= 1'b1;
+                    state  <= S_DONE;
+                end else begin
+                    am_idx <= am_idx + 1;
+                end
             end
 
             S_DONE: begin

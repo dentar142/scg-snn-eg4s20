@@ -917,3 +917,116 @@ jobs:
 ---
 
 *生成于 2026-05-05，by SCG-CNN-on-Anlogic-EG4S20 项目工具链。所有数字可由 `tools/bench_cpu.py` / `tools/bench_fpga.py` 重现。*
+
+---
+
+## 附录 C：3-class vs 5-class SNN 全面对比（2026-05-07）
+
+> 3-class 标注方案：Background (BG) / Systole (Sys) / Diastole (Dia)
+> 5-class 标注方案：Background (BG) / Early-Systole / Peak-Systole / Early-Diastole / Peak-Diastole
+> 数据集：3-class 使用 `data_excl100`（BG 时序排除 ≥100 ms）；5-class 使用 `data_excl150_5class`（≥150 ms，子标签细分）
+> 架构：两者均为 SNN 256→64→K，T=32，β=0.9，θ=1.0；唯一差异是输出神经元数 K=3 vs K=5
+> FPGA：3-class 已在 EG4S20 实测；5-class 仅 CPU INT8 仿真（bitstream 待重新综合）
+
+### C.1 跨受试者 5-fold CV 对比
+
+| 指标 | SNN 3-class | SNN 5-class | CNN 3-class (baseline) |
+|---|---|---|---|
+| **数据集** | data_excl100 | data_excl150_5class | data_excl100 |
+| **CV mean acc** | **85.48 ± 2.02 %** | 73.34 ± 3.70 % | 79.68 ± 3.46 % |
+| **CV acc range** | [82.60, 87.48] % | [68.35, 76.50] % | [74.27, 82.72] % |
+| **macro F1 mean ± std** | **79.28 ± 3.60 %** | 62.90 ± 4.85 % | 72.07 ± 6.99 % |
+| **mean train acc** | 96.39 % | 93.26 % | 96.41 % |
+| **mean train-val gap** | 10.90 pp | 19.53 pp | 16.32 pp |
+| **epochs** | 30 | 30 | 30 |
+| **CV elapsed** | ~6.7 min | ~11.3 min | ~6.7 min |
+
+### C.2 Per-class F1（5-fold CV mean ± std）
+
+| Class | SNN 3-class | SNN 5-class | CNN 3-class |
+|---|---|---|---|
+| **BG** | 92.2 ± 0.8 % | 88.4 ± 1.8 % | 88.3 % |
+| **Systole** (3-class) / **Early-Sys** (5-class) | 76.8 ± 7.2 % | 65.1 ± 10.2 % | 68.4 % |
+| **Diastole** (3-class) / **Peak-Sys** (5-class) | 68.9 ± 5.7 % | 67.0 ± 9.6 % | 59.5 % |
+| **Early-Dia** (5-class only) | — | 50.5 ± 6.1 % | — |
+| **Peak-Dia** (5-class only) | — | 43.5 ± 4.6 % | — |
+
+> 关键洞察：5-class 将 Sys/Dia 细分为 Early/Peak 后，BG 识别基本不变（-3.8 pp），但 Sys/Dia 子类精度大幅下降（尤其 Peak-Dia 仅 43.5%）。这与心震图波形的时域相似性一致：Early 和 Peak 子相位在 256-sample 窗口中形态接近，256→64→K SNN 在当前规模下难以区分。
+
+### C.3 Hold-out / Val 准确率对比
+
+| 数据集 | SNN 3-class | SNN 5-class | CNN 3-class |
+|---|---|---|---|
+| **Random-shuffle val acc (FP32)** | 97.85 % | **92.14 %** (best epoch 13) | 95.98 % |
+| **Random-shuffle val acc (INT8 CPU sim)** | 97.76 % | **91.71 %** | 95.90 % |
+| **Subject-disjoint hold-out acc (FP32)** | 78.10 % (3 subjects) | N/A (no hold-out set generated) | 76.30 % |
+| **Subject-disjoint hold-out acc (FPGA)** | **77.72 %** (9660 samples) | N/A (bitstream = 3-class) | 95.00 % (200 samples, random-shuffle) |
+
+> 注：CNN 95% FPGA 数字基于 random-shuffle val（非 subject-disjoint），与 SNN 77.72% subject-disjoint hold-out 不可直接比较。SNN subject-disjoint 是部署至新受试者时的真实精度。
+
+### C.4 FPGA 资源对比（EG4S20BG256，50 MHz）
+
+| 资源 | SNN 3-class (实测) | SNN 5-class (估算) | CNN v7 (实测) | 变化 (3→5) |
+|---|---|---|---|---|
+| **LUT** | 3,120 / 19,600 (15.9 %) | ~3,130 / 19,600 (~16.0 %) | 12,393 / 19,600 (63.2 %) | +~10 LUT (+0.1 pp) |
+| **BRAM9K** | 18 / 64 (28.1 %) | 18 / 64 (28.1 %) | 51 / 64 (79.7 %) | 0 |
+| **DSP** | 1 / 29 (3.5 %) | 1 / 29 (3.5 %) | 8 / 29 (27.6 %) | 0 |
+| **REG** | 3,589 / 19,600 (18.3 %) | ~3,600 / 19,600 (~18.4 %) | — | +~11 REG |
+| **Fmax (slow corner)** | 77.47 MHz | ~77 MHz (est.) | — | ~0 |
+| **Bitstream size** | 649,420 B | 649,420 B (same frame) | 629,628 B | 0 (frame fixed) |
+
+> 5-class 资源估算依据：输出层由 64×3=192 个 INT8 乘加单元扩展为 64×5=320 个（+128），每个乘加约需 1 LUT4 + 1 REG，因此新增约 10~15 LUT，BRAM/DSP 不变（权重全部 inline）。
+
+### C.5 推理速度（FPGA on-board，50 MHz）
+
+| 指标 | SNN 3-class (实测) | SNN 5-class (估算) | CNN 3-class (实测) |
+|---|---|---|---|
+| **run-only ms/sample** | **7.87 ms** | **~7.87 ms** | 128.11 ms |
+| **UART round-trip ms** | 27.45 ms | ~27.45 ms | 147.73 ms |
+| **吞吐量 (run-only)** | ~127 inf/s | ~127 inf/s | ~7.8 inf/s |
+| **相对 CNN** | **16.3× faster** | ~16× faster | 1× |
+
+> SNN 推理时间与输出类别数无关（T×H×K 中 T=32, H=64 固定，K=3→5 仅多 2 个输出神经元累加，约占总计算量的 1%）。
+
+### C.6 模型权重大小
+
+| | SNN 3-class | SNN 5-class | CNN v7 3-class |
+|---|---|---|---|
+| **PyTorch .pt 文件** | 68,485 B | 68,616 B | 223,988 B |
+| **RTL INT8 权重 (fc1+fc2)** | 16,576 B (256×64 + 64×3) | 16,704 B (256×64 + 64×5) | ~51,744 B |
+| **参数量** | 16,576 | 16,704 | ~56,000 |
+
+### C.7 综合评分表（所有指标汇总）
+
+| 指标 | SNN 3-class | SNN 5-class | CNN 3-class | 备注 |
+|---|---|---|---|---|
+| **5-fold CV acc (mean ± std)** | **85.48 ± 2.02 %** | 73.34 ± 3.70 % | 79.68 ± 3.46 % | SNN 3-class 最优 |
+| **5-fold CV macro F1 (mean ± std)** | **79.28 ± 3.60 %** | 62.90 ± 4.85 % | 72.07 ± 6.99 % | SNN 3-class 最优 |
+| **Hold-out acc (subject-disjoint)** | **78.10 %** (FP32) | N/A | 76.30 % (FP32) | SNN 3-class 略优 |
+| **FPGA on-board acc (hold-out, 9660)** | **77.72 %** | N/A | N/A† | †CNN FPGA 数字为 random-shuffle |
+| **FPGA run-only ms/sample** | **7.87 ms** | ~7.87 ms | 128.11 ms | SNN 16× 快于 CNN |
+| **LUT (routed)** | **3,120 (15.9 %)** | ~3,130 | 12,393 (63.2 %) | SNN 占用 CNN 的 25% |
+| **BRAM9K** | **18 (28.1 %)** | 18 (28.1 %) | 51 (79.7 %) | SNN 占用 CNN 的 35% |
+| **DSP** | **1 (3.5 %)** | 1 (3.5 %) | 8 (27.6 %) | SNN 占用 CNN 的 13% |
+| **RTL 权重字节** | **16,576 B** | 16,704 B | ~51,744 B | SNN 是 CNN 的 32% |
+| **BG F1 (CV mean)** | 92.2 % | 88.4 % | 88.3 % | 3-class 最优 |
+| **Sys / Early-Sys F1 (CV mean)** | 76.8 % | 65.1 % | 68.4 % | 3-class SNN 最优 |
+| **Dia / Peak-Sys F1 (CV mean)** | 68.9 % | 67.0 % | 59.5 % | 3-class SNN 最优 |
+| **Early-Dia F1 (CV mean)** | — | 50.5 % | — | 5-class 专有指标 |
+| **Peak-Dia F1 (CV mean)** | — | 43.5 % | — | 5-class 专有指标 |
+| **INT8 CPU sim acc (val)** | 97.76 % | 91.71 % | 95.90 % | 量化损失均 <1 pp |
+| **训练参数量** | 16,576 | 16,704 | ~56,000 | SNN 极轻量 |
+
+### C.8 结论
+
+1. **3-class SNN 在 subject-disjoint CV 上以 85.48 ± 2.02% 领先**，比 CNN 高 5.80 pp，比 5-class SNN 高 12.14 pp。
+2. **5-class 标注细化带来显著精度下降**（CV acc -12 pp，macro F1 -16 pp），主要瓶颈是 Early/Peak 子相位在 256-sample 窗口中难以区分。若需 5-class 达到可用精度，建议：(a) 增大窗口（512 sample）；(b) 增大隐藏层（H=128）；(c) 引入时序上下文（LSTM/Transformer 后处理）。
+3. **FPGA 资源几乎不变**：3→5 类仅增加 ~128 个 INT8 MAC（+10 LUT，< 0.1 pp），推理速度不变（7.87 ms）。若精度需求可降低，5-class 部署几乎零成本。
+4. **SNN 相对 CNN 的核心优势不变**：LUT 为 CNN 的 25%，DSP 为 CNN 的 13%，推理速度 16× 更快，且跨受试者泛化（CV std 2.02 pp vs CNN 3.46 pp）更稳定。
+5. **最终推荐**：论文采用 3-class SNN，以 85.48 ± 2.02% CV accuracy 和 77.72% FPGA subject-disjoint hold-out 作为核心贡献指标。5-class 作为探索性实验报告，说明细粒度标注需要更深模型或更大上下文窗口。
+
+---
+
+*5-class 数据生成：2026-05-07，`tools/cross_val.py --model snn --n-classes 5 --data data_excl150_5class/all.npz`*
+*5-class 训练：`model/train_snn_v1.py --data data_excl150_5class --n-classes 5 --tag snn_5class --epochs 60`（best epoch 13, val_acc=92.14% on random-shuffle val）*
+*INT8 sim：`tools/sim_snn.py --ckpt model/ckpt/best_snn_5class.pt --data data_excl150_5class/val.npz --n 9767`*

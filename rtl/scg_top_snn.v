@@ -21,10 +21,10 @@ module scg_top_snn #(
     parameter integer BAUD        = 115_200,
     parameter integer WIN_LEN     = 256,
     parameter integer H           = 64,
-    parameter integer N_CLASSES   = 3,
+    parameter integer N_CLASSES   = 5,                // 5-class fine-grained
     parameter integer T           = 32,
     parameter integer LEAK_SHIFT  = 4,
-    parameter signed [23:0] THETA1 = 24'sd44012,    // from rtl/weights_snn/meta.json (holdout-trained)
+    parameter signed [23:0] THETA1 = 24'sd44012,      // overwritten by build .tcl from meta.json
     parameter signed [23:0] THETA2 = 24'sd660
 ) (
     input  wire        clk_i,
@@ -161,8 +161,9 @@ module scg_top_snn #(
     reg  [7:0]  x_waddr;
     reg         run_pulse;
     wire        run_done;
-    wire [1:0]  run_class;
-    wire [7:0]  sc0, sc1, sc2;
+    // Predicted-class width = ceil(log2(N_CLASSES));   2 bits for K=3, 3 bits for K=5
+    localparam integer PRED_W = $clog2(N_CLASSES);
+    wire [PRED_W-1:0] run_class;
 
     // x_bram write port (UART loader)
     always @(posedge clk) begin
@@ -191,7 +192,9 @@ module scg_top_snn #(
                 end
                 S_RUN:  if (run_done) fsm <= S_DONE;
                 S_DONE: begin
-                    tx_data  <= {6'd0, run_class};
+                    // Pad pred to 8 bits regardless of N_CLASSES
+                    //   K=3 -> {6'd0, 2-bit pred};  K=5 -> {5'd0, 3-bit pred}
+                    tx_data  <= {{(8-PRED_W){1'b0}}, run_class};
                     tx_start <= ~tx_busy;
                     if (tx_start) fsm <= S_IDLE;
                 end
@@ -223,10 +226,7 @@ module scg_top_snn #(
         .theta1_i (THETA1),
         .theta2_i (THETA2),
 
-        .pred_o   (run_class),
-        .sc0_o    (sc0),
-        .sc1_o    (sc1),
-        .sc2_o    (sc2)
+        .pred_o   (run_class)
     );
 
     //--------------------------------------------------------------------

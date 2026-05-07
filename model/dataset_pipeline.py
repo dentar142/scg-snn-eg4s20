@@ -8,14 +8,22 @@ from ECG R-wave references, and writes train.npz / val.npz.
 
 Usage:
     pip install wfdb numpy scipy tqdm
-    python dataset_pipeline.py --out data/
+    python dataset_pipeline.py --out data/                       # 3-class (default)
+    python dataset_pipeline.py --out data_5cls --n-classes 5     # 5-class
 
 Output:
     data/train.npz: X (N, 1, 256) int16, y (N,) int64
     data/val.npz:   X (N, 1, 256) int16, y (N,) int64
 
 Labels:
-    0 = Background, 1 = Systolic, 2 = Diastolic
+    n_classes=3 (default, original):
+        0 = Background, 1 = Systolic, 2 = Diastolic
+    n_classes=5 (fine-grained, R-peak-only, no SCG morphology dependency):
+        0 = BG (>=150 ms from any event center)
+        1 = Sys-onset    (R + 15 ms +- 15 ms)  isovolumic contraction onset
+        2 = Sys-peak     (R + 50 ms +- 20 ms)  ejection peak (narrower than Sys)
+        3 = Dia-onset    (R + 320 ms +- 15 ms) diastolic phase ramp-up
+        4 = Dia-peak     (R + 350 ms +- 20 ms) mitral valve open peak
 """
 from __future__ import annotations
 import argparse
@@ -97,6 +105,39 @@ def label_window(center_idx: int, r_peaks: np.ndarray, fs: float,
     return 0       # clean Background
 
 
+# 5-class label scheme (fine-grained, R-peak-only)
+EVENTS_5CLS = (
+    # (label, center_ms, half_ms)
+    (1, 15.0,  15.0),  # Sys-onset
+    (2, 50.0,  20.0),  # Sys-peak
+    (3, 320.0, 15.0),  # Dia-onset
+    (4, 350.0, 20.0),  # Dia-peak
+)
+
+
+def label_window_5cls(center_idx: int, r_peaks: np.ndarray, fs: float,
+                      bg_exclusion_ms: float = 150.0) -> int:
+    """5-class label using only R-peak distance (no SCG morphology).
+
+    Returns -1 if the window is in a boundary-ambiguous zone (drop).
+    """
+    if len(r_peaks) == 0:
+        return 0
+    nearest = r_peaks[np.argmin(np.abs(r_peaks - center_idx))]
+    delta_ms = (center_idx - nearest) * 1000.0 / fs
+
+    # In-window classes: first event whose [center-half, center+half] contains delta
+    for lbl, c_ms, h_ms in EVENTS_5CLS:
+        if abs(delta_ms - c_ms) <= h_ms:
+            return lbl
+
+    # BG candidate: must be far from EVERY event center (>= bg_exclusion_ms).
+    min_d = min(abs(delta_ms - c_ms) for _, c_ms, _ in EVENTS_5CLS)
+    if min_d < bg_exclusion_ms:
+        return -1
+    return 0
+
+
 def downsample(sig: np.ndarray, fs_in: float, fs_out: float) -> np.ndarray:
     factor = int(round(fs_in / fs_out))
     return sig[::factor]
@@ -111,7 +152,8 @@ def normalize_int8(x: np.ndarray) -> np.ndarray:
     return z.astype(np.int8)
 
 
-def build_record(rec_path: Path, bg_exclusion_ms: float = BG_EXCLUSION_MS
+def build_record(rec_path: Path, bg_exclusion_ms: float = BG_EXCLUSION_MS,
+                 n_classes: int = 3
                  ) -> tuple[np.ndarray, np.ndarray]:
     """Return (windows, labels) arrays for one CEBS record."""
     rec = wfdb.rdrecord(str(rec_path))
@@ -144,7 +186,12 @@ def build_record(rec_path: Path, bg_exclusion_ms: float = BG_EXCLUSION_MS
     for start in range(0, len(scg) - WINDOW_LEN, stride):
         center = start + WINDOW_LEN // 2
         win = scg[start:start + WINDOW_LEN]
-        lbl = label_window(center, r_peaks, fs, bg_exclusion_ms)
+        if n_classes == 3:
+            lbl = label_window(center, r_peaks, fs, bg_exclusion_ms)
+        elif n_classes == 5:
+            lbl = label_window_5cls(center, r_peaks, fs, bg_exclusion_ms)
+        else:
+            raise ValueError(f"Unsupported n_classes={n_classes} (expected 3 or 5)")
         if lbl < 0:
             continue  # boundary-ambiguous: drop
         windows.append(normalize_int8(win))
@@ -156,15 +203,15 @@ def build_record(rec_path: Path, bg_exclusion_ms: float = BG_EXCLUSION_MS
 
 
 def balance(X: np.ndarray, y: np.ndarray, sid: np.ndarray | None = None,
-            max_bg_ratio: float = 3.0):
-    """Cap Background to max_bg_ratio × max(systolic, diastolic) count.
+            max_bg_ratio: float = 3.0, n_classes: int = 3):
+    """Cap Background (class 0) to max_bg_ratio * max(non-BG counts).
 
-    If `sid` (per-window subject id) is given, also returns the filtered sid
-    so that subject-disjoint cross-validation can use the post-balance set.
+    Generalized for K classes. If `sid` (per-window subject id) is given,
+    also returns the filtered sid so that subject-disjoint cross-validation
+    can use the post-balance set.
     """
-    n_sys = int((y == 1).sum())
-    n_dia = int((y == 2).sum())
-    cap = int(max_bg_ratio * max(n_sys, n_dia, 1))
+    non_bg_counts = [int((y == c).sum()) for c in range(1, n_classes)]
+    cap = int(max_bg_ratio * max(max(non_bg_counts) if non_bg_counts else 1, 1))
     bg_mask = (y == 0)
     bg_idx = np.where(bg_mask)[0]
     if len(bg_idx) > cap:
@@ -191,10 +238,15 @@ def main():
     p.add_argument("--cebs-dir", type=Path, default=None,
                    help="If set, read CEBS records from here instead of "
                         "downloading; defaults to <out>/cebsdb.")
+    p.add_argument("--n-classes", type=int, default=3, choices=[3, 5],
+                   help="Label scheme: 3 (BG/Sys/Dia, original) or "
+                        "5 (BG/Sys-onset/Sys-peak/Dia-onset/Dia-peak).")
     args = p.parse_args()
 
     args.out.mkdir(parents=True, exist_ok=True)
-    print(f"BG temporal exclusion: ≥ {args.bg_exclusion_ms:.0f} ms")
+    K = args.n_classes
+    print(f"BG temporal exclusion: >= {args.bg_exclusion_ms:.0f} ms")
+    print(f"Label scheme: n_classes={K}")
     all_X: list[np.ndarray] = []
     all_y: list[np.ndarray] = []
     all_sid: list[np.ndarray] = []   # subject id (int index into args.records)
@@ -205,8 +257,9 @@ def main():
         try:
             print(f"[{rec}] processing...")
             rec_path = fetch_record(rec, src_dir)
-            X, y = build_record(rec_path, args.bg_exclusion_ms)
-            print(f"[{rec}] {len(X)} windows | bg={(y==0).sum()} sys={(y==1).sum()} dia={(y==2).sum()}")
+            X, y = build_record(rec_path, args.bg_exclusion_ms, n_classes=K)
+            counts = np.bincount(y, minlength=K).tolist()
+            print(f"[{rec}] {len(X)} windows | per-class={counts}")
             all_X.append(X)
             all_y.append(y)
             all_sid.append(np.full(len(X), sid, dtype=np.int32))
@@ -217,8 +270,9 @@ def main():
     X = np.concatenate(all_X)[:, None, :]   # (N, 1, 256)
     y = np.concatenate(all_y)
     sid = np.concatenate(all_sid)
-    X, y, sid = balance(X, y, sid)
-    print(f"After balance: total={len(X)} | bg={(y==0).sum()} sys={(y==1).sum()} dia={(y==2).sum()}")
+    X, y, sid = balance(X, y, sid, n_classes=K)
+    counts = np.bincount(y, minlength=K).tolist()
+    print(f"After balance: total={len(X)} | per-class={counts}")
     print(f"  per-subject window count: {np.bincount(sid).tolist()}")
 
     # all.npz: full balanced set with subject IDs preserved (for K-fold CV)

@@ -1,9 +1,11 @@
-"""export_snn_weights.py — INT8 export of FC SNN weights for the FPGA RTL.
+"""export_snn_weights.py - INT8 export of FC SNN weights for the FPGA RTL.
 
 Outputs to rtl/weights_snn/:
-  W1.hex          — INT8 fc1 weights (H × 256), row-major [i, j], one byte/line
-  W2.hex          — INT8 fc2 weights (3 × H), row-major [c, i],  one byte/line
-  meta.json       — H, T, leak_shift, theta1_int, theta2_int, w1_scale, w2_scale
+  W1.hex          - INT8 fc1 weights (H x 256), row-major [i, j], one byte/line
+  W2.hex          - INT8 fc2 weights (K x H), row-major [c, i],  one byte/line
+                    (K = n_classes, auto-detected from ckpt; 3 or 5)
+  meta.json       - n_classes, H, T, leak_shift, theta1_int, theta2_int,
+                    w1_scale, w2_scale
 
 The .hex format matches export_weights_v2.py so the same Verilog $readmemh
 machinery works for both engines.
@@ -31,7 +33,7 @@ def main():
     args.out.mkdir(parents=True, exist_ok=True)
 
     W1 = state["fc1.weight"].numpy()                     # (H, 256)
-    W2 = state["fc2.weight"].numpy()                     # (3, H)
+    W2 = state["fc2.weight"].numpy()                     # (K, H)  K=n_classes
 
     def q(w):
         absmax = float(np.abs(w).max())
@@ -67,9 +69,9 @@ def main():
         "W2_bytes": int(W2q.size),
     }
     (args.out / "meta.json").write_text(json.dumps(meta, indent=2))
-    print(f"→ wrote {args.out}/W1.hex ({W1q.size} B), W2.hex ({W2q.size} B), meta.json")
-    print(f"   H={H} T={T} leak_shift={args.leak_shift} "
-          f"θ1={theta1_int} θ2={theta2_int}")
+    print(f"-> wrote {args.out}/W1.hex ({W1q.size} B), W2.hex ({W2q.size} B), meta.json")
+    print(f"   K={int(W2q.shape[0])} H={H} T={T} leak_shift={args.leak_shift} "
+          f"theta1={theta1_int} theta2={theta2_int}")
 
 
 if __name__ == "__main__":

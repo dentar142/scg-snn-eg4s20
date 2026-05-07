@@ -1,0 +1,33 @@
+# Round 19 — CI smoke test
+name: smoke
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: install deps
+        run: pip install --quiet numpy torch psutil pyserial scipy wfdb tqdm
+      - name: import sanity
+        run: |
+          python -c "import sys; sys.path.insert(0,'model'); from train_qat import SCGNet; SCGNet()"
+          python -c "import sys; sys.path.insert(0,'tools'); from golden_model import forward_int8; print('ok')"
+      - name: golden_model bit-exact (offline if val.npz absent)
+        run: |
+          if [ -f data/val.npz ]; then
+            python tools/golden_model.py --n 60
+          else
+            echo "skipping (no data — CI runners don't have the dataset)"
+          fi
+      - name: quant sweep on stored weights
+        run: |
+          if [ -f model/ckpt/best.pt ] && [ -f data/val.npz ]; then
+            python tools/quant_sweep.py
+          fi
