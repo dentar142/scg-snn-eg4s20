@@ -1,0 +1,221 @@
+{
+  "data": "data_foster_multi\\all.npz",
+  "holdout_subjects": [
+    "sub003",
+    "sub006",
+    "sub009",
+    "sub013",
+    "sub020",
+    "sub021",
+    "sub024",
+    "sub026"
+  ],
+  "n_holdout_windows": 40575,
+  "scales": [
+    0.5,
+    0.7,
+    1.0,
+    1.3,
+    1.5
+  ],
+  "results": [
+    {
+      "tag": "best_sweep_H16_T32",
+      "H": 16,
+      "T": 32,
+      "n_params": 20528,
+      "n_in_total": 1280,
+      "val_acc_unperturbed": 0.9368083795440543,
+      "mean_l1_spikes_per_inference": 128.00022181146025,
+      "max_l1_spikes": 512,
+      "sparsity": 0.7499995667744916,
+      "amplitude_robustness": [
+        {
+          "scale": 0.5,
+          "acc": 0.885939617991374
+        },
+        {
+          "scale": 0.7,
+          "acc": 0.9239186691312384
+        },
+        {
+          "scale": 1.0,
+          "acc": 0.9368083795440543
+        },
+        {
+          "scale": 1.3,
+          "acc": 0.9324214417744917
+        },
+        {
+          "scale": 1.5,
+          "acc": 0.9264571780653111
+        }
+      ]
+    },
+    {
+      "tag": "best_sweep_H32_T16",
+      "H": 32,
+      "T": 16,
+      "n_params": 41056,
+      "n_in_total": 1280,
+      "val_acc_unperturbed": 0.9442513863216266,
+      "mean_l1_spikes_per_inference": 151.0690080098583,
+      "max_l1_spikes": 512,
+      "sparsity": 0.7049433437307455,
+      "amplitude_robustness": [
+        {
+          "scale": 0.5,
+          "acc": 0.9312138016019716
+        },
+        {
+          "scale": 0.7,
+          "acc": 0.9422057917436846
+        },
+        {
+          "scale": 1.0,
+          "acc": 0.9442513863216266
+        },
+        {
+          "scale": 1.3,
+          "acc": 0.9373752310536044
+        },
+        {
+          "scale": 1.5,
+          "acc": 0.9281823783117683
+        }
+      ]
+    },
+    {
+      "tag": "best_sweep_H32_T32",
+      "H": 32,
+      "T": 32,
+      "n_params": 41056,
+      "n_in_total": 1280,
+      "val_acc_unperturbed": 0.942600123228589,
+      "mean_l1_spikes_per_inference": 323.768404189772,
+      "max_l1_spikes": 1024,
+      "sparsity": 0.6838199177834258,
+      "amplitude_robustness": [
+        {
+          "scale": 0.5,
+          "acc": 0.9246826863832409
+        },
+        {
+          "scale": 0.7,
+          "acc": 0.9395933456561922
+        },
+        {
+          "scale": 1.0,
+          "acc": 0.942600123228589
+        },
+        {
+          "scale": 1.3,
+          "acc": 0.9349845964263709
+        },
+        {
+          "scale": 1.5,
+          "acc": 0.9253974121996303
+        }
+      ]
+    },
+    {
+      "tag": "best_sweep_H32_T48",
+      "H": 32,
+      "T": 48,
+      "n_params": 41056,
+      "n_in_total": 1280,
+      "val_acc_unperturbed": 0.9438077634011091,
+      "mean_l1_spikes_per_inference": 471.9240665434381,
+      "max_l1_spikes": 1536,
+      "sparsity": 0.6927577691774491,
+      "amplitude_robustness": [
+        {
+          "scale": 0.5,
+          "acc": 0.9029944547134935
+        },
+        {
+          "scale": 0.7,
+          "acc": 0.9372766481823783
+        },
+        {
+          "scale": 1.0,
+          "acc": 0.9438077634011091
+        },
+        {
+          "scale": 1.3,
+          "acc": 0.935452865064695
+        },
+        {
+          "scale": 1.5,
+          "acc": 0.9255945779420826
+        }
+      ]
+    },
+    {
+      "tag": "best_sweep_H32_T8",
+      "H": 32,
+      "T": 8,
+      "n_params": 41056,
+      "n_in_total": 1280,
+      "val_acc_unperturbed": 0.9420332717190388,
+      "mean_l1_spikes_per_inference": 76.54294516327788,
+      "max_l1_spikes": 256,
+      "sparsity": 0.7010041204559458,
+      "amplitude_robustness": [
+        {
+          "scale": 0.5,
+          "acc": 0.9251263093037585
+        },
+        {
+          "scale": 0.7,
+          "acc": 0.9364879852125693
+        },
+        {
+          "scale": 1.0,
+          "acc": 0.9420332717190388
+        },
+        {
+          "scale": 1.3,
+          "acc": 0.9357979051139864
+        },
+        {
+          "scale": 1.5,
+          "acc": 0.9270733210104745
+        }
+      ]
+    },
+    {
+      "tag": "best_sweep_H64_T32",
+      "H": 64,
+      "T": 32,
+      "n_params": 82112,
+      "n_in_total": 1280,
+      "val_acc_unperturbed": 0.943290203327172,
+      "mean_l1_spikes_per_inference": 725.8465804066543,
+      "max_l1_spikes": 2048,
+      "sparsity": 0.6455827244108133,
+      "amplitude_robustness": [
+        {
+          "scale": 0.5,
+          "acc": 0.9416882316697474
+        },
+        {
+          "scale": 0.7,
+          "acc": 0.9478250154035737
+        },
+        {
+          "scale": 1.0,
+          "acc": 0.943290203327172
+        },
+        {
+          "scale": 1.3,
+          "acc": 0.9308687615526802
+        },
+        {
+          "scale": 1.5,
+          "acc": 0.9173382624768947
+        }
+      ]
+    }
+  ]
+}

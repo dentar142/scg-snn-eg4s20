@@ -1,0 +1,11 @@
+{
+  "tag": "best_sweep_H64_T32",
+  "status": "failed",
+  "failure_stage": "global_placement",
+  "failure_code": "PHY-9009",
+  "mslice_required": 16131,
+  "mslice_limit": 4900,
+  "oversize_ratio": 3.2920408163265305,
+  "log": "build_snn_best_sweep_H64_T32.log",
+  "note": "Multi-modal H=64 (5 banks * 16KB = 80 KB W1) exceeds EG4S20 MSlice budget. This is the chip capacity boundary for this RTL."
+}

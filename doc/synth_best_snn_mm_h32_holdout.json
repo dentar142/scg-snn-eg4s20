@@ -1,0 +1,37 @@
+{
+  "tag": "best_snn_mm_h32_holdout",
+  "status": "ok",
+  "H": 32,
+  "n_chan": 5,
+  "win_len": 256,
+  "elapsed_sec": 40.13129997253418,
+  "resources": {
+    "LUT4": {
+      "used": 2098,
+      "total": 19600,
+      "pct": 10.704081632653061
+    },
+    "REG": {
+      "used": 1971,
+      "total": 19600,
+      "pct": 10.056122448979592
+    },
+    "BRAM32K": {
+      "used": 0,
+      "total": 16,
+      "pct": 0.0
+    },
+    "DSP18": {
+      "used": 1,
+      "total": 29,
+      "pct": 3.4482758620689653
+    },
+    "BRAM9K": {
+      "used": 39,
+      "total": 64,
+      "pct": 60.9375
+    }
+  },
+  "log": "C:\\Users\\Neko\\Documents\\neko142-essay\\30_SRTP\\SCG-CNN-on-Anlogic-EG4S20\\build_snn_best_snn_mm_h32_holdout.log",
+  "saved_bit": null
+}

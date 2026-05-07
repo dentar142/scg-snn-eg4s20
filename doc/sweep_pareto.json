@@ -1,0 +1,166 @@
+{
+  "data": "data_foster_multi",
+  "holdout_subjects": [
+    "sub003",
+    "sub006",
+    "sub009",
+    "sub013",
+    "sub020",
+    "sub021",
+    "sub024",
+    "sub026"
+  ],
+  "n_configs": 6,
+  "results": [
+    {
+      "H": 16,
+      "T": 32,
+      "tag": "sweep_H16_T32",
+      "best_val_acc": 0.9368083795440543,
+      "best_epoch": 49,
+      "elapsed_sec": 1153.7815494537354,
+      "skipped": false,
+      "n_train_windows": 162433,
+      "n_val_windows": 40575,
+      "confusion_matrix": [
+        [
+          24921,
+          185,
+          609
+        ],
+        [
+          122,
+          7948,
+          217
+        ],
+        [
+          559,
+          872,
+          5142
+        ]
+      ]
+    },
+    {
+      "H": 32,
+      "T": 32,
+      "tag": "sweep_H32_T32",
+      "best_val_acc": 0.942600123228589,
+      "best_epoch": 30,
+      "skipped": true,
+      "n_train_windows": 162433,
+      "n_val_windows": 40575
+    },
+    {
+      "H": 64,
+      "T": 32,
+      "tag": "sweep_H64_T32",
+      "best_val_acc": 0.943290203327172,
+      "best_epoch": 36,
+      "elapsed_sec": 1105.8600916862488,
+      "skipped": false,
+      "n_train_windows": 162433,
+      "n_val_windows": 40575,
+      "confusion_matrix": [
+        [
+          24960,
+          101,
+          654
+        ],
+        [
+          171,
+          7852,
+          264
+        ],
+        [
+          635,
+          476,
+          5462
+        ]
+      ]
+    },
+    {
+      "H": 32,
+      "T": 8,
+      "tag": "sweep_H32_T8",
+      "best_val_acc": 0.9420332717190388,
+      "best_epoch": 44,
+      "elapsed_sec": 417.345844745636,
+      "skipped": false,
+      "n_train_windows": 162433,
+      "n_val_windows": 40575,
+      "confusion_matrix": [
+        [
+          25060,
+          108,
+          547
+        ],
+        [
+          164,
+          7900,
+          223
+        ],
+        [
+          526,
+          784,
+          5263
+        ]
+      ]
+    },
+    {
+      "H": 32,
+      "T": 16,
+      "tag": "sweep_H32_T16",
+      "best_val_acc": 0.9442513863216266,
+      "best_epoch": 36,
+      "elapsed_sec": 562.4847631454468,
+      "skipped": false,
+      "n_train_windows": 162433,
+      "n_val_windows": 40575,
+      "confusion_matrix": [
+        [
+          24968,
+          116,
+          631
+        ],
+        [
+          163,
+          7953,
+          171
+        ],
+        [
+          468,
+          713,
+          5392
+        ]
+      ]
+    },
+    {
+      "H": 32,
+      "T": 48,
+      "tag": "sweep_H32_T48",
+      "best_val_acc": 0.9438077634011091,
+      "best_epoch": 30,
+      "elapsed_sec": 1173.9297420978546,
+      "skipped": false,
+      "n_train_windows": 162433,
+      "n_val_windows": 40575,
+      "confusion_matrix": [
+        [
+          24940,
+          137,
+          638
+        ],
+        [
+          152,
+          7917,
+          218
+        ],
+        [
+          561,
+          574,
+          5438
+        ]
+      ]
+    }
+  ]
+}

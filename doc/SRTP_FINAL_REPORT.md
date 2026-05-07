@@ -745,6 +745,75 @@ true Dia [   619   621   5333 ]
 
 **结论**：通过 (1) channel-bank ROM 重组绕开 Anlogic BRAM 推断阈值；(2) 严格 subject-disjoint 训练 + 测试避免 leakage —— **FOSTER 5-channel 多模态 SNN 在国产 EG4S20 FPGA 上以 94.14 % overall / 91.32 % macro-F1 完成 zero-leakage gold-standard 部署**，比单模态 SNN 的 77.72 % 高 16.4 pp，证明多模态融合的硬件可行性 + 临床部署级精度。
 
+### 9.6 Pareto 前沿与机制消融
+
+为量化模型容量、时序深度、稀疏性、幅度鲁棒性对部署成本-精度的影响，跑了 6-config 矩阵：H × T 维度交叉，全部用 fold-0 8 个受试者作 subject-disjoint hold-out。
+
+**实验脚本**：
+- `tools/sweep_pareto.py`（训练扫描，6 config × 50 epoch ~100 min on cuda）
+- `tools/probe_sparsity_amplitude.py`（每 ckpt 测 L1 spike 数 + amplitude × {0.5, 0.7, 1.0, 1.3, 1.5}）
+- `tools/sweep_synth.py` + `tools/synth_one_config.py`（5 config 实际 Anlogic 综合）
+- `tools/plot_pareto.py`（聚合 + 图表）
+
+**输出**：`doc/sweep_pareto.json`, `doc/sweep_sparsity_amplitude.json`, `doc/synth_best_sweep_*.json`, `doc/figs/{pareto_acc_lut, pareto_acc_bram, sparsity_vs_H, temporal_depth_vs_acc, amplitude_robustness}.png`, `doc/pareto_summary.md`
+
+#### 9.6.1 Pareto 矩阵实测
+
+| H | T | 参数量 | Val acc | Mean L1 spikes/inf | Sparsity | LUT4 | BRAM9K | DSP | 综合 |
+|---|---|-------:|-------:|------------------:|--------:|-----:|------:|----:|---|
+| 16 | 32 | 20,528 | 93.68 % | 128.0 / 512  | 75.0 % | 1,377 (7.03 %)  | 21/64 | 1/29 | ok |
+| 32 |  8 | 41,056 | 94.20 % | 76.5 / 256   | 70.1 % | 2,100 (10.71 %) | 39/64 | 1/29 | ok |
+| 32 | 16 | 41,056 | **94.43 %** ⭐ | 151.1 / 512  | 70.5 % | 2,098 (10.70 %) | 38/64 | 1/29 | ok |
+| 32 | 32 | 41,056 | 94.26 % (deployed) | 323.8 / 1024 | 68.4 % | 2,098 (10.70 %) | 39/64 | 1/29 | ok |
+| 32 | 48 | 41,056 | 94.38 % | 471.9 / 1536 | 69.3 % | 2,095 (10.69 %) | 39/64 | 1/29 | ok |
+| 64 | 32 | 82,112 | 94.33 % | 725.8 / 2048 | 64.6 % | — | — | — | **FAILED PHY-9009 MSlice 16,131 > 4,900** |
+
+#### 9.6.2 四条机制结论
+
+**(M1) Temporal-depth saturation** —— 时序整合 T > 16 已饱和：
+
+| T | val acc | Δ vs T=16 | inference latency 对比 |
+|---|---|---|---|
+| 8  | 94.20 % | -0.23 pp | **4× 快** |
+| 16 | 94.43 % | (peak) | 2× |
+| 32 | 94.26 % | -0.17 pp | 1× (deployed) |
+| 48 | 94.38 % | -0.05 pp | 0.67× |
+
+➡ **T=8 是高效角点**：精度仅低 0.23 pp，但**推理 latency 从 8.65 ms 降到 ~2.2 ms**，FPGA 上 BRAM/LUT 不变，仅状态机循环次数减少。**对超低延时实时应用 (RR 间期 <100 ms 内多次决策) 是更优 trade-off**。
+
+**(M2) Hidden-size 容量边界** —— H=64 触发 EG4S20 硬限：
+
+- 5 banks × 64 × 256 = 80 KB W1 → 综合阶段 MSlice 报 16,131，**3.3 倍超 4,900 限**，PHY-9009 拒绝放置
+- 算法层面 H=64 仅 +0.07 pp，**多余容量反过来害了 sparsity**（64.6% 最低）
+- 工程结论：**EG4S20 上多模态 SNN 的容量天花板就在 H=32**
+
+**(M3) Spike sparsity 64–75 %** —— SNN 能效论的硬证据：
+
+- H=16 → 75.0 % 稀疏（128/512 spike）
+- H=32 → 68–70 % 稀疏（差几百 spike per inference）
+- H=64 → 64.6 % 稀疏（H 越大反而越稠密 —— spike 阈值不变 + 输入扇入大）
+
+➡ **小 SNN 比大 SNN 更稀疏**，正好是嵌入式部署偏好的方向。比 dense INT8 MAC 节省 64 % MAC 操作。
+
+**(M4) Amplitude robustness** —— 输入信号幅度 ±30 % 全部容忍：
+
+| H/T | scale=0.5 | 0.7 | 1.0 | 1.3 | 1.5 |
+|---|---|---|---|---|---|
+| H=16 T=32 | 88.59 % | 92.39 % | 93.68 % | 93.24 % | 92.65 % |
+| H=32 T=16 | 93.12 % | 94.22 % | **94.43 %** | 93.74 % | 92.82 % |
+| H=64 T=32 | **94.17 %** | 94.78 % | 94.33 % | 93.09 % | 91.73 % |
+
+➡ H=64 在 0.5× 幅度下最鲁棒（仅 -0.16 pp），但综合失败用不上；**H=32 全幅度区间内 ≥ 92.8 %**，工程上选它。
+
+#### 9.6.3 工程结论
+
+部署 H=32 T=32 是**正确选择**，但**未必最优**：
+- 若优先**最大精度** → H=32 T=16（94.43 %，资源同 T=32，**推理快 2×**）
+- 若优先**最低 LUT** → H=16 T=32（93.68 %，LUT 1,377 = 7.03 %，**腾出 4× 空间给 ADC / Ethernet 等周边**）
+- 若优先**最快推理** → H=32 T=8（94.20 %，**推理 ~2.2 ms**）
+
+当前 deployable bit `scg_top_snn_multimodal_holdout.bit` 是 H=32 T=32 = "中间最稳" 的折中。
+
 ---
 
 ## 10. 结论

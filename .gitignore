@@ -30,6 +30,10 @@ build_snn/*
 !build_snn/scg_top_snn_route_timing.rpt
 !build_snn/scg_top_snn_route.area
 !build_snn/scg_top_snn_route.qor
+!build_snn/scg_top_snn_sweep_H16_T32.bit
+!build_snn/scg_top_snn_sweep_H32_T8.bit
+!build_snn/scg_top_snn_sweep_H32_T16.bit
+!build_snn/scg_top_snn_sweep_H32_T48.bit
 
 # --- runtime logs / scratch ---
 *.log

@@ -1,0 +1,37 @@
+{
+  "tag": "best_sweep_H32_T48",
+  "status": "ok",
+  "H": 32,
+  "n_chan": 5,
+  "win_len": 256,
+  "elapsed_sec": 38.95632863044739,
+  "resources": {
+    "LUT4": {
+      "used": 2095,
+      "total": 19600,
+      "pct": 10.688775510204081
+    },
+    "REG": {
+      "used": 1976,
+      "total": 19600,
+      "pct": 10.081632653061224
+    },
+    "BRAM32K": {
+      "used": 0,
+      "total": 16,
+      "pct": 0.0
+    },
+    "DSP18": {
+      "used": 1,
+      "total": 29,
+      "pct": 3.4482758620689653
+    },
+    "BRAM9K": {
+      "used": 39,
+      "total": 64,
+      "pct": 60.9375
+    }
+  },
+  "log": "C:\\Users\\Neko\\Documents\\neko142-essay\\30_SRTP\\SCG-CNN-on-Anlogic-EG4S20\\build_snn_best_sweep_H32_T48.log",
+  "saved_bit": "C:\\Users\\Neko\\Documents\\neko142-essay\\30_SRTP\\SCG-CNN-on-Anlogic-EG4S20\\build_snn\\scg_top_snn_sweep_H32_T48.bit"
+}

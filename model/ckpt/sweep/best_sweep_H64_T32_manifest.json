@@ -1,0 +1,74 @@
+{
+  "tag": "sweep_H64_T32",
+  "best_val_acc": 0.943290203327172,
+  "best_epoch": 36,
+  "holdout_subjects": [
+    "sub003",
+    "sub006",
+    "sub009",
+    "sub013",
+    "sub020",
+    "sub021",
+    "sub024",
+    "sub026"
+  ],
+  "n_holdout": 8,
+  "train_subjects": [
+    "sub001",
+    "sub002",
+    "sub004",
+    "sub005",
+    "sub007",
+    "sub008",
+    "sub010",
+    "sub011",
+    "sub012",
+    "sub014",
+    "sub015",
+    "sub016",
+    "sub017",
+    "sub018",
+    "sub019",
+    "sub022",
+    "sub023",
+    "sub025",
+    "sub027",
+    "sub028",
+    "sub029",
+    "sub030",
+    "sub031",
+    "sub032",
+    "sub033",
+    "sub034",
+    "sub035",
+    "sub036",
+    "sub037",
+    "sub038",
+    "sub039",
+    "sub040"
+  ],
+  "n_train_subjects": 32,
+  "n_train_windows": 162433,
+  "n_val_windows": 40575,
+  "confusion_matrix": [
+    [
+      24960,
+      101,
+      654
+    ],
+    [
+      171,
+      7852,
+      264
+    ],
+    [
+      635,
+      476,
+      5462
+    ]
+  ],
+  "H": 64,
+  "T": 32,
+  "epochs": 50,
+  "seed": 42
+}

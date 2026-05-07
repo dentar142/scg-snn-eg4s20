@@ -28,7 +28,8 @@ REPO = Path(__file__).resolve().parents[1]
 
 
 def patch_rtl_thetas(rtl_path: Path, theta1_int: int, theta2_int: int,
-                     n_classes: int, n_chan: int, win_len: int) -> None:
+                     n_classes: int, n_chan: int, win_len: int,
+                     H: int = None, T: int = None) -> None:
     """In-place rewrite the parameter defaults in scg_top_snn.v so the next
     synth run bakes the correct thresholds + topology.  Idempotent: re-running
     with new values just overwrites the previous numbers.
@@ -45,10 +46,19 @@ def patch_rtl_thetas(rtl_path: Path, theta1_int: int, theta2_int: int,
                  lambda m: f"{m.group(1)}{n_chan}", out)
     out = re.sub(r"(parameter integer WIN_LEN\s*=\s*)\d+",
                  lambda m: f"{m.group(1)}{win_len}", out)
+    if H is not None:
+        out = re.sub(r"(parameter integer H\s*=\s*)\d+",
+                     lambda m: f"{m.group(1)}{H}", out)
+    if T is not None:
+        out = re.sub(r"(parameter integer T\s*=\s*)\d+",
+                     lambda m: f"{m.group(1)}{T}", out)
     if out != text:
         rtl_path.write_text(out, encoding="utf-8")
+        extras = ""
+        if H is not None: extras += f" H={H}"
+        if T is not None: extras += f" T={T}"
         print(f"-> patched {rtl_path} with THETA1={theta1_int} THETA2={theta2_int} "
-              f"N_CLASSES={n_classes} N_CHAN={n_chan} WIN_LEN={win_len}")
+              f"N_CLASSES={n_classes} N_CHAN={n_chan} WIN_LEN={win_len}{extras}")
     else:
         print(f"   (no patch needed; rtl already at correct values)")
 
@@ -121,7 +131,8 @@ def main():
     if not args.no_patch_rtl:
         patch_rtl_thetas(args.rtl_top, theta1_int, theta2_int,
                          n_classes=int(W2q.shape[0]),
-                         n_chan=n_chan, win_len=win_len)
+                         n_chan=n_chan, win_len=win_len,
+                         H=int(W1q.shape[0]), T=T)
 
 
 if __name__ == "__main__":
