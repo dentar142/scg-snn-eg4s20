@@ -7,6 +7,15 @@
 [![Hardware: EG4S20](https://img.shields.io/badge/Hardware-Anlogic%20EG4S20BG256-green)](https://www.anlogic.com/)
 [![Verilog: 100%25 hand-written](https://img.shields.io/badge/Verilog-100%25%20hand--written-purple)](rtl/)
 
+<p align="center">
+  <img src="./assets/toilet.svg" alt="Toilet Badge for scg-snn-eg4s20" width="256" />
+  <br>
+  <sub>程序化 3D 马桶徽章，颜色由 commit SHA 决定 · 仓库更新后在
+  <a href="../../actions/workflows/refresh-toilet-badge.yml">Actions</a> 手动刷新 ·
+  生成器：<a href="https://github.com/dentar142/StoneBadge">dentar142/StoneBadge</a>
+  （forked from <a href="https://github.com/professor-lee/StoneBadge">professor-lee/StoneBadge</a>）</sub>
+</p>
+
 ---
 
 ## 目录

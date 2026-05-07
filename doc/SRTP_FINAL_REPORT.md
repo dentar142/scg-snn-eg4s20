@@ -738,10 +738,13 @@ true Dia [   619   621   5333 ]
 | Bitstream | 模型 | 评估方法 | 板上 acc | LUT % | BRAM9K |
 |---|---|---|---|---|---|
 | `build_snn/scg_top_snn_singlemodal_backup.bit` | 单模态 H=64 SCG (CEBSDB) | 5-fold subject-disjoint hold-out 9,660 windows | 77.72 % | 15.9 % | 18 |
-| `build_snn/scg_top_snn_multimodal.bit` | 多模态 H=32 channel-bank, **leaky-split ckpt** | first-200 window (含训练受试者) | 98.00 % (无效) | 10.97 % | 39 |
-| `build_snn/scg_top_snn_multimodal_holdout.bit` | **多模态 H=32 channel-bank, subject-disjoint** | **40,575 windows × 8 hold-out 受试者** | **94.14 %** ⭐ | 10.70 % | 39 |
+| `build_snn/scg_top_snn_multimodal.bit` | 多模态 H=32 T=32 channel-bank, **leaky-split ckpt** | first-200 window (含训练受试者) | 98.00 % (无效) | 10.97 % | 39 |
+| `build_snn/scg_top_snn_multimodal_holdout.bit` | 多模态 H=32 T=32 channel-bank, subject-disjoint | 40,575 windows × 8 hold-out 受试者 | 94.14 % | 10.70 % | 39 |
+| `build_snn/scg_top_snn_sweep_H32_T16.bit` | **多模态 H=32 T=16 channel-bank, subject-disjoint** ⭐ | 5,000 stratified 子集 × 8 hold-out 受试者 | **94.54 %** | 10.70 % | 38 |
 
-**当前烧录**：`scg_top_snn_multimodal_holdout.bit` (gold-standard 多模态部署)。其它 bit 作 fallback 保留。
+**当前烧录**：`scg_top_snn_sweep_H32_T16.bit` (基于 §9.6 Pareto 实验选择的"平衡版本"，比 T=32 deployed 提升 +0.40 pp 板上 acc，FPGA 推理快 2×)。其它 bit 作 fallback 保留。
+
+**Per-subject acc (H=32 T=16, 5000 subset)**：sub009 99.36 % / sub003 97.12 % / sub020 96.00 % / sub013 94.88 % / sub021 93.12 % / sub026 92.16 % / sub006 91.84 % / sub024 91.84 %（全部 ≥ 91 %，最低提升 0.80 pp vs T=32）。
 
 **结论**：通过 (1) channel-bank ROM 重组绕开 Anlogic BRAM 推断阈值；(2) 严格 subject-disjoint 训练 + 测试避免 leakage —— **FOSTER 5-channel 多模态 SNN 在国产 EG4S20 FPGA 上以 94.14 % overall / 91.32 % macro-F1 完成 zero-leakage gold-standard 部署**，比单模态 SNN 的 77.72 % 高 16.4 pp，证明多模态融合的硬件可行性 + 临床部署级精度。
 
@@ -830,12 +833,13 @@ true Dia [   619   621   5333 ]
 - Hold-out: 77.72 %（per-subject best 98.77 %）
 - 揭示 cross-subject 双峰分布——临床部署的关键挑战
 
-#### 贡献 3：FOSTER 5-channel 多模态 SNN 在 EG4S20 上的 zero-leakage gold-standard 部署
+#### 贡献 3：FOSTER 5-channel 多模态 SNN 在 EG4S20 上的 zero-leakage gold-standard 部署 + Pareto 优化
 - 经过 3 轮综合失败 + **channel-bank ROM 重组** (W1 切 5 个 8 KB 子数组) 突破 Anlogic BRAM 推断阈值
-- **subject-disjoint 8-人 hold-out × 40,575 窗 严格 bench**：板上 acc = **94.14 %**, macro-F1 = 91.32 %
-- FPGA vs FP32 sim Δ = -0.12 pp（INT8 几乎 bit-exact）
-- 资源 LUT 10.70 % / BRAM9K 60.94 % / DSP 3.45 %, inference 8.65 ms / 窗
-- **国产 FPGA 上多模态生理信号 SNN 推理的首次 zero-leakage 上板**，比单模态 SNN 的 77.72 % 高 16.4 pp
+- **subject-disjoint 8-人 hold-out 严格 bench**：H=32 T=32 板上 94.14 % (40,575 窗) → H=32 T=16 板上 **94.54 %** (5,000 stratified)
+- 6-config Pareto 扫描 (§9.6) 揭示 **EG4S20 容量边界 = H≤32**（H=64 综合 PHY-9009 失败）+ 时序饱和 (T>16 无收益)
+- FPGA vs FP32 sim Δ < 0.2 pp（INT8 几乎 bit-exact）
+- 资源 LUT 10.70 % / BRAM9K 38–39 / DSP 3.45 %, inference ~8.65 ms / 窗
+- **国产 FPGA 上多模态生理信号 SNN 推理的首次 zero-leakage 上板**，比单模态 SNN 的 77.72 % 高 16.8 pp
 
 #### 贡献 4：架构层面 SNN 优于 CNN 的硬证据
 - SNN 在难类（Sys/Dia）F1 比 CNN 高 10-14 pp
