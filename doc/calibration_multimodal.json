@@ -1,0 +1,123 @@
+{
+  "ckpt": "model\\ckpt\\best_multimodal_final.pt",
+  "data": "data_foster_multi\\all.npz",
+  "n_eval": 8000,
+  "baseline_acc": 0.95775,
+  "auroc_correct_vs_wrong": {
+    "margin_int": 0.9192572582127428,
+    "sc_max_int": 0.8284510200961017,
+    "entropy_neg_fp": 0.8822638117258923
+  },
+  "auroc_ratio_int_vs_fp": 1.0419301415236375,
+  "tau_recommended": 0,
+  "tau_rule": "sel_acc>=0.95 AND cov>=0.50, max coverage",
+  "tau_coverage": 1.0,
+  "tau_selective_acc": 0.95775,
+  "sweep": [
+    {
+      "tau": 0,
+      "coverage": 1.0,
+      "selective_acc": 0.95775
+    },
+    {
+      "tau": 1,
+      "coverage": 0.967625,
+      "selective_acc": 0.9695129828187573
+    },
+    {
+      "tau": 2,
+      "coverage": 0.8885,
+      "selective_acc": 0.9867754642656162
+    },
+    {
+      "tau": 3,
+      "coverage": 0.77775,
+      "selective_acc": 0.9951783992285439
+    },
+    {
+      "tau": 4,
+      "coverage": 0.621,
+      "selective_acc": 0.9981884057971014
+    },
+    {
+      "tau": 5,
+      "coverage": 0.40325,
+      "selective_acc": 0.9993800371977681
+    },
+    {
+      "tau": 6,
+      "coverage": 0.173625,
+      "selective_acc": 1.0
+    },
+    {
+      "tau": 7,
+      "coverage": 0.046375,
+      "selective_acc": 1.0
+    },
+    {
+      "tau": 8,
+      "coverage": 0.009875,
+      "selective_acc": 1.0
+    },
+    {
+      "tau": 9,
+      "coverage": 0.0005,
+      "selective_acc": 1.0
+    },
+    {
+      "tau": 10,
+      "coverage": 0.000125,
+      "selective_acc": 1.0
+    },
+    {
+      "tau": 11,
+      "coverage": 0.0,
+      "selective_acc": 0.0
+    }
+  ],
+  "per_subject": {
+    "sub008": {
+      "n": 1232,
+      "baseline_acc": 0.948051948051948,
+      "coverage": 1.0,
+      "selective_acc": 0.948051948051948
+    },
+    "sub015": {
+      "n": 1410,
+      "baseline_acc": 0.9375886524822695,
+      "coverage": 1.0,
+      "selective_acc": 0.9375886524822695
+    },
+    "sub019": {
+      "n": 1313,
+      "baseline_acc": 0.9535415079969536,
+      "coverage": 1.0,
+      "selective_acc": 0.9535415079969536
+    },
+    "sub021": {
+      "n": 1415,
+      "baseline_acc": 0.9752650176678446,
+      "coverage": 1.0,
+      "selective_acc": 0.9752650176678446
+    },
+    "sub029": {
+      "n": 1313,
+      "baseline_acc": 0.9596344249809596,
+      "coverage": 1.0,
+      "selective_acc": 0.9596344249809596
+    },
+    "sub039": {
+      "n": 1317,
+      "baseline_acc": 0.9719058466211086,
+      "coverage": 1.0,
+      "selective_acc": 0.9719058466211086
+    }
+  },
+  "leak_shift": 4,
+  "T": 32,
+  "H": 64,
+  "n_in": 256,
+  "n_channels": 5,
+  "theta1_int": 19046,
+  "theta2_int": 3045
+}

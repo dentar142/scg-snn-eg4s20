@@ -1,16 +1,21 @@
 //============================================================================
 // scg_top_snn.v
-// Top module for SCG INT8 SNN classifier (256→64→3 LIF) on Anlogic EG4S20BG256.
+// Top module for SCG INT8 SNN classifier on Anlogic EG4S20BG256.
+//
+//  Multi-modal variant: 5 channels x 256 samples = 1280-byte input window.
+//  (Single-channel single-modal variant lives at scg_top_snn_singlemodal.bit
+//   on the same board — rebuild this file with N_CHAN=1 for that flavor.)
 //
 //  - UART (115200 8N1) is the only host interface.
 //  - Protocol (host -> FPGA):
-//      0xA2 + 256 bytes  : load one INT8 SCG window into input BRAM
+//      0xA2 + N_IN bytes : load one INT8 SCG window into input BRAM
+//                          (N_IN = N_CHAN * WIN_LEN, 1280 for multimodal)
 //      0xA3              : run inference; FPGA replies with 1 byte class
 //      0xA0              : reset internal pointers
 //  - W1 / W2 ROMs are baked into the bitstream via $readmemh
-//      (W1 = 16384 B in BRAM32K, W2 = 192 B in distributed/B9K).
+//      (W1 = H*N_IN bytes in BRAM32K array, W2 = N_CLASSES*H bytes).
 //  - All compute is multiplication-free for FC2 (binary spike fan-in);
-//    FC1 uses a single INT8×INT8 MAC.
+//    FC1 uses a single INT8x INT8 MAC.
 //
 // All RTL is hand-written for this project; no third-party code reused.
 //============================================================================
@@ -20,12 +25,14 @@ module scg_top_snn #(
     parameter integer CLK_HZ      = 50_000_000,
     parameter integer BAUD        = 115_200,
     parameter integer WIN_LEN     = 256,
+    parameter integer N_CHAN      = 5,                // 5 modalities for foster multi
+    parameter integer N_IN        = N_CHAN * WIN_LEN, // 1280
     parameter integer H           = 64,
-    parameter integer N_CLASSES   = 5,                // 5-class fine-grained
+    parameter integer N_CLASSES   = 3,                // 3-class multimodal SNN
     parameter integer T           = 32,
     parameter integer LEAK_SHIFT  = 4,
-    parameter signed [23:0] THETA1 = 24'sd44012,      // overwritten by build .tcl from meta.json
-    parameter signed [23:0] THETA2 = 24'sd660
+    parameter signed [23:0] THETA1 = 24'sd19046,      // overwritten by build .tcl from meta.json
+    parameter signed [23:0] THETA2 = 24'sd3045
 ) (
     input  wire        clk_i,
     input  wire        rst_n_i,
@@ -38,7 +45,7 @@ module scg_top_snn #(
     wire rst_n = rst_n_i;
 
     //--------------------------------------------------------------------
-    // UART RX (8N1, 16x oversample) — copied verbatim from scg_top_v7
+    // UART RX (8N1, 16x oversample) - copied verbatim from scg_top_v7
     //--------------------------------------------------------------------
     localparam integer BAUD_DIV = CLK_HZ / (BAUD * 16);
     reg  [15:0] os_cnt;
@@ -124,12 +131,15 @@ module scg_top_snn #(
 
     //--------------------------------------------------------------------
     // BRAMs
-    //   * x_bram   :  256 bytes input (registered read; loaded by UART)
-    //   * w1_rom   : 16384 bytes (H × N_IN), $readmemh from rtl/weights_snn/W1.hex
-    //   * w2_rom   :   192 bytes (N_CLASSES × H), $readmemh from W2.hex
+    //   * x_bram   :  N_IN bytes input (registered read; loaded by UART)
+    //                 N_IN=1280 -> ~1.4 x BRAM9K
+    //   * w1_rom   :  H * N_IN bytes (= 64 * 1280 = 81920 B for multimodal),
+    //                 $readmemh from rtl/weights_snn/W1.hex.  Synth tool will
+    //                 auto-pack into BRAM32K instances.
+    //   * w2_rom   :  N_CLASSES * H bytes ($readmemh from W2.hex).
     //--------------------------------------------------------------------
-    (* syn_ramstyle = "block_ram" *) reg  [7:0] x_bram   [0:WIN_LEN-1];
-    (* syn_ramstyle = "block_ram" *) reg  [7:0] w1_rom   [0:H*WIN_LEN-1];
+    (* syn_ramstyle = "block_ram" *) reg  [7:0] x_bram   [0:N_IN-1];
+    (* syn_ramstyle = "block_ram" *) reg  [7:0] w1_rom   [0:H*N_IN-1];
     (* syn_ramstyle = "block_ram" *) reg  [7:0] w2_rom   [0:N_CLASSES*H-1];
 
     // Synthesis runs from build_snn/, so the hex files are one dir up.
@@ -139,8 +149,8 @@ module scg_top_snn #(
     end
 
     // SNN engine read addresses and buses
-    wire [$clog2(WIN_LEN)-1:0]   eng_x_addr;
-    wire [$clog2(H*WIN_LEN)-1:0] eng_w1_addr;
+    wire [$clog2(N_IN)-1:0]        eng_x_addr;
+    wire [$clog2(H*N_IN)-1:0]      eng_w1_addr;
     wire [$clog2(N_CLASSES*H)-1:0] eng_w2_addr;
 
     reg  signed [7:0]  x_dout, w1_dout, w2_dout;
@@ -156,18 +166,20 @@ module scg_top_snn #(
     localparam CMD_LD_X = 8'hA2, CMD_RUN = 8'hA3, CMD_RST = 8'hA0;
     localparam S_IDLE=3'd0, S_X_DATA=3'd1, S_RUN=3'd2, S_DONE=3'd3;
 
-    reg  [2:0]  fsm;
-    reg  [8:0]  count;        // 0..256
-    reg  [7:0]  x_waddr;
-    reg         run_pulse;
-    wire        run_done;
+    // Width of the byte counter must hold N_IN (e.g. 1280 -> 11 bits + room for == compare).
+    localparam integer CNT_W = $clog2(N_IN+1);
+    reg  [2:0]         fsm;
+    reg  [CNT_W-1:0]   count;        // 0..N_IN
+    reg  [CNT_W-1:0]   x_waddr;
+    reg                run_pulse;
+    wire               run_done;
     // Predicted-class width = ceil(log2(N_CLASSES));   2 bits for K=3, 3 bits for K=5
     localparam integer PRED_W = $clog2(N_CLASSES);
-    wire [PRED_W-1:0] run_class;
+    wire [PRED_W-1:0]  run_class;
 
     // x_bram write port (UART loader)
     always @(posedge clk) begin
-        if (fsm == S_X_DATA && rx_valid) x_bram[x_waddr] <= rx_data;
+        if (fsm == S_X_DATA && rx_valid) x_bram[x_waddr[$clog2(N_IN)-1:0]] <= rx_data;
     end
 
     always @(posedge clk or negedge rst_n) begin
@@ -186,7 +198,7 @@ module scg_top_snn #(
                 S_X_DATA: if (rx_valid) begin
                     x_waddr <= x_waddr + 1;
                     count   <= count + 1;
-                    if (count + 1 == WIN_LEN) begin
+                    if (count + 1 == N_IN) begin
                         fsm <= S_IDLE; x_waddr <= 0;
                     end
                 end
@@ -206,7 +218,7 @@ module scg_top_snn #(
     // SNN engine
     //--------------------------------------------------------------------
     scg_snn_engine #(
-        .N_IN(WIN_LEN), .H(H), .N_CLASSES(N_CLASSES),
+        .N_IN(N_IN), .H(H), .N_CLASSES(N_CLASSES),
         .T(T), .LEAK_SHIFT(LEAK_SHIFT)
     ) u_engine (
         .clk      (clk),

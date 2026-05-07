@@ -1,14 +1,16 @@
 {
-  "n_in": 256,
+  "n_in": 1280,
   "H": 64,
+  "n_channels": 5,
+  "win_len": 256,
   "n_classes": 3,
   "T": 32,
   "leak_shift": 4,
   "threshold_fp": 1.0,
-  "w1_scale": 0.002885545801928663,
-  "w2_scale": 0.0015146428440499494,
-  "theta1_int": 44012,
-  "theta2_int": 660,
-  "W1_bytes": 16384,
+  "w1_scale": 0.006668188440518116,
+  "w2_scale": 0.0003284552083240719,
+  "theta1_int": 19046,
+  "theta2_int": 3045,
+  "W1_bytes": 81920,
   "W2_bytes": 192
 }

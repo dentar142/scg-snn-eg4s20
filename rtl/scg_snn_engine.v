@@ -1,7 +1,7 @@
 // =============================================================================
-// scg_snn_engine.v - INT8 LIF SNN inference for 256->H->K SCG classification
+// scg_snn_engine.v - INT8 LIF SNN inference for N_IN->H->K SCG classification
 // =============================================================================
-// Architecture (matches tools/sim_snn.py exactly):
+// Architecture (matches tools/sim_snn.py / model/train_snn_multimodal.py):
 //   1) FC1 precompute: I1[i] = sum_{j=0..N_IN-1} x[j] * W1[i,j]   (INT24 accum)
 //   2) for t in 0..T-1:
 //        v1[i]  <- (v1[i] - (v1[i] >>> LEAK_SHIFT)) + I1[i]      (i in 0..H-1)
@@ -14,11 +14,13 @@
 //        sc[c]  <- sc[c] + s2[c]
 //   3) pred = argmax(sc[0..N_CLASSES-1])  (generic loop over K classes)
 //
-// Resource budget for EG4S20: 1 INT8xINT8 DSP MAC + ~1500 LUT + 1xBRAM32K (W1)
-// Latency estimate @ 50 MHz, T=32, H=64, K=5, LEAK_SHIFT=4:
-//   FC1 precompute = H * N_IN = 16384 cycles  (one-time)
-//   per timestep   = H (LIF1) + H*K (FC2) + K (LIF2) ~ 64+320+5 = 389 cycles
-//   total ~ 16384 + 32*389 = 28832 cycles ~ 0.58 ms / inference
+// Resource budget for EG4S20: 1 INT8xINT8 DSP MAC + ~1500 LUT + W1 in BRAM32K.
+// Latency estimate @ 50 MHz, T=32, H=64, LEAK_SHIFT=4:
+//   single-modal (N_IN=256, K=5):
+//     FC1 = H*N_IN = 16384 cy; per-ts ~389 cy; total ~28832 cy ~0.58 ms
+//   multi-modal  (N_IN=1280, K=3):
+//     FC1 = H*N_IN = 81920 cy; per-ts ~ H+H*K+K = 64+192+3 = 259 cy
+//     total ~ 81920 + 32*259 = 90208 cy ~1.80 ms / inference
 // =============================================================================
 
 `timescale 1ns / 1ps

@@ -56,7 +56,8 @@ def lif_step_int(v, I, theta, leak_shift):
 
 
 def run_int_snn(X, W1q, W2q, theta1, theta2, leak_shift, T, abstain_tau=0):
-    """X: (N, 256) int8. Returns (preds, spike_counts).
+    """X: (N, N_IN) int8 (already flattened channel-major if multi-modal).
+    Returns (preds, spike_counts).
 
     If abstain_tau > 0, sets pred=3 (UNK) when (max_sc - second_sc) < abstain_tau.
     Otherwise pred is argmax(spike_count) ∈ {0,1,2}.
@@ -133,10 +134,18 @@ def main():
     theta2_int = max(1, int(round(threshold_fp / w2_s)))
     print(f"  theta1_int = {theta1_int}   theta2_int = {theta2_int}")
 
-    val = np.load(args.data)
-    X = val["X"][:args.n, 0].astype(np.int8)
+    val = np.load(args.data, allow_pickle=True)
+    X_raw = val["X"][:args.n].astype(np.int8)
     y = val["y"][:args.n]
-    print(f"  data: X={X.shape} y={y.shape}")
+    # X may be (N, C, L). Flatten channel-major to (N, C*L) so the simulator
+    # consumes the same byte order the FPGA receives over UART.
+    if X_raw.ndim == 3:
+        N, C, L = X_raw.shape
+        X = X_raw.reshape(N, C * L)
+        print(f"  data: X={X_raw.shape} -> flattened ({C}x{L}={C*L}) -> {X.shape} y={y.shape}")
+    else:
+        X = X_raw
+        print(f"  data: X={X.shape} y={y.shape}")
 
     preds, spike_counts = run_int_snn(
         X, W1q, W2q, theta1_int, theta2_int,

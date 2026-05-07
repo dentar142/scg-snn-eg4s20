@@ -1,8 +1,12 @@
 """bench_fpga_snn.py — bench the SCG-SNN engine on FPGA over UART.
 
 W1 / W2 ROMs are baked into the bitstream, so per-sample we only need:
-  CMD_LD_X (0xA2) + 256 INT8 bytes
+  CMD_LD_X (0xA2) + N_IN INT8 bytes  (256 for single-modal, 1280 for multi-modal)
   CMD_RUN  (0xA3)         → reply 1 byte class
+
+The window length is auto-detected from X.shape:
+  X (N, 1, L)        -> single-modal:   send L bytes
+  X (N, C, L), C>1   -> multi-modal:    send C*L bytes (channel-major flatten)
 """
 from __future__ import annotations
 import argparse
@@ -34,13 +38,21 @@ def main():
                         "controls response-byte mask 0x3 for K<=4 or 0x7 for K<=8)")
     args = p.parse_args()
 
-    val = np.load(args.data)
+    val = np.load(args.data, allow_pickle=True)
     X, y = val["X"], val["y"]
     n = min(args.n, len(X))
     K = args.n_classes if args.n_classes is not None else int(y.max()) + 1
     # 8-bit response: low K-bit-width is the predicted class id.
     pred_mask = (1 << max(2, (K - 1).bit_length())) - 1
+    # Auto-detect channel count: X is (N, C, L); when C==1 we send L bytes,
+    # when C>1 we flatten channel-major to send C*L bytes (matches torch
+    # x.reshape(B,-1) used in MultiModalSCGSnn).
+    if X.ndim != 3:
+        sys.exit(f"X must be (N, C, L), got shape {X.shape}")
+    C, L = int(X.shape[1]), int(X.shape[2])
+    n_in = C * L
     print(f"samples = {n}  data = {args.data}  K = {K}  pred_mask=0x{pred_mask:02X}")
+    print(f"  X.shape = {X.shape}  -> sending {n_in} bytes/sample (C={C}, L={L})")
 
     ser = serial.Serial(args.port, args.baud, timeout=2.0)
     time.sleep(0.05)
@@ -51,7 +63,10 @@ def main():
     valid = np.zeros(n, dtype=bool)
 
     for i in range(n):
-        window = X[i, 0].astype(np.int8).tobytes()
+        # Channel-major flatten: matches torch x.reshape(B, -1) at training,
+        # which lays out as ch0[0..L-1], ch1[0..L-1], ..., ch(C-1)[0..L-1].
+        window = X[i].reshape(-1).astype(np.int8).tobytes()
+        assert len(window) == n_in, f"window {len(window)} != n_in {n_in}"
         if ser.in_waiting:
             ser.reset_input_buffer()
         t_a = time.perf_counter()
