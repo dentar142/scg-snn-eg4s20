@@ -968,10 +968,24 @@ Per-class keep@τ=2：BG 24,060/25,715 (93.6 % 接受率) 准 98.26 %；Sys 7,31
 
 **当前状态**：综合可过的 RTL 骨架（FSM 完整），但**未在真实硬件上验证**（无 AD7606C 实物），属未来工作。这一改动让 SNN 推理延迟从 117 ms (UART roundtrip) → 9 ms (纯片上 + ADC 抓取) — 真实 1 kHz 实时部署的关键步骤。
 
-### 11.7 未来工作 (规划)
+### 11.7 Cross-Domain SCG → PCG (诚实负面结果)
+
+PhysioNet 2016 PCG 6,478 / 6,480 文件下载完成（5555 代理 + 分片重试，1 fail 接受）。
+
+**实验设计**（`tools/cross_domain_pcg.py`）：FOSTER-trained H=32 T=16 SNN 期望 5-channel 输入，PhysioNet 只有 PCG 单通道。把 PCG 信号填到 FOSTER 的 PCG 通道槽（idx=3），其余 4 通道置 0；运行 SNN，对每条录音求 spike-output 平均熵。假设：若 FOSTER PCG 通道学到通用心跳特征，**异常 record 应触发更高 prediction entropy**（更不确定）。
+
+**结果（326 records, 154 normal + 172 abnormal）**：
+
+| 指标 | Normal | Abnormal | Δ | Welch t |
+|---|---:|---:|---:|---:|
+| Mean entropy | 0.1008 ± 0.079 | 0.0901 ± 0.077 | -0.011 | **-1.23 (n.s.)** |
+
+**结论：单模态跨域 ✗ 失败**。原因推测：FOSTER 训练时 PCG 通道与 PVDF/PZT/ACC/ERB 4 个机械通道**深度耦合**，单独使用时模型 fc1 输入向量缺失 4/5 信息，下游 LIF 主要被 fc2 偏置驱动，输出近常数。修复路径属未来工作：(a) 多模态联合域适应；(b) 单 PCG 通道单独训练后再融合；(c) MMD 或 CORAL 域对齐。
+
+### 11.8 未来工作 (规划)
 
 #### 学术方向
-1. **Cross-domain SCG → PCG 跨域**：PhysioNet 2016 PCG 通过 5555 代理重新下载（已 6,480 文件分片获取，~15 % 完成）；SNN 单模态 fine-tune 测试跨域泛化
+1. **PCG 跨域域适应**：基于 §11.7 负面结果，做 multimodal joint fine-tuning on PhysioNet 2016 with FOSTER as auxiliary domain (MMD / DANN baseline)
 2. **Subject-supervised contrastive SSL**：正样本=同被试不同窗，可能教模型学到 cross-subject invariance（覆盖 §11.3 的 outlier 难题）
 3. **Focal Loss + Dia 重训**：base on §11.1 发现，Dia recall 是核心痛点
 
