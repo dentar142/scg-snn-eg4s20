@@ -841,36 +841,148 @@ true Dia [   619   621   5333 ]
 - 资源 LUT 10.70 % / BRAM9K 38–39 / DSP 3.45 %, inference ~8.65 ms / 窗
 - **国产 FPGA 上多模态生理信号 SNN 推理的首次 zero-leakage 上板**，比单模态 SNN 的 77.72 % 高 16.8 pp
 
-#### 贡献 4：架构层面 SNN 优于 CNN 的硬证据
-- SNN 在难类（Sys/Dia）F1 比 CNN 高 10-14 pp
-- SNN train-val gap (10.9 pp) 显著小于 CNN (16.3 pp)
-- SSL pretraining 救不了 CNN（无论单语料还是大混合），但 SNN 不需要 SSL 就赢
+#### 贡献 4：SNN vs CNN 的诚实定性结论 (regime-dependent)
+- **CEBSDB 单模态低 SNR 场景**：SNN 在难类 (Sys/Dia) F1 高 CNN 10-14 pp（§7），train-val gap 砍半
+- **FOSTER 多模态丰富信号场景**：CNN raw 精度反超 SNN 1.6 pp / Dia F1 高 6 pp（§11.4）—— 早期 "SNN > CNN" 不普适
+- **SNN 真正的差异化优势在 FPGA 维度**：
+  1. 推理延迟 8.65 ms (T=32 deployed) / 1.8 ms (T=16 estimated pure FPGA)
+  2. spike sparsity 64–75 % → ~65 % MAC 节能
+  3. fc2 96 weights 可实时改写，支持 STDP per-subject calibration（§11.5 sub021 +3.95 pp）
+  4. 1 / 29 DSP 占用，CNN 在 EG4S20 上同等参数量难以部署
 
 ### 10.2 局限性
 1. **静态功耗劣势**：55 nm vs 40 nm ULP 的工艺差距（80 mW vs 8.55 mW），属物理硬约束
-2. **Hold-out 仅 3 受试者**：受具体 hold-out 选择影响（含 b002 这个最难 fold 的代表）
-3. **功耗未实测**：TD `calculate_power` toolchain bug，仅 datasheet 估算
-4. **跨域测试未做**：PhysioNet 2016 PCG 大 zip 下载失败，未能验证 SCG → PCG 跨域泛化
+2. **Hold-out 仅 3 受试者** (CEBSDB)：受具体 hold-out 选择影响（含 b002 这个最难 fold 的代表）；FOSTER hold-out 已扩到 8 人 × 40,575 窗
+3. **功耗未实测**：TD `calculate_power` 在 EG4S20 上崩溃，且 power library 未随 TD 6.2.190.657 发行；datasheet 估算仅
+4. **跨域测试部分**：PhysioNet 2016 PCG 通过 5555 代理已 ~15 % 下载（§11.7），未完成跨域验证
+5. **CNN 优势 (raw 精度) 未在 FPGA 部署**：因为 EG4S20 DSP 资源受限，CNN-on-FPGA 是 future work，非本工程承诺
 
 ---
 
-## 11. 未来工作
+## 11. 机制分析 + 诚实结论
 
-### 11.1 学术方向
-1. **Subject-supervised contrastive SSL**：替代 SimCLR，正样本=同被试不同窗，可能教模型学到 cross-subject invariance
-2. **Cross-domain 验证**：补 PN2016 PCG zip，做 SCG → PCG 跨域测试
-3. **Sys/Dia recall 提升**：当前 hold-out Sys/Dia recall 仅 40-44 %，需用 focal loss / threshold tuning / ensemble 改善
-4. **病人适配性筛查方案**：上线前用模型置信度 + ECG 同步信号判断"该病人是否适合此模型"，分流到人工修正
+> 在 §9.6 Pareto/Mechanism 之外，对部署版本做了 5 项专项 deep-dive：Dia 错分溯源、margin-based abstention 校准、难受试者特征溯源、CNN-vs-SNN 同数据集公平比较、STDP per-subject 校准 PoC、ADC-direct RTL 骨架。脚本：`tools/{analyze_dia_errors, calibrate_abstention, analyze_subjects, stdp_personalize}.py`、`model/train_cnn_mm_holdout.py`、`rtl/scg_adc_stream.v`。
 
-### 11.2 工程方向
-1. **重做 v7 流水线**：S_MUL 阶段加回 `gen_rtl_v7.py`，闭合 50 MHz Setup WNS
-2. **SDRAM 权重存储**：解锁更大模型（200K+ 参数），可能突破 88 % 架构天花板
-3. **外接电流测量**：补真实功耗 / 能效数字，消除 datasheet 估算的不确定性
-4. **多通道 SCG**：EG4S20 还有 96.5 % DSP 闲置，可加 ECG 同步通道做多模态融合
+### 11.1 Dia 类错分溯源 (`doc/dia_error_summary.md`)
 
-### 11.3 临床方向
-1. **真实病人数据采集**：CEBSDB 19 受试者太少；用 MEMS 加速度计 + Arduino + 50 志愿者扩 train set
-2. **SDR 指标计算 + 报告**：从 Sys/Dia 时序衍生收缩-舒张比，与心血管科医生合作验证临床价值
+H=32 T=32 hold-out 6,573 个 Dia 真值，整体 recall **81.93%**：
+
+| Subject | n_dia | Dia recall | → BG | → Sys |
+|---------|-----:|----------:|----:|------:|
+| sub021 | 995 | **62.61%** ❌ | 11.2 % | **26.2 %** |
+| sub013 | 925 | 69.51% | **20.0 %** | 10.5 % |
+| sub006 | 800 | 80.25% | 1.8 % | 18.0 % |
+| sub026 | 396 | 82.83% | 13.4 % | 3.8 % |
+| sub024 | 826 | 83.54% | 14.8 % | 1.7 % |
+| sub020 | 822 | 88.44% | 6.8 % | 4.7 % |
+| sub003 | 889 | 93.25% | 0.2 % | 6.5 % |
+| sub009 | 920 | **98.15%** ✅ | 1.6 % | 0.2 % |
+
+**结论**：Dia 错分整体 47% → BG / 53% → Sys（均衡），但**集中在两个受试者**：sub021（→Sys 26%）和 sub013（→BG 20%）。说明问题不是 Dia 类整体训练不足，而是**少数 outlier subject 的 Dia 时序模式与训练分布偏移**。
+
+### 11.2 Margin-based Abstention 校准 (`doc/abstention_h32_t16.json`)
+
+deployed H=32 T=16 ckpt 上 hold-out 40,575 窗，spike-count margin（top1 − top2）分布：min=0, max=9, median=4。
+
+**推荐 τ = 2**（首个满足 acc_kept ≥ 97 % AND coverage ≥ 80 % 的阈值）：
+
+| Coverage | Acc on kept | Acc on rejected | 提升 |
+|---:|---:|---:|---:|
+| 100 % (no abstain) | 94.43 % | — | baseline |
+| **89.25 %** ⭐ | **97.78 %** | 66.54 % | **+3.35 pp** |
+
+Per-class keep@τ=2：BG 24,060/25,715 (93.6 % 接受率) 准 98.26 %；Sys 7,315/8,287 (88.3 %) 准 98.78 %；**Dia 4,840/6,573 (73.6 % 接受率) 准 93.90 %**——Dia 弃判最多，符合 §11.1 的 outlier-driven 性质。
+
+**临床意义**：弃判 11 % 高风险窗 → 剩 89 % 精度从 94 % → **98 %**。FPGA 实现极廉价（仅 6 比特比较器 + 1 减法器）。
+
+### 11.3 难受试者特征溯源 (`doc/subject_difficulty.md`)
+
+为查明为何 sub013/021 仅 ~91 % 而 sub009 达 99 %，从 raw FOSTER CSV 提取 4 类特征：HR mean/std、R-peak SNR、inter-cycle alignment、per-modality SNR。Pearson 相关系数 vs 板上 acc：
+
+| Feature | Pearson r vs acc |
+|---|---:|
+| Mean HR (bpm) | -0.327 |
+| HR std (bpm) | -0.225 |
+| R-peak SNR | +0.017 |
+| Inter-cycle alignment | +0.018 |
+| **SNR (ACC)** | **-0.501** |
+| **SNR (ERB)** | **-0.498** |
+| SNR (PCG) | +0.249 |
+| SNR (PVDF) | +0.128 |
+| SNR (PZT) | -0.052 |
+
+**反直觉发现**：difficulty 不是由心跳一致性 (alignment +0.02) 或 R-peak SNR 主导，而是**ACC + ERB 通道的 SNR 越高，acc 越低**。原因推测：ACC（加速度）和 ERB（电阻抗呼吸）通道在心动信号频带 (5-50 Hz) 的高 SNR **可能反映呼吸/运动 artifact** 而非真心脏机械活动；当训练数据其他人的这两通道 SNR 较低时，模型学到"这两个通道弱"的先验，到 outlier 受试者上失败。
+
+**工程含义**：临床部署前对 ACC + ERB 通道做 5-50 Hz vs 100-450 Hz 比例预筛，超阈值的受试者标记"高风险"或自动弃判。
+
+### 11.4 CNN vs SNN 同数据集公平比较 (诚实修正)
+
+之前章节多处声称"SNN 优于 CNN"——这是基于 **CEBSDB 单模态** 数据 (§7)，单一信号，hold-out 受试者较少。在 FOSTER 多模态 + subject-disjoint hold-out 上，重新训练 CNN baseline (`model/train_cnn_mm_holdout.py`, channels 5→32→64→64→3, 32,201 参数 vs SNN 41,056 参数)：
+
+| 指标 | SNN H=32 T=16 (deployed) | CNN match (32 K params) | Δ |
+|---|---:|---:|---:|
+| 参数量 | 41,056 | **32,201** (-22 %) | CNN 更小 |
+| Val acc (subject-disjoint) | 94.43 % | **96.04 %** | **CNN +1.6 pp** |
+| Macro-F1 | ~91.32 % | **94.86 %** | **CNN +3.5 pp** |
+| Dia F1 | 83.80 % | **89.80 %** | **CNN +6 pp** |
+| 推理 latency on EG4S20 | **8.65 ms (T=16: ~1.8 ms)** | est. 20+ ms | SNN **2-10× 快** |
+| Sparsity / 节能 | **64-75 % spike-sparse** | dense MAC | SNN 占优 |
+| FPGA INT8 部署可行 | ✅ 已验证 (94.14 % on-board) | ❌ 未验证 (DSP-bound) | SNN 已上板 |
+
+**诚实结论**：
+- **CNN 在 raw 多模态精度上反超 SNN ~1.6 pp**（FOSTER 5-channel）；之前 "SNN > CNN 10-14 pp" 的结论只在 CEBSDB 单模态成立
+- **SNN 的真正优势不是 raw 精度，而是**：
+  1. **延迟**：8.65 ms（T=32，真延迟 3.6 ms）远低于 CNN 估算 20+ ms（DSP-limited 1D-conv on EG4S20）
+  2. **稀疏性能效**：64–75 % spike-sparse → 65 % MAC 节能（vs CNN dense convolution）
+  3. **STDP 个体化**（§11.5）：fc2 96 weights 可改写，per-subject calibration 是 CNN 难复制的能力
+  4. **资源**：SNN 用 1 / 29 DSP；CNN 多模态需要更多 DSP（无法在 EG4S20 内部署 32K-param CNN）
+
+### 11.5 STDP / Per-Subject Calibration PoC (`doc/stdp_personalize.json`)
+
+仅校准 fc2（96 INT8 weights，硬件可改写为 12 LUT-RAM）；校准集 = 每受试者前 100 窗（per-class stratified 33 each），10 epoch fine-tune；test 集 = 余下窗 (~5,000)。
+
+| Subject | Pre-cal | Post-cal | Δ |
+|---------|--------:|---------:|--:|
+| sub021 (最难) | 91.50 % | **95.45 %** | **+3.95 pp** ⭐ |
+| sub026 | 92.13 % | 93.50 % | +1.38 |
+| sub024 | 93.49 % | 94.10 % | +0.61 |
+| sub009 (最易) | 98.88 % | 99.10 % | +0.22 |
+| sub013 | 94.11 % | 93.83 % | -0.28 |
+| sub020 | 95.95 % | 95.08 % | -0.87 |
+| **均值** | **94.57 %** | **95.49 %** | **+0.92** |
+
+**结论**：**最难受试者 (sub021) +3.95 pp**——per-subject calibration 对 outlier 个体威力最大；容易受试者 (sub009) 已饱和无收益甚至轻微 regression。这是 SNN 范式相对 CNN 静态部署的**核心差异化卖点**：CNN 没有可在板上动态改写的 12-LUT 个体化通道。
+
+### 11.6 ADC-Direct 实时流式 RTL 骨架 (`rtl/scg_adc_stream.v`)
+
+为绕开 UART (108 ms upload bottleneck)，设计了 5-channel 1 kHz ADC 直接采样模块替代 UART RX 路径：
+
+| 阶段 | 时延预算 (1 ms 内) |
+|---|---:|
+| ADC convert (8-ch parallel, AD7606C-16) | ~150 µs |
+| FIFO 写入环形缓冲 | ~1 µs |
+| 256-sample 窗口移位 + LIF 推理 (T=16) | ~1,800 µs (跨 2 个 1-ms tick) |
+| 余量 | ~50 % |
+
+引脚映射（待 `constraints/scg_top_adc.adc` 落实）：`adc_clk_o`/`adc_cs_n_o`/`adc_convst_o`/`adc_busy_i`/`adc_db_i[15:0]`/`adc_rd_n_o`。
+
+**当前状态**：综合可过的 RTL 骨架（FSM 完整），但**未在真实硬件上验证**（无 AD7606C 实物），属未来工作。这一改动让 SNN 推理延迟从 117 ms (UART roundtrip) → 9 ms (纯片上 + ADC 抓取) — 真实 1 kHz 实时部署的关键步骤。
+
+### 11.7 未来工作 (规划)
+
+#### 学术方向
+1. **Cross-domain SCG → PCG 跨域**：PhysioNet 2016 PCG 通过 5555 代理重新下载（已 6,480 文件分片获取，~15 % 完成）；SNN 单模态 fine-tune 测试跨域泛化
+2. **Subject-supervised contrastive SSL**：正样本=同被试不同窗，可能教模型学到 cross-subject invariance（覆盖 §11.3 的 outlier 难题）
+3. **Focal Loss + Dia 重训**：base on §11.1 发现，Dia recall 是核心痛点
+
+#### 工程方向
+1. **真功耗实测**：HX4S20C 板 VCCINT (1.2V) 测试点定位 + 万用表差分（idle vs active），消除 datasheet 估算
+2. **ADC-direct 真实硬件验证**：买 AD7606C 模块，验证 §11.6 的 RTL 骨架；目标真实 1 kHz 实时演示
+3. **STDP 硬件落地**：把 §11.5 的 fc2 fine-tune 改写为 STDP 局部更新规则 + LUT-RAM 实现，做 on-chip 个体化 demo
+
+#### 临床方向
+1. **真实病人数据采集**：用 MEMS 加速度计 + Arduino + 50 志愿者扩大 SCG corpus
+2. **SDR 指标 (Sys/Dia ratio) 计算**：从分类输出衍生收缩-舒张比，与心血管科医生合作验证临床价值
 3. **可穿戴/航天场景验证**：低重力 / 振动环境下的 SCG 信号特性变化研究
 
 ---

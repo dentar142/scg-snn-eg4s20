@@ -1,0 +1,42 @@
+{
+  "tag": "cnn_mm_match",
+  "size": "match",
+  "n_params": 32201,
+  "best_val_acc": 0.9603696857670979,
+  "best_epoch": 15,
+  "macro_f1": 0.948560326083479,
+  "per_class_f1": [
+    0.9730340195359711,
+    0.9746180680861302,
+    0.8980288906283356
+  ],
+  "confusion_matrix": [
+    [
+      24555,
+      160,
+      1000
+    ],
+    [
+      15,
+      8102,
+      170
+    ],
+    [
+      186,
+      77,
+      6310
+    ]
+  ],
+  "holdout_subjects": [
+    "sub003",
+    "sub006",
+    "sub009",
+    "sub013",
+    "sub020",
+    "sub021",
+    "sub024",
+    "sub026"
+  ],
+  "n_train_windows": 162433,
+  "n_val_windows": 40575
+}

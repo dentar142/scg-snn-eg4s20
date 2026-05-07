@@ -1,0 +1,123 @@
+{
+  "ckpt": "model\\ckpt\\sweep\\best_sweep_H32_T16.pt",
+  "n_cal_target": 100,
+  "n_epochs": 10,
+  "lr": 0.005,
+  "results": [
+    {
+      "subject": "sub021",
+      "n_cal": 99,
+      "n_test": 5340,
+      "base_acc": 0.9149812734082396,
+      "cal_acc": 0.9544943820224719,
+      "delta_pp": 3.9513108614232295,
+      "status": "ok",
+      "cal_class_dist": [
+        33,
+        33,
+        33
+      ]
+    },
+    {
+      "subject": "sub026",
+      "n_cal": 99,
+      "n_test": 5525,
+      "base_acc": 0.9212669683257918,
+      "cal_acc": 0.9350226244343891,
+      "delta_pp": 1.3755656108597303,
+      "status": "ok",
+      "cal_class_dist": [
+        33,
+        33,
+        33
+      ]
+    },
+    {
+      "subject": "sub006",
+      "n_cal": 99,
+      "n_test": 4804,
+      "base_acc": 0.9333888426311407,
+      "cal_acc": 0.947751873438801,
+      "delta_pp": 1.4363030807660215,
+      "status": "ok",
+      "cal_class_dist": [
+        33,
+        33,
+        33
+      ]
+    },
+    {
+      "subject": "sub024",
+      "n_cal": 99,
+      "n_test": 5052,
+      "base_acc": 0.9348772763262074,
+      "cal_acc": 0.9410134600158353,
+      "delta_pp": 0.6136183689627872,
+      "status": "ok",
+      "cal_class_dist": [
+        33,
+        33,
+        33
+      ]
+    },
+    {
+      "subject": "sub013",
+      "n_cal": 99,
+      "n_test": 4990,
+      "base_acc": 0.9410821643286573,
+      "cal_acc": 0.9382765531062124,
+      "delta_pp": -0.2805611222444937,
+      "status": "ok",
+      "cal_class_dist": [
+        33,
+        33,
+        33
+      ]
+    },
+    {
+      "subject": "sub020",
+      "n_cal": 99,
+      "n_test": 4470,
+      "base_acc": 0.9595078299776286,
+      "cal_acc": 0.9507829977628636,
+      "delta_pp": -0.8724832214765055,
+      "status": "ok",
+      "cal_class_dist": [
+        33,
+        33,
+        33
+      ]
+    },
+    {
+      "subject": "sub003",
+      "n_cal": 99,
+      "n_test": 4619,
+      "base_acc": 0.9720718770296601,
+      "cal_acc": 0.9811647542758173,
+      "delta_pp": 0.9092877246157149,
+      "status": "ok",
+      "cal_class_dist": [
+        33,
+        33,
+        33
+      ]
+    },
+    {
+      "subject": "sub009",
+      "n_cal": 99,
+      "n_test": 4983,
+      "base_acc": 0.9887617900862934,
+      "cal_acc": 0.9909692956050572,
+      "delta_pp": 0.22075055187638082,
+      "status": "ok",
+      "cal_class_dist": [
+        33,
+        33,
+        33
+      ]
+    }
+  ],
+  "mean_base_acc": 0.9457422527642023,
+  "mean_cal_acc": 0.9549344925826809,
+  "mean_delta_pp": 0.919223981847858
+}
