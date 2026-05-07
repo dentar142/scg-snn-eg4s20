@@ -138,26 +138,46 @@ module scg_top_snn #(
     //                 auto-pack into BRAM32K instances.
     //   * w2_rom   :  N_CLASSES * H bytes ($readmemh from W2.hex).
     //--------------------------------------------------------------------
-    (* syn_ramstyle = "block_ram" *) reg  [7:0] x_bram   [0:N_IN-1];
-    (* syn_ramstyle = "block_ram" *) reg  [7:0] w1_rom   [0:H*N_IN-1];
-    (* syn_ramstyle = "block_ram" *) reg  [7:0] w2_rom   [0:N_CLASSES*H-1];
+    (* syn_ramstyle = "block_ram" *) reg  [7:0] x_bram     [0:N_IN-1];
+    // W1 ROM split into 3 banks (32K + 32K + 16K) to force BRAM32K inference.
+    // Single 80KB array gets implemented as LUT-RAM by Anlogic synth -> exceeds MSlice limit.
+    (* syn_ramstyle = "block_ram" *) reg  [7:0] w1_rom_0   [0:32767];
+    (* syn_ramstyle = "block_ram" *) reg  [7:0] w1_rom_1   [0:32767];
+    (* syn_ramstyle = "block_ram" *) reg  [7:0] w1_rom_2   [0:16383];
+    (* syn_ramstyle = "block_ram" *) reg  [7:0] w2_rom     [0:N_CLASSES*H-1];
 
     // Synthesis runs from build_snn/, so the hex files are one dir up.
     initial begin
-        $readmemh("../rtl/weights_snn/W1.hex", w1_rom);
-        $readmemh("../rtl/weights_snn/W2.hex", w2_rom);
+        $readmemh("../rtl/weights_snn/W1_0.hex", w1_rom_0);
+        $readmemh("../rtl/weights_snn/W1_1.hex", w1_rom_1);
+        $readmemh("../rtl/weights_snn/W1_2.hex", w1_rom_2);
+        $readmemh("../rtl/weights_snn/W2.hex",   w2_rom);
     end
 
     // SNN engine read addresses and buses
     wire [$clog2(N_IN)-1:0]        eng_x_addr;
-    wire [$clog2(H*N_IN)-1:0]      eng_w1_addr;
+    wire [$clog2(H*N_IN)-1:0]      eng_w1_addr;     // 17-bit for 81920 entries
     wire [$clog2(N_CLASSES*H)-1:0] eng_w2_addr;
 
+    // W1 bank decoder: top 2 bits of eng_w1_addr select the bank, lower bits are offset
     reg  signed [7:0]  x_dout, w1_dout, w2_dout;
+    reg  signed [7:0]  w1_b0_dout, w1_b1_dout, w1_b2_dout;
+    reg  [1:0]         w1_bank_sel;
     always @(posedge clk) begin
-        x_dout  <= x_bram[eng_x_addr];
-        w1_dout <= w1_rom[eng_w1_addr];
-        w2_dout <= w2_rom[eng_w2_addr];
+        x_dout      <= x_bram[eng_x_addr];
+        w1_b0_dout  <= w1_rom_0[eng_w1_addr[14:0]];
+        w1_b1_dout  <= w1_rom_1[eng_w1_addr[14:0]];
+        w1_b2_dout  <= w1_rom_2[eng_w1_addr[13:0]];
+        w1_bank_sel <= eng_w1_addr[16:15];
+        w2_dout     <= w2_rom[eng_w2_addr];
+    end
+    // 1-cycle later mux on bank select (extra pipeline stage)
+    always @(*) begin
+        case (w1_bank_sel)
+            2'b00: w1_dout = w1_b0_dout;
+            2'b01: w1_dout = w1_b1_dout;
+            default: w1_dout = w1_b2_dout;
+        endcase
     end
 
     //--------------------------------------------------------------------
