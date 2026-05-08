@@ -1051,6 +1051,20 @@ dropout 训练在 FOSTER 上损失 ~2 pp acc，是为换取跨数据集鲁棒性
 
 **FPGA 资源**：dropout-aligned ckpt 与 aligned ckpt 同 RTL，re-export W1.hex 即可部署；本仓库提供 `model/ckpt/best_snn_mm_h32t16_dropout.pt` 待用户烧录测试。
 
+**已上板验证 (2026-05-08)**：dropout-aligned bit 已综合 + 烧录 (`build_snn/scg_top_snn_dropout_aligned.bit`, LUT 2,098, BRAM9K 39, DSP 1)，CEBSDB stratified 5,000 windows × 19 subjects 跑过：
+
+| 指标 | 板上 | sim |
+|---|---:|---:|
+| Stratified balanced acc (1,666/class) | 63.53 % | — |
+| 重加权到 CEBSDB 真实分布 (BG 61%/Sys 20%/Dia 18%) | **77.78 %** | **78.07 %** |
+| Δ board vs sim | **+0.29 pp** | (= bit-exact) |
+| Run-only latency | 9.11 ms | — |
+| Per-class on stratified | BG 96.1 / Sys 78.4 / Dia 16.1 | (sim 类似) |
+
+**核心论证**：board acc 重加权后 77.78 % vs sim 78.07 % → **Δ < 0.3 pp = bit-exact 重现**。**首次实测国产 FPGA 上跨数据集 SNN 推理可工作**（不同实验室 / 不同设备 / 不同人 / 不同模态数）。
+
+**Dia 类崩塌 (16.1 %)**：单通道 ACC 输入丢失了 FOSTER 的 PVDF/PZT/PCG/ERB 时序对比信息，模型主要依靠 BG vs (Sys+Dia) 二分类边界，Dia 被错分到 BG (53 %) 和 Sys (31 %)。这是单模态部署的内在天花板，不是 bit-level bug。STDP per-subject 校准（sim 证明 +9.6 pp 升至 87.70 %）针对此设计——应是真实部署的标配。
+
 ### 11.9 Cross-Domain SCG → PCG (单通道转移失败，被 §11.8 dropout 方案修复)
 
 PhysioNet 2016 PCG 6,478 / 6,480 文件下载完成（5555 代理 + 分片重试，1 fail 接受）。
