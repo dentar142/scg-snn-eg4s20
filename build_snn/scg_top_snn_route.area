@@ -8,12 +8,12 @@ IO Statistics
   #inout                    0
 
 Utilization Statistics
-#lut                     2098   out of  19600   10.70%
-#reg                     1971   out of  19600   10.06%
-#le                      2430
-  #lut only               459   out of   2430   18.89%
-  #reg only               332   out of   2430   13.66%
-  #lut&reg               1639   out of   2430   67.45%
+#lut                     2109   out of  19600   10.76%
+#reg                     1977   out of  19600   10.09%
+#le                      2462
+  #lut only               485   out of   2462   19.70%
+  #reg only               353   out of   2462   14.34%
+  #lut&reg               1624   out of   2462   65.96%
 #bram                      39   out of     64   60.94%
   #bram9k                  39
   #fifo9k                   0
@@ -29,31 +29,32 @@ Report Clock Domain Luts:
 ------------------------------------------------------------------------------------------------------------------
   Index   |  Name         |  Frequency   |  LUT As Logic   |  LUT As Shifter   |  LUT As Dram   |  BRAM   |  DSP
 ------------------------------------------------------------------------------------------------------------------
-  #1      |  DeriveClock  |  50MHz       |  1044           |  0                |  0             |  39     |  1
+  #1      |  DeriveClock  |  50MHz       |  1041           |  0                |  0             |  39     |  1
 ------------------------------------------------------------------------------------------------------------------
 
 Clock Resource Statistics
 Index     ClockNet       Type               DriverType         Driver            Clk/Fanout
-#1        clk_i_dup_1    Global             io                 clk_i_syn_2.di    1396/1396
+#1        clk_i_dup_1    Global             io                 clk_i_syn_2.di    1376/1376
 
 Report Hierarchy Area:
 +---------------------------------------------------------------------------------+
 |Instance   |Module         |le      |lut     |ripple  |seq     |bram    |dsp     |
 +---------------------------------------------------------------------------------+
-|top        |scg_top_snn    |2430    |1941    |157     |1971    |39      |1       |
-|  u_engine |scg_snn_engine |2114    |1694    |120     |1821    |0       |1       |
+|top        |scg_top_snn    |2462    |1951    |158     |1977    |39      |1       |
+|  u_engine |scg_snn_engine |2123    |1681    |121     |1821    |0       |1       |
 +---------------------------------------------------------------------------------+
 
 
 DataNet Average Fanout:
 
-   Index     Fanout    Nets  
-    #1         1       3612  
-    #2         2       267   
-    #3         3       106   
-    #4         4        30   
-    #5        5-10      61   
-    #6       11-50     181   
-    #7       51-100     26   
-    #8        >500      1    
-  Average     2.93           
+   Index     Fanout     Nets  
+    #1          1       3599  
+    #2          2       271   
+    #3          3       103   
+    #4          4        38   
+    #5        5-10       63   
+    #6        11-50     190   
+    #7       51-100      21   
+    #8       101-500     1    
+    #9        >500       1    
+  Average     2.93            

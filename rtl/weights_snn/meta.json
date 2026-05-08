@@ -4,13 +4,21 @@
   "n_channels": 5,
   "win_len": 256,
   "n_classes": 3,
-  "T": 32,
+  "T": 16,
   "leak_shift": 4,
   "threshold_fp": 1.0,
-  "w1_scale": 0.009232315491503619,
-  "w2_scale": 0.0007157849045250359,
-  "theta1_int": 13756,
-  "theta2_int": 1397,
+  "w1_scale": 0.008257457590478611,
+  "w2_scale": 0.001574292778968811,
+  "theta1_int": 15380,
+  "theta2_int": 635,
   "W1_bytes": 40960,
-  "W2_bytes": 96
+  "W2_bytes": 96,
+  "tau_int_baked": [
+    4,
+    5,
+    5,
+    6,
+    13
+  ],
+  "aligned_ckpt": "model\\ckpt\\best_snn_mm_h32t16_aligned.pt"
 }

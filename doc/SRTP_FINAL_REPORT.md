@@ -740,9 +740,10 @@ true Dia [   619   621   5333 ]
 | `build_snn/scg_top_snn_singlemodal_backup.bit` | 单模态 H=64 SCG (CEBSDB) | 5-fold subject-disjoint hold-out 9,660 windows | 77.72 % | 15.9 % | 18 |
 | `build_snn/scg_top_snn_multimodal.bit` | 多模态 H=32 T=32 channel-bank, **leaky-split ckpt** | first-200 window (含训练受试者) | 98.00 % (无效) | 10.97 % | 39 |
 | `build_snn/scg_top_snn_multimodal_holdout.bit` | 多模态 H=32 T=32 channel-bank, subject-disjoint | 40,575 windows × 8 hold-out 受试者 | 94.14 % | 10.70 % | 39 |
-| `build_snn/scg_top_snn_sweep_H32_T16.bit` | **多模态 H=32 T=16 channel-bank, subject-disjoint** ⭐ | 5,000 stratified 子集 × 8 hold-out 受试者 | **94.54 %** | 10.70 % | 38 |
+| `build_snn/scg_top_snn_sweep_H32_T16.bit` | 多模态 H=32 T=16 channel-bank, subject-disjoint | 5,000 stratified 子集 × 8 hold-out 受试者 | 94.54 % | 10.70 % | 38 |
+| `build_snn/scg_top_snn_aligned_h32t16.bit` | **多模态 H=32 T=16 + phase-aligned (A+B)** ⭐ | 5,000 stratified 子集 × 8 hold-out 受试者 | **95.02 %** | 10.76 % | 39 |
 
-**当前烧录**：`scg_top_snn_sweep_H32_T16.bit` (基于 §9.6 Pareto 实验选择的"平衡版本"，比 T=32 deployed 提升 +0.40 pp 板上 acc，FPGA 推理快 2×)。其它 bit 作 fallback 保留。
+**当前烧录**：`scg_top_snn_aligned_h32t16.bit` (§11.7 phase-aligned 版本，board acc 比 T=16 baseline +0.48 pp，Dia F1 +2.03 pp，仍同 RTL 同资源)。其它 bit 作 fallback 保留。
 
 **Per-subject acc (H=32 T=16, 5000 subset)**：sub009 99.36 % / sub003 97.12 % / sub020 96.00 % / sub013 94.88 % / sub021 93.12 % / sub026 92.16 % / sub006 91.84 % / sub024 91.84 %（全部 ≥ 91 %，最低提升 0.80 pp vs T=32）。
 
@@ -968,7 +969,41 @@ Per-class keep@τ=2：BG 24,060/25,715 (93.6 % 接受率) 准 98.26 %；Sys 7,31
 
 **当前状态**：综合可过的 RTL 骨架（FSM 完整），但**未在真实硬件上验证**（无 AD7606C 实物），属未来工作。这一改动让 SNN 推理延迟从 117 ms (UART roundtrip) → 9 ms (纯片上 + ADC 抓取) — 真实 1 kHz 实时部署的关键步骤。
 
-### 11.7 Cross-Domain SCG → PCG (诚实负面结果)
+### 11.7 Phase-Aligned SNN (闭合 CNN 反超的一半)
+
+§11.4 揭示 CNN 在 FOSTER 多模态反超 SNN 1.6 pp，主因是 SNN 的 fc1 把 (5×256) flatten 成 1280-vec，**通道间相对相位关系 + 时序局部性丢失**，而 CNN 的 1D conv + maxpool 自带 translation invariance。
+
+为闭合这一差距，做了 **A + B 联合训练**（`model/train_snn_mm_aligned.py`）：
+
+**A. 通道-shift 数据增强**：训练时每个通道独立 random roll ±15 sample，迫使 fc1 学到 alignment-robust 表征
+**B. 可学习 per-channel 整数偏移 τ_c**：5 个 float 参数，differentiable 训练（bilinear interp shift），部署时 round 到 int
+
+学到的 τ_int = **[4, 5, 5, 6, 13]** for [PVDF, PZT, ACC, PCG, ERB]。物理合理：表面压电 (PVDF/PZT) 比胸内体震/声波 (ACC/PCG) 快几 ms；ERB 阻抗呼吸最慢动态，τ=13 最大。
+
+**FPGA 部署技巧（无需 RTL 改动）**：把 τ 烘进 W1 的列置换 `W'[i,c,k] = W[i,c, (k+τ_c) mod L]`（`tools/export_aligned_weights.py`）。channel-bank 5 banks 的内容仅是 W1 的不同重排，**bit 比特级一致逻辑、综合资源不变**：
+
+| 资源 | Baseline H=32 T=16 | Aligned H=32 T=16 |
+|---|---:|---:|
+| LUT4 | 2,098 (10.70 %) | 2,109 (10.76 %, +11) |
+| BRAM9K | 38 / 64 | 39 / 64 |
+| DSP18 | 1 | 1 |
+| 推理 latency | 9.12 ms | 9.12 ms (相同) |
+
+**板上 bench (5000 stratified subject-disjoint, `doc/bench_fpga_snn_h32t16_aligned.json`)**：
+
+| 指标 | Baseline H=32 T=16 | **Aligned (A+B)** | Δ | CNN match (ref) |
+|---|---:|---:|---:|---:|
+| Overall acc | 94.54 % | **95.02 %** | **+0.48 pp** | 96.04 % |
+| Macro-F1 | 91.79 % | **92.58 %** | +0.79 | 94.86 % |
+| BG F1 | 97.04 % | 97.41 % | +0.37 | 97.30 % |
+| Sys F1 | 93.11 % | **94.51 %** | **+1.40** | 97.46 % |
+| **Dia F1** | 83.80 % | **85.83 %** | **+2.03** ⭐ | 89.80 % |
+
+**关键发现**：Dia F1 +2.03 pp 是最大收益—— phase-misalignment 的危害**集中在 Dia 类**（§11.1 显示 Dia 错分主要来自 outlier 受试者 sub013/021，phase alignment 帮了这部分）。
+
+**vs CNN gap**：原 1.61 pp → 闭合到 **1.02 pp（减半）**。剩下的差距源于 SNN 的 binary spike 量化损失 + 单层 fc 缺多尺度——这是结构性的，要继续闭合需要 CNN-front-end (§11.7-推荐 D)。
+
+### 11.8 Cross-Domain SCG → PCG (诚实负面结果)
 
 PhysioNet 2016 PCG 6,478 / 6,480 文件下载完成（5555 代理 + 分片重试，1 fail 接受）。
 
@@ -982,7 +1017,7 @@ PhysioNet 2016 PCG 6,478 / 6,480 文件下载完成（5555 代理 + 分片重试
 
 **结论：单模态跨域 ✗ 失败**。原因推测：FOSTER 训练时 PCG 通道与 PVDF/PZT/ACC/ERB 4 个机械通道**深度耦合**，单独使用时模型 fc1 输入向量缺失 4/5 信息，下游 LIF 主要被 fc2 偏置驱动，输出近常数。修复路径属未来工作：(a) 多模态联合域适应；(b) 单 PCG 通道单独训练后再融合；(c) MMD 或 CORAL 域对齐。
 
-### 11.8 未来工作 (规划)
+### 11.9 未来工作 (规划)
 
 #### 学术方向
 1. **PCG 跨域域适应**：基于 §11.7 负面结果，做 multimodal joint fine-tuning on PhysioNet 2016 with FOSTER as auxiliary domain (MMD / DANN baseline)

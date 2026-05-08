@@ -34,6 +34,7 @@ build_snn/*
 !build_snn/scg_top_snn_sweep_H32_T8.bit
 !build_snn/scg_top_snn_sweep_H32_T16.bit
 !build_snn/scg_top_snn_sweep_H32_T48.bit
+!build_snn/scg_top_snn_aligned_h32t16.bit
 
 # --- runtime logs / scratch ---
 *.log
