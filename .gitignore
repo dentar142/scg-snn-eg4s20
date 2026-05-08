@@ -10,7 +10,6 @@ data_excl100/
 data_mixed/
 
 # --- ML training artifacts ---
-model/ckpt/*.pt
 model/__pycache__/
 **/__pycache__/
 *.pyc
