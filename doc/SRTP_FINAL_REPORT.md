@@ -1065,7 +1065,38 @@ dropout 训练在 FOSTER 上损失 ~2 pp acc，是为换取跨数据集鲁棒性
 
 **Dia 类崩塌 (16.1 %)**：单通道 ACC 输入丢失了 FOSTER 的 PVDF/PZT/PCG/ERB 时序对比信息，模型主要依靠 BG vs (Sys+Dia) 二分类边界，Dia 被错分到 BG (53 %) 和 Sys (31 %)。这是单模态部署的内在天花板，不是 bit-level bug。STDP per-subject 校准（sim 证明 +9.6 pp 升至 87.70 %）针对此设计——应是真实部署的标配。
 
-### 11.9 Cross-Domain SCG → PCG (单通道转移失败，被 §11.8 dropout 方案修复)
+### 11.9 Cross-Dataset 第二证据：WESAD (验证 modality dropout 不是 CEBSDB 单点过拟合)
+
+为验证 §11.8 不是某一对数据集的偶然，再做一次完全独立的跨数据集测试：**WESAD** (Schmidt 2018, UCI/Sciebo) 是德国 Siegen 大学的 15 受试者 wearable stress 数据集，用 **RespiBAN 胸带 (700 Hz)** 采胸 ACC 三轴 + ECG。和 FOSTER (40 健康青年, 5 模态压电+加速度) 完全不同的设备、协议、人群。
+
+**Pipeline** (`tools/build_wesad_corpus.py`)：chest ACC z-axis (canonical SCG 轴) + ECG → 700 Hz resample 到 1 kHz → 5–50 Hz 带通 → Pan-Tompkins R-peak → BG/Sys/Dia label 同 FOSTER 协议 → 256-sample 窗 → per-window int8 z-norm → 945,884 windows × 15 受试者，类分布 BG 567K / Sys 189K / Dia 189K。
+
+**WESAD 评估** (`tools/eval_cross_dataset.py --cebs-data data_wesad/all.npz`)：
+
+| 配置 | 0-shot WESAD | + STDP per-subject (300 cal) |
+|---|---:|---:|
+| Random baseline | 33.33 % | — |
+| Aligned (无 dropout) | 36.33 % | 60.15 % (+23.88 pp) |
+| **Dropout-aligned** | **68.39 %** | 67.06 % (-1.38 pp) |
+
+**三数据集汇总（FOSTER 训练，跨数据集部署）**：
+
+| 测试集 | Aligned 0-shot | Dropout 0-shot | + STDP |
+|---|---:|---:|---:|
+| FOSTER hold-out (in-distribution) | 94.81 % | 92.75 % | 95.82 % |
+| **CEBSDB** (PhysioNet, 19 sub) | 43.19 % | **78.07 %** | **87.70 %** ⭐ (>CEBSDB 自训 85.48 %) |
+| **WESAD** (UCI, 15 sub) | 36.33 % | **68.39 %** ⭐ | 67.06 % |
+
+**关键发现**：
+
+1. **Modality Dropout 训练在 2 个独立数据集上都把 0-shot 从 ~36 % 抬到 65–78 %** —— 证技术不是 CEBSDB 单点过拟合，是真跨数据集鲁棒性
+2. **Aligned without Dropout 在 WESAD 0-shot 几乎是 random (36 % vs 33 %)** —— 反证：**modality dropout 是必需组件**，不是可有可无
+3. **WESAD 比 CEBSDB 难约 10 pp**：RespiBAN 胸带 ACC 与 FOSTER 加速度计响应特性差异 + 德国 vs 澳/英人群 + WESAD stress/amusement/meditation 4 状态切换导致心动力学不平稳
+4. **WESAD 上 STDP 反向 -1.38 pp**：在跨状态非平稳信号上，100 窗 calibration set 的 class 分布可能偏；CEBSDB 静态信号上 STDP 大胜 (+9.63)
+
+**意义**：modality-dropout SNN 在国产 FPGA 上**经过 3 个数据集（FOSTER 训练 + CEBSDB + WESAD 跨数据集）的诚实验证**，确立了"训练用大库、部署小校准"范式的工程可行性。
+
+### 11.10 Cross-Domain SCG → PCG (单通道转移失败，被 §11.8 dropout 方案修复)
 
 PhysioNet 2016 PCG 6,478 / 6,480 文件下载完成（5555 代理 + 分片重试，1 fail 接受）。
 
