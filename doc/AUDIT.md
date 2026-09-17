@@ -355,3 +355,115 @@ README 表 D 标注 "**deployed**" 的行 Sim acc = 94.43%（对应 `doc/abstent
 | `doc/SRTP_FINAL_REPORT.md` | §11.4 CNN 对比表 | `94.14 % on-board` → 补 bit 与窗口集限定 |
 
 未修改项：`doc/bench_fpga_snn_h32t16_aligned.json` 等原始 bench JSON（数据源保持原样）。
+
+---
+
+## 附录 F — 静态审查：导出器错配（wrong-exporter）footgun
+
+> **本次范围**：仅静态审查（读源码 + `git`/文件校验）。**未运行任何导出脚本、未综合、未上板、未改动 RTL 与权重**。行号对应 `8e49289` 提交态。
+>
+> 本附录的目的是把「按 README 步骤操作可能静默丢 τ」这件事写成一份**可复查的永久记录**，而不是修正任何数字。
+
+### F.1 两个导出器，职责不同
+
+| 导出器 | FP32 → INT8 hex | 是否烘 τ | 是否写 `meta.json` | 是否 patch RTL θ/T |
+|---|---|---|---|---|
+| `model/export_snn_weights.py` | ✅ | ❌ | ✅（整字典重写）| ✅ **默认开**（`--no-patch-rtl` 可关，L73-74）|
+| `tools/export_aligned_weights.py` | ❌（转调前者）| ✅ | ✅（转调后**回填** aligned 键）| ✅ **间接**（转调时未加 `--no-patch-rtl`，L62-66）|
+
+两条事实决定了整个 footgun：
+
+1. `model/export_snn_weights.py:86` 读的是**原始** `state["fc1.weight"]`，**不含 τ**；
+2. 全仓库内施加 τ 列置换的唯一位置是 `tools/export_aligned_weights.py:46` 的 `np.roll(..., axis=-1)`（在 `win_len` 轴内按通道循环移位，即**通道内列置换**）。
+
+⇒ **只要绕过 aligned 导出器，τ 就不在权重里。**
+
+### F.2 footgun 链条（按 README 部署流程）
+
+`README.md` 部署流程（L204-219）第 1、2 步是**两个各自独立会写 `rtl/weights_snn/` 的导出动作**：
+
+| 步 | 命令 | 对 `W1.hex` | 对 `meta.json` | 对 RTL θ/T |
+|---|---|---|---|---|
+| 1 | `tools/export_aligned_weights.py --ckpt best_snn_mm_h32t16_aligned.pt` | 写**已烘 τ**（aligned）| 写后**回填** `tau_int_baked`/`aligned_ckpt` | patch 为 T=16 / θ=15380,635 |
+| 2 | `tools/synth_one_config.py --ckpt best_snn_mm_h32t16_aligned.pt` → `model/export_snn_weights.py` | **覆写为原始未烘 τ** | **覆写为无 aligned 键** | patch 为 T=16 / θ=15380,635 |
+
+`tools/synth_one_config.py:54-58` 调用 `model/export_snn_weights.py --out rtl/weights_snn --leak-shift 4` 时**没有** `--no-patch-rtl`，也**没有**任何再烘 τ 的步骤。于是：
+
+- `W1.hex` + `W1_ch{0..4}.hex` 从 aligned 退回**原始列序**；
+- `meta.json` 里的 `tau_int_baked` / `aligned_ckpt` **被抹掉**；
+- 但步骤**本身不报错**，命令行输出看起来完全正常。
+
+⇒ **第 2 步会静默撤销第 1 步的 τ-bake，而 README 把两步并列写成标准流程。**
+
+### F.3 为什么 θ 不受影响（footgun 的爆炸半径很窄）
+
+τ-roll 是**通道内的列置换**（`export_aligned_weights.py:46`，`axis=-1`），它**保持矩阵元素的多重集不变**。而：
+
+- `model/export_snn_weights.py:90-91` 的 `w1_s` 由 `W1` 的 **absmax** 导出；
+- `model/export_snn_weights.py:98` 的 `theta1_int = round(threshold_fp / (in_scale * w1_s))`。
+
+两者都只依赖 absmax ⇒ **对列置换不变**。因此：
+
+> 第 2 步（错配导出）**不会**改变 θ，也**不会**改变 T。它只把 **`W1.hex` 的列序**打回原始排列。
+
+这条性质让 footgun **可证**（不依赖上板）且**狭窄**（只坏一处）。
+
+### F.4 工具自身的两处错误陈述
+
+`tools/export_aligned_weights.py` 内部有两条与代码**直接矛盾**的说明（本次已逐行复核）：
+
+| 位置 | 原文（要点）| 实际行为 |
+|---|---|---|
+| docstring **L10** | "No RTL changes needed." | L62-66 转调 `export_snn_weights.py` 时未加 `--no-patch-rtl` ⇒ **会** patch RTL θ/T |
+| **L83** `print` | "Done. RTL is unchanged; ..." | 同上，**不成立** |
+
+附带一处**表述歧义**（非错误）：`README.md`「关键 RTL 创新」第 2 条写「τ 烘进 W1 …… **RTL 完全不变**」。按**架构**读是对的（τ 机制不需要任何新增 RTL 支持）；按**字面**读与 L62-66 矛盾（脚本确实会改 θ/T 字面量）。建议后续把该句改为「**τ 机制无需新增 RTL 支持**」。
+
+### F.5 覆盖语义：为什么 aligned 路径能自愈，错配路径不能
+
+- `model/export_snn_weights.py:109-122` 的 `meta` 是一个**全新的 dict 字面量**，L123 `write_text(json.dumps(meta))` **整体覆盖、不 merge** ⇒ aligned 专属键必然被抹掉。
+- 但 `tools/export_aligned_weights.py:76-81` 在转调**之后**把 `meta["tau_int_baked"] = tau_int`（L79）与 `meta["aligned_ckpt"]`（L80）**回填**并重写（L81）。
+
+⇒ **aligned 路径自洽（自愈）；错配路径（步骤 2 / 裸 `export_snn_weights.py`）会留下被抹净的 `meta.json`。**
+
+### F.6 后果量化（预期值，非本次实测）
+
+`README.md` §11.7 记录 τ=[4,5,5,6,13] 带来板上 **+0.48 pp**；同一 5,000 窗分层子采样下：
+
+| 状态 | 板上 acc（同窗口集）|
+|---|---:|
+| `scg_top_snn_sweep_H32_T16.bit`（无 τ）| 94.54 % |
+| `scg_top_snn_aligned_h32t16.bit`（烘 τ）| **95.02 %** |
+
+⇒ 若按 README 顺序跑完第 2 步后直接综合，**预期落回 ≈ 94.54 %（−0.48 pp）**。这是**推论**（由 F.3 的置换不变性 + §11.7 的实测差值导出），**未**在本次运行中复现。
+
+### F.7 与附录 D 的关系（加强 D.3，不替代 D.3）
+
+两个反证说明「提交态 RTL」与「提交态权重」**不是同一次导出产生的**：
+
+1. 提交态 `rtl/weights_snn/meta.json` **含** `tau_int_baked`/`aligned_ckpt`，而这两个键**只有** `tools/export_aligned_weights.py` 会写（L76-81）⇒ `rtl/weights_snn/` 的**最后写入者不是** `synth_one_config.py` 路径。这与 `tools/build_snn.tcl` **不含导出步骤**的事实一致（综合只读 RTL + hex）。
+2. `fe79395`（新增 `scg_top_snn_aligned_h32t16.bit`）**未改动** `rtl/scg_top_snn.v`，而该提交态的 RTL 字面量是 T=32 / θ=13756,1397（= T=32 holdout 的值，见附录 D 表 D.1）⇒ 该 bit 综合时 RTL 的 θ/T 来自 **T=32** 的 ckpt，而非 aligned。
+
+两点合起来正是附录 D.3「delivered bit ↔ source 链接缺失」的**机制级候选解释**（两个导出器各自独立 patch RTL，提交产物是混合态）。但**哪一种顺序真实发生过，本附录无法判定**——这正是 D.4 要求的 P0「SHA256 → bit → 权重 → meta 完整链条」要解决的问题。
+
+> ⚠️ 同时注意：`8e49289` 把 RTL 字面量修为 T=16 / θ=15380,635 后，**并未重新综合任何 bit**。因此当前提交态 RTL 描述的是一个**从未被综合过**的设计，而任何已提交 bit 都不是从它产出的。源码↔meta 现在一致，**源码↔bit 仍未闭合**。
+
+### F.8 操作规则（写给未来的自己）
+
+- ❌ **不要**单独运行 `model/export_snn_weights.py --ckpt <aligned ckpt>` 作为部署路径——它不烘 τ。
+- ❌ **不要**把 `tools/synth_one_config.py`（第 2 步）当作「只综合、不动权重」——它在 L54-58 会**重写** `W1.hex` 与 `meta.json`。
+- ❌ **不要**在 aligned 部署后追加一次错配导出「顺便再综合一遍」。
+- ✅ 部署 aligned 设计时，**最后**一个写 `rtl/weights_snn/` 的动作必须是 `tools/export_aligned_weights.py`。
+- ✅ 每次导出后，**校验** `rtl/weights_snn/meta.json` **必须含** `tau_int_baked` 与 `aligned_ckpt` 两键；缺失即说明 τ 已被抹掉，必须重跑 aligned 导出再综合。
+- ✅ 校验 `meta.json` 的 `W1_bytes`(=40960) 与 `W1.hex` 实际大小一致，避免沿用上一次的 hex。
+
+### F.9 建议（沿用附录 D 的编号体系，不新增 P0）
+
+| 优先级 | 建议 | 目的 |
+|---|---|---|
+| P0（承 D.4）| 把 F.8 的「导出后校验 meta.json 必须含 aligned 两键」写成 `tools/export_aligned_weights.py` 结尾的 **assert**，失败即非零退出 | 让 footgun **从静默变响亮** |
+| P1（承 D.4/P1）| 修 `tools/export_aligned_weights.py` 的 L10 / L83 错误陈述（改为「会以 named ckpt 的 T/θ patch RTL」）| 文档与代码一致 |
+| P1 | `README.md`「关键 RTL 创新」第 2 条的「RTL 完全不变」改为「τ 机制无需新增 RTL 支持」| 消除歧义 |
+| P2 | 在 README 部署流程第 1/2 步之间加一行警示：第 2 步会重写 `W1.hex`/`meta.json` | 降低误操作概率 |
+
+> **本附录未执行任何 P0/P1/P2 修复**；仅记录。以上建议涉及脚本改动，需另行授权。
