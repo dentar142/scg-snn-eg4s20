@@ -58,7 +58,7 @@ If a skill was already invoked earlier in this session for the same call site (s
 ## Project-specific facts (preserve)
 
 - Repository: `dentar142/scg-snn-eg4s20` (multi-modal SCG SNN on Anlogic EG4S20)
-- Current deployed bit: `build_snn/scg_top_snn_aligned_h32t16.bit` (95.02 % board acc)
+- Current deployed bit: `build_snn/scg_top_snn_aligned_h32t16.bit` (95.02 % board acc on a 5,000-window stratified subsample; full 40,575-window hold-out board result is 94.14 %, measured on the T=32 `scg_top_snn_multimodal_holdout.bit`)
 - Cross-dataset bit: `build_snn/scg_top_snn_dropout_aligned.bit` (CEBSDB 78 % 0-shot, WESAD 68 %)
 - 3 dataset corpora available: `data_foster_multi/all.npz`, `data_excl100/val.npz` (CEBSDB), `data_wesad/all.npz`
 - Pareto-optimal config: H=32, T=16

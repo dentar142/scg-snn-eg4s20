@@ -747,7 +747,7 @@ true Dia [   619   621   5333 ]
 
 **Per-subject acc (H=32 T=16, 5000 subset)**：sub009 99.36 % / sub003 97.12 % / sub020 96.00 % / sub013 94.88 % / sub021 93.12 % / sub026 92.16 % / sub006 91.84 % / sub024 91.84 %（全部 ≥ 91 %，最低提升 0.80 pp vs T=32）。
 
-**结论**：通过 (1) channel-bank ROM 重组绕开 Anlogic BRAM 推断阈值；(2) 严格 subject-disjoint 训练 + 测试避免 leakage —— **FOSTER 5-channel 多模态 SNN 在国产 EG4S20 FPGA 上以 94.14 % overall / 91.32 % macro-F1 完成 zero-leakage gold-standard 部署**，比单模态 SNN 的 77.72 % 高 16.4 pp，证明多模态融合的硬件可行性 + 临床部署级精度。
+**结论**：通过 (1) channel-bank ROM 重组绕开 Anlogic BRAM 推断阈值；(2) 严格 subject-disjoint 训练 + 测试避免 leakage —— **FOSTER 5-channel 多模态 SNN 在国产 EG4S20 FPGA 上完成 zero-leakage gold-standard 部署**。当前烧录的 `scg_top_snn_aligned_h32t16.bit`（H=32 T=16 + phase-aligned）在 **5,000 窗分层子采样** hold-out 集上测得 **95.02 % overall / 92.58 % macro-F1**（同 8 个 hold-out 受试者）；**全测 40,575 窗**的 **94.14 % overall / 91.32 % macro-F1** 来自 **T=32 的 `scg_top_snn_multimodal_holdout.bit`（非当前烧录 bit）**——两 bit 不同、窗口集不同，**不可互换引用**。多模态部署精度比 CEBSDB 单模态 fallback 的 77.72 % 高 16.4 pp（注意：两者数据集与评估口径不同，非同一评估集上的 delta），证明多模态融合的硬件可行性 + 临床部署级精度。
 
 ### 9.6 Pareto 前沿与机制消融
 
@@ -935,7 +935,7 @@ Per-class keep@τ=2：BG 24,060/25,715 (93.6 % 接受率) 准 98.26 %；Sys 7,31
 | Dia F1 | 83.80 % | **89.80 %** | **CNN +6 pp** |
 | 推理 latency on EG4S20 | **8.65 ms (T=16: ~1.8 ms)** | est. 20+ ms | SNN **2-10× 快** |
 | Sparsity / 节能 | **64-75 % spike-sparse** | dense MAC | SNN 占优 |
-| FPGA INT8 部署可行 | ✅ 已验证 (94.14 % on-board) | ❌ 未验证 (DSP-bound) | SNN 已上板 |
+| FPGA INT8 部署可行 | ✅ 已验证（T=32 holdout bit 94.14 % @ 40,575 窗；当前烧录 T=16 aligned bit 95.02 % @ 5,000 窗分层子采样） | ❌ 未验证 (DSP-bound) | SNN 已上板 |
 
 **诚实结论**：
 - **CNN 在 raw 多模态精度上反超 SNN ~1.6 pp**（FOSTER 5-channel）；之前 "SNN > CNN 10-14 pp" 的结论只在 CEBSDB 单模态成立

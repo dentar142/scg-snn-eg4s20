@@ -6,7 +6,7 @@
 [![Data: ODC-BY](https://img.shields.io/badge/Data-FOSTER%20OSF%2FCEBSDB%20ODC--BY-orange)](https://osf.io/3u6yb/)
 [![Hardware: EG4S20](https://img.shields.io/badge/Hardware-Anlogic%20EG4S20BG256-green)](https://www.anlogic.com/)
 [![Verilog: 100%25 hand-written](https://img.shields.io/badge/Verilog-100%25%20hand--written-purple)](rtl/)
-[![Board acc: 95.02%25](https://img.shields.io/badge/board%20acc-95.02%25-brightgreen)](doc/SRTP_FINAL_REPORT.md)
+[![Board acc: 95.02% (5k-win subsample)](https://img.shields.io/badge/board%20acc-95.02%25%20%285k--win%20subsample%29-brightgreen)](doc/SRTP_FINAL_REPORT.md)
 [![Cross-dataset: 87.70%25](https://img.shields.io/badge/cross--dataset-87.70%25-blue)](doc/SRTP_FINAL_REPORT.md)
 
 <p align="center">
@@ -24,7 +24,8 @@
 
 - **多模态 5-channel SCG** (PVDF / PZT / ACC / PCG / ERB) → BG / Sys / Dia 三分类
 - 在 **Anlogic EG4S20 国产 FPGA**（19,600 LUT4 / 64 BRAM9K / 29 DSP18）上**手写 Verilog** 部署
-- **zero-leakage subject-disjoint 板上 acc = 95.02 %**（40,575 hold-out windows，8 受试者，aligned + phase-shift bake）
+- **zero-leakage subject-disjoint 板上 acc = 95.02 %**（8 受试者 × **5,000 窗分层子采样**，aligned + phase-shift bake）
+  - 同 hold-out **全测 40,575 窗**的板上结果为 **94.14 %**，对应 T=32 的 `scg_top_snn_multimodal_holdout.bit`（非当前烧录 bit）
 - **跨数据集 0-shot acc = 78.07 %**（FOSTER → CEBSDB），**+30 s STDP 校准 → 87.70 %（反超 CEBSDB 5-fold 自训）**
 - **资源**：LUT 10.76 % / BRAM9K 39 / DSP **1**，**推理 8.65 ms / 窗**
 - 全套 ckpt（5.3 MB FP32 + 量化 hex）+ bit + bench JSON + 17 张图 + 1100 行报告 在仓库
@@ -69,6 +70,8 @@
 | `scg_top_snn_multimodal_holdout.bit` | FOSTER 32 sub | 8 sub × 40,575 win | **94.14 %** | 10.70 % | 39 | 1 | 8.65 ms | fallback |
 | `scg_top_snn_sweep_H32_T16.bit` | 同上, T=16 | 8 sub × 5,000 strat | 94.54 % | 10.70 % | 38 | 1 | 9.12 ms | fallback |
 | **`scg_top_snn_aligned_h32t16.bit`** ⭐ | + Aligned (A+B) | 8 sub × 5,000 strat | **95.02 %** | 10.76 % | 39 | 1 | 9.12 ms | **当前烧录** |
+
+> 注：`板上 acc` 只在同一评估窗口集内可比。**全测（40,575 窗）** 只有 `scg_top_snn_multimodal_holdout.bit`（T=32）有板上数字 = **94.14 %**；当前烧录的 `aligned_h32t16`（T=16）仅在 **5,000 窗分层子采样**上测过（94.54 % sweep / 95.02 % aligned）。两者不是同一 bit、也不是同一窗口集，不可互相套用。
 
 ### B. 跨数据集 (FOSTER 训练 → CEBSDB 11,601 win 评估)
 
@@ -272,7 +275,7 @@ scg-snn-eg4s20/
 │   └── figs/*.png                      # 17 张分析图
 │
 ├── build_snn/                          # 5 个部署 bit + 综合报告
-│   ├── scg_top_snn_aligned_h32t16.bit  # 当前烧录 (95.02 % 板上)
+│   ├── scg_top_snn_aligned_h32t16.bit  # 当前烧录 (95.02 % 板上, 5,000 窗子采样)
 │   ├── scg_top_snn_multimodal_holdout.bit (94.14 % 全测)
 │   ├── scg_top_snn_sweep_H{16,32}_T*.bit (Pareto 角点)
 │   └── scg_top_snn_singlemodal_backup.bit (CEBSDB 单模态 fallback)
@@ -302,8 +305,10 @@ scg-snn-eg4s20/
   author = {Neko},
   year   = 2026,
   url    = {https://github.com/dentar142/scg-snn-eg4s20},
-  note   = {SRTP final report; board acc 95.02% on FOSTER subject-disjoint
-            hold-out; 0-shot 78.07% on CEBSDB cross-dataset}
+  note   = {SRTP final report; board acc 95.02% on a 5,000-window stratified
+            subsample of the FOSTER subject-disjoint hold-out (94.14% over the
+            full 40,575-window hold-out, T=32 holdout bit); 0-shot 78.07% on
+            CEBSDB cross-dataset}
 }
 ```
 

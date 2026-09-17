@@ -295,3 +295,63 @@ README 表 D 标注 "**deployed**" 的行 Sim acc = 94.43%（对应 `doc/abstent
 - 时序：`build_snn/scg_top_snn_route_timing.rpt`（20.000 ns 约束 / Min 19.329 ns / WNS +0.671 ns / 0 viol / 3290 endpoints）
 - 面积：`build_snn/scg_top_snn_route.area`；解析器 `tools/synth_one_config.py::parse_area_report()`
 - 复现脚本 CLI：`tools/synth_one_config.py`（`--ckpt/--py/--td/--build-dir/--bit-name`）
+
+---
+
+## 附录 D — 追加发现 #2：提交态 RTL 的 θ 与 meta.json 不一致（P0）
+
+> 本节为审计**后补**记录，对应核心发现 F3（`rtl/scg_top_snn.v:34` 注释与实际不符）。F3 只记录了「注释说谎」；本节补齐**「RTL 常量本身与已发布权重不一致」**这一更强的结论，并说明为何本次**不修**。
+
+### D.1 事实
+
+| 来源 | θ₁ | θ₂ | 对应 T |
+|---|---|---|---|
+| `rtl/scg_top_snn.v`（提交态，THETA1/THETA2 常量） | 13756 | 1397 | **T=32** |
+| `rtl/weights_snn/meta.json`（已发布权重侧的 θ） | 15380 | 635 | **T=16** |
+| `model/ckpt/best_snn_mm_h32t16_aligned.pt`（当前烧录 bit 的训练 ckpt） | 15380 | 635 | **T=16** |
+| `model/ckpt/best_snn_mm_h32_holdout.pt`（T=32 holdout bit） | 13756 | 1397 | T=32 |
+
+结论：提交进仓库的 `rtl/scg_top_snn.v` 里硬编码的是 **T=32 holdout 权重** 的 θ；而 `rtl/weights_snn/` 与 `meta.json` 描述的是 **T=16 aligned** 权重。第 34 行注释声称「THETA 与 meta.json 一致」为**假**。
+
+### D.2 为什么不构成「已证实的功能错误」
+
+- 仓库内**没有**任何构建期产物记录「某 bit 由哪组 θ 综合而成」；θ 是 RTL 源码常量，综合后不可从 `.bit` 反读。
+- `build_snn/*` 全部产物 mtime 统一为 `2026-09-17 16:08`（checkout 时间戳），**无法据文件时间推断构建先后**。
+- 因此存在两种世界、且当前证据无法区分：
+  - **世界 A**：当年综合 `scg_top_snn_aligned_h32t16.bit` 时，`.v` 里的 θ 恰好是 T=16 的 15380/635（后被人改回 T=32，或在另一分支改回），则**板上 95.02 % 的实测是真的**。
+  - **世界 B**：综合时 `.v` 里就是 13756/1397（T=32），则板上实测对应的**不是** T=16 模型，95.02 % 与 T=16 的 sim 数字属于**不同的 θ**。
+- 判定世界 A/B 需要**用 Anlogic TD 以指定 θ 重新综合并上板对比** —— 属超出本次文档修复的授权范围。
+
+### D.3 已交付 bit 的可复现性缺口
+
+- 已发布 bit `scg_top_snn_aligned_h32t16.bit` 的 SHA256 前缀 `A15D2C5ACFEA91F0` **与** `scg_top_snn.bit` **完全相同**（见附录 A），二者同属提交 `fe79395`。
+- 但 `fe79395` **未包含** `rtl/scg_top_snn.v` 的 θ 变更 —— 即「已交付 bit ↔ 源码状态」之间**缺少可追溯链接**：从当前 HEAD 出发**无法重建**出那个 bit。
+- 这是比 θ 数值本身更根本的缺口：**交付物不可复现**。
+
+### D.4 建议修复（本次**未执行**，需重新授权）
+
+| 优先级 | 动作 | 备注 |
+|---|---|---|
+| P0 | 以 T=16 aligned ckpt 重跑 `model/export_snn_weights.py`（其 `patch_rtl_thetas()` 会把 RTL θ 改写成 15380/635），删除 `:34` 假注释，提交 `rtl/scg_top_snn.v` | 使 RTL 与 `meta.json` 一致 |
+| P0 | 建立并发布 **SHA256 → bit → 权重 → meta** 的完整链条（`build_snn/*.bit` + `rtl/weights_snn/`），每次构建落档 θ | 根除「bit 不可复现」 |
+| P1 | 用 Anlogic TD 以两组 θ 各综合一次并上板，判定世界 A/B | 关掉 D.2 的不确定性 |
+
+> **本次范围声明**：仅执行文档口径修正（#1）与本追加记录；**未改动任何 RTL、未重新综合、未重训**。
+
+---
+
+## 附录 E — #1 口径修正记录（本次已执行）
+
+针对核心发现 F1（95.02 % ≠ 40,575 窗口）与 F4（延迟计时窗口含 `sleep`），本次只做**文档层面的口径标签化**，不改任何数字、不改任何 bit：
+
+| 文件 | 位置 | 修正内容 |
+|---|---|---|
+| `README.md` | badge | `board acc 95.02%` → `board acc-95.02% (5k-win subsample)` |
+| `README.md` | TL;DR | 明确 95.02 % 为 **5,000 窗分层子采样**；全测 40,575 窗 = 94.14 %（T=32 holdout bit，非当前烧录） |
+| `README.md` | aligned 表 | 保留 `95.02 %` 并加 protocol 附注 |
+| `README.md` | 目录树 / bib | 同步标注 5,000 窗子采样与 T=32 来源 |
+| `CLAUDE.md` | 项目事实 | 同口径标注 |
+| `doc/SRTP_FINAL_REPORT.md` | §9.5 结论 | 拆分「当前烧录 T=16 aligned @ 5,000 窗 = 95.02 %」与「T=32 holdout @ 40,575 窗 = 94.14 %」，并声明不可互换引用 |
+| `doc/SRTP_FINAL_REPORT.md` | §11.4 CNN 对比表 | `94.14 % on-board` → 补 bit 与窗口集限定 |
+
+未修改项：`doc/bench_fpga_snn_h32t16_aligned.json` 等原始 bench JSON（数据源保持原样）。
